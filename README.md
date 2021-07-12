@@ -1,1 +1,33 @@
-# 80-days-of-react-native
+# 50-days-of-react-native
+### TODO
+- [ ] Upgrade to RN 17xx
+- [ ] integrate TS
+- [ ] refactor stopwatch
+- [ ] add basic navigation
+- [ ] welcome pages
+- [ ] tinder swipe cards
+- [ ] notes (Samsung notes implementation)
+- [ ] weather app
+- [ ] music player
+- [ ] video player
+- [ ] core animation and masks (twitter entrance animation)
+- [ ] custom swipe transitions
+- [ ] segmented control views
+- [ ] mapview and find geolocation
+- [ ] pan gesture (move objects around, specify background, specify object, and toggle spring back (with animation))
+- [ ] swipeable sidemenu
+- [ ] pattern unlock (with gesture)
+- [ ] fuzzy search
+- [ ] sortable blocks
+- [ ] multi page reminder
+- [ ] D3.js samples (Webview)
+- [ ] scrollable tab (old youtube example?)
+- [ ] imessage gradient
+- [ ] push notification
+- [ ] image carousel
+- [ ] action sheet
+- [ ] jumpbar
+- [ ] pull to refresh
+- [ ] tip calculator
+- [ ] basic charts
+- [ ] dynamic charts (with chart information)
