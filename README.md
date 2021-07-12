@@ -31,3 +31,4 @@
 - [ ] tip calculator
 - [ ] basic charts
 - [ ] dynamic charts (with chart information)
+- [ ] Youtube music track page - playlist list transition animation
