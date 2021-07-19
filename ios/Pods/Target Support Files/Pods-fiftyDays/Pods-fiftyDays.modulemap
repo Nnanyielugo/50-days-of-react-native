@@ -1,0 +1,6 @@
+module Pods_fiftyDays {
+  umbrella header "Pods-fiftyDays-umbrella.h"
+
+  export *
+  module * { export * }
+}
