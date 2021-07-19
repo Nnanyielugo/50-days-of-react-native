@@ -1,0 +1,6 @@
+module Pods_fiftyDays_fiftyDaysTests {
+  umbrella header "Pods-fiftyDays-fiftyDaysTests-umbrella.h"
+
+  export *
+  module * { export * }
+}

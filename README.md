@@ -1,6 +1,8 @@
 # 50-days-of-react-native
+
 ### TODO
-- [ ] Upgrade to RN 17xx
+
+- [ x ] Upgrade to RN 17xx
 - [ ] integrate TS
 - [ ] refactor stopwatch
 - [ ] add basic navigation
