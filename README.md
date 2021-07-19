@@ -2,7 +2,7 @@
 
 ### TODO
 
-- [ x ] Upgrade to RN 17xx
+- [x] Upgrade to RN 0.64xx
 - [ ] integrate TS
 - [ ] refactor stopwatch
 - [ ] add basic navigation
