@@ -3,9 +3,9 @@
 ### TODO
 
 - [x] Upgrade to RN 0.64xx
-- [ ] integrate TS
-- [ ] refactor stopwatch
-- [ ] add basic navigation
+- [x] integrate TS
+- [x] refactor stopwatch
+- [x] add basic navigation
 - [ ] welcome pages
 - [ ] tinder swipe cards
 - [ ] notes (Samsung notes implementation)

@@ -18,6 +18,7 @@
 		2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		2D16E6881FA4F8E400B85C8A /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D16E6891FA4F8E400B85C8A /* libReact.a */; };
 		2DCD954D1E0B4F2C00145EB5 /* fiftyDaysTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* fiftyDaysTests.m */; };
+		38FA5116CA547662BC0EA027 /* libPods-fiftyDays-fiftyDaysTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E9F7D8E26A5DF630064F250 /* libPods-fiftyDays-fiftyDaysTests.a */; };
 		6CECB28F088B7EAC29C857E0 /* libPods-fiftyDays-fiftyDaysTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 69C41DFE5CC49A30B72355B1 /* libPods-fiftyDays-fiftyDaysTests.a */; };
 /* End PBXBuildFile section */
 
@@ -379,6 +380,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6CECB28F088B7EAC29C857E0 /* libPods-fiftyDays-fiftyDaysTests.a in Frameworks */,
+				38FA5116CA547662BC0EA027 /* libPods-fiftyDays-fiftyDaysTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

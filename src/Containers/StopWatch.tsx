@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import * as React from 'react';
 import {
   View,
   StyleSheet,
@@ -9,21 +9,39 @@ import {
 
 import Timer from '../Components/StopWatch/Timer';
 import Controls from '../Components/StopWatch/Controls';
-import LapList from '../Components/StopWatch/LapsList';
-import format from '../Components/StopWatch/utils';
-import Button from '../Components/StopWatch//Buttons';
+import LapList from '../Components/StopWatch/LapList';
+import { format } from '../Components/StopWatch/utils';
+import Button from '../Components/utils/Button';
 
-class Index extends Component {
-  getInitialState = () => ({
+interface ComponentProps {}
+interface ComponentState {
+  timeElapsed: number;
+  laps: number[];
+  running: boolean;
+  lastLap: number;
+}
+
+function getInitialState(): ComponentState {
+  return {
     timeElapsed: 0,
     laps: [],
     running: false,
     lastLap: 0,
-  });
+  };
+}
 
-  state = this.getInitialState();
+export default class StopWatch extends React.Component<
+  ComponentProps,
+  ComponentState
+> {
+  private timing!: number;
+  private timer!: NodeJS.Timer;
+  constructor(props: ComponentProps) {
+    super(props);
+    this.state = getInitialState();
+  }
 
-  start = () => {
+  start = (): void => {
     const { running } = this.state;
     if (!running) {
       this.timing = Date.now();
@@ -32,7 +50,7 @@ class Index extends Component {
     }
   };
 
-  update = () => {
+  update = (): void => {
     let diff = Date.now() - this.timing;
     this.setState(state => ({
       timeElapsed: state.timeElapsed + diff,
@@ -41,24 +59,24 @@ class Index extends Component {
     this.timing = Date.now();
   };
 
-  split = () => {
+  split = (): void => {
     this.setState(state => ({
-      laps: state.laps.concat(state.timeElapsed),
-      lastLap: this.getInitialState().lastLap,
+      laps: state.laps.concat(state.lastLap),
+      lastLap: getInitialState().lastLap,
     }));
   };
 
-  stop = () => {
+  stop = (): void => {
     clearInterval(this.timer);
     this.setState({
       running: false,
     });
   };
 
-  reset = () => {
+  reset = (): void => {
     clearInterval(this.timer);
     this.setState(() => ({
-      ...this.getInitialState(),
+      ...getInitialState(),
     }));
   };
 
@@ -66,7 +84,7 @@ class Index extends Component {
     const { timeElapsed, laps, running, lastLap } = this.state;
     return (
       <SafeAreaView style={styles.container}>
-        <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <ScrollView contentContainerStyle={styles.scollContainer}>
           <View style={styles.header}>
             <Timer
               time={format(timeElapsed)}
@@ -80,27 +98,24 @@ class Index extends Component {
               start={this.start}
               split={this.split}
               running={running}
-              startCOlor={running ? 'grey' : 'blue'}
+              startColor={running ? 'grey' : 'blue'}
             />
-            <View style={{ width: Dimensions.get('screen').width * 0.9 }}>
-              <LapList laps={laps} />
-            </View>
+          </View>
+          <View style={styles.lapListContainer}>
+            <LapList laps={laps} />
+          </View>
+          <View style={styles.cancelContainer}>
+            <Button
+              onPress={this.reset}
+              disabled={!running && laps.length === 0}
+              style={{
+                container: styles.cancelButton,
+                text: styles.cancelButtonText,
+              }}>
+              Reset
+            </Button>
           </View>
         </ScrollView>
-        <View style={styles.cancelContainer}>
-          <Button
-            text="Reset"
-            disable={!running && timeElapsed === 0}
-            inactiveColor="#F7AFAF"
-            color="#E31919"
-            textColor="white"
-            style={{
-              container: styles.cancelButton,
-              text: styles.cancelButtonText,
-            }}
-            onPress={this.reset}
-          />
-        </View>
       </SafeAreaView>
     );
   }
@@ -110,11 +125,18 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: 'whitesmoke',
     alignItems: 'center',
+    // flexGrow: 1,
   },
-  scrollContainer: {
+  scollContainer: {
     flexGrow: 1,
     alignItems: 'center',
-    paddingBottom: 90,
+  },
+  lapListContainer: {
+    width: Dimensions.get('screen').width * 0.9,
+  },
+  header: {
+    backgroundColor: 'white',
+    width: Dimensions.get('screen').width,
   },
   timerHeader: {
     fontSize: 30,
@@ -125,10 +147,6 @@ const styles = StyleSheet.create({
   },
   body: {
     paddingTop: 15,
-  },
-  header: {
-    backgroundColor: 'white',
-    width: Dimensions.get('screen').width,
   },
   cancelContainer: {
     position: 'absolute',
@@ -143,10 +161,11 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     alignItems: 'center',
     borderRadius: 5,
+    color: '#E31919',
+    backgroundColor: 'maroon',
   },
   cancelButtonText: {
     fontSize: 19,
+    color: 'white',
   },
 });
-
-export default Index;
