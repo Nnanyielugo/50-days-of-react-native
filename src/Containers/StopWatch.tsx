@@ -61,7 +61,7 @@ export default class StopWatch extends React.Component<
 
   split = (): void => {
     this.setState(state => ({
-      laps: state.laps.concat(state.timeElapsed),
+      laps: state.laps.concat(state.lastLap),
       lastLap: getInitialState().lastLap,
     }));
   };
