@@ -5,6 +5,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import Home from '../Containers/Home';
 import StopWatch from '../Containers/StopWatch';
+import Weather from '../Containers/Weather';
 
 export default function Navigator() {
   const Stack = createStackNavigator();
@@ -14,6 +15,7 @@ export default function Navigator() {
       <Stack.Navigator initialRouteName="Home" headerMode="none">
         <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="StopWatch" component={StopWatch} />
+        <Stack.Screen name="Weather" component={Weather} />
       </Stack.Navigator>
     </NavigationContainer>
   );

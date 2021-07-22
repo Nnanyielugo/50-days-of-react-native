@@ -29,7 +29,7 @@
 // gets linked in instead.
 #if __MACH__ &&                                                \
     (MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_12 || \
-     __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_12_0)
+     __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_10_0)
 
 #ifdef FOLLY_HAVE_CLOCK_GETTIME
 #undef FOLLY_HAVE_CLOCK_GETTIME

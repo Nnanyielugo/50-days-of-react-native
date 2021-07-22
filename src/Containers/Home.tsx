@@ -7,15 +7,10 @@ import {
   TouchableOpacity,
 } from 'react-native';
 
+import { PAGES } from '../utils/constants/pages';
+
 import type { StackNavigationProp } from '@react-navigation/stack';
 import type { RootStackParamList, Page } from '../utils/interfaces';
-
-const PAGES: Page[] = [
-  {
-    name: 'Stop Watch',
-    componentName: 'StopWatch',
-  },
-];
 
 type HomeScreenNavigationProps = StackNavigationProp<
   RootStackParamList,
