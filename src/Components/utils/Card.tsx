@@ -14,8 +14,6 @@ const Card: FunctionComponent<ComponentProps> = props => {
 const styles = StyleSheet.create({
   container: {
     height: 250,
-    justifyContent: 'center',
-    alignItems: 'center',
     backgroundColor: 'whitesmoke',
     marginHorizontal: 10,
     borderRadius: 7,
