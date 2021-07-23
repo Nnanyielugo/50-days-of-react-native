@@ -1,13 +1,19 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, SafeAreaView } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  SafeAreaView,
+  ImageBackground,
+} from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import Geolocation from 'react-native-geolocation-service';
 import Config from 'react-native-config';
+import coverImage from '../assets/weather.jpeg';
 
 import WeatherInformation from '../Components/Weather/WeatherInformation';
 import History from '../Components/Weather/History';
 import Map from '../Components/Weather/Map';
-import Button from '../Components/utils/Button';
 import { composeWeatherResults } from '../utils/functions';
 
 import type {
@@ -94,9 +100,6 @@ class Weather extends Component<ComponentProps, ComponentState> {
       geocode(coords),
       getYesterday(coords),
     ]).then(([weatherData, geoResults, yesterday]) => {
-      console.log('data', weatherData);
-      console.log('geo data', geoResults);
-      console.log('yesterday', yesterday);
       const formattedresults = composeWeatherResults(weatherData);
       this.setState(state => ({
         ...state,
@@ -119,23 +122,29 @@ class Weather extends Component<ComponentProps, ComponentState> {
     console.log('state', this.state);
     return (
       <SafeAreaView style={styles.container}>
-        <ScrollView style={styles.scroll}>
-          <View style={styles.headerContainer}>
-            <Text style={styles.headerText}>Weather</Text>
-          </View>
-          <WeatherInformation
-            current={this.state?.current}
-            hourly={this.state?.hourly}
-            address={this.state?.address}
-            loaded={this.state.loaded}
-          />
-          <History loaded={this.state.loaded} daily={this.state.daily} />
-          {this.state.coords && (
-            <>
-              <Map coords={this.state.coords} />
-            </>
-          )}
-        </ScrollView>
+        <ImageBackground
+          style={styles.backgroundImage}
+          imageStyle={{ opacity: 1 }}
+          source={coverImage}
+          resizeMode="cover">
+          <ScrollView style={styles.scroll}>
+            <View style={styles.headerContainer}>
+              <Text style={styles.headerText}>Weather</Text>
+            </View>
+            <WeatherInformation
+              current={this.state?.current}
+              hourly={this.state?.hourly}
+              address={this.state?.address}
+              loaded={this.state.loaded}
+            />
+            <History loaded={this.state.loaded} daily={this.state.daily} />
+            {this.state.coords && (
+              <>
+                <Map coords={this.state.coords} />
+              </>
+            )}
+          </ScrollView>
+        </ImageBackground>
       </SafeAreaView>
     );
   }
@@ -147,13 +156,21 @@ const styles = StyleSheet.create({
     // justifyContent: 'center',
     // alignItems: 'center',
     backgroundColor: '#36454F',
+    opacity: 1,
+  },
+  backgroundImage: {
+    flex: 1,
+    opacity: 0.8,
+    zIndex: 0,
   },
   scroll: {
     marginBottom: 20,
+    zIndex: 999,
   },
   headerContainer: {
     marginTop: 20,
     marginBottom: 30,
+    opacity: 0.8,
   },
   headerText: {
     fontSize: 34,

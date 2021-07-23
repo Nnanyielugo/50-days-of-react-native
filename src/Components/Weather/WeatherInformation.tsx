@@ -6,6 +6,7 @@ import Hour from './Hourly';
 
 import type { FunctionComponent } from 'react';
 import type { Address, Current, Hourly } from '../../utils/interfaces';
+import { CARD_COLOR_WHITE, TEXT_COLOR_WHITE } from '../../utils/constants';
 
 interface ComponentProps {
   address?: Address;
@@ -23,7 +24,7 @@ const WeatherInformation: FunctionComponent<ComponentProps> = ({
   if (!loaded) {
     return (
       <Card style={{ justifyContent: 'center' }}>
-        <ActivityIndicator size="large" color="#36454F" />
+        <ActivityIndicator size="large" color={CARD_COLOR_WHITE} />
       </Card>
     );
   }
@@ -31,9 +32,7 @@ const WeatherInformation: FunctionComponent<ComponentProps> = ({
   return (
     <Card style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerText}>
-          {(address && address.locality) || 'Location'}
-        </Text>
+        <Text style={styles.headerText}>{address && address.locality}</Text>
         {current && (
           <Text style={styles.date}>
             {format(current.date * 1000, 'E dd LLLL, h:ss bbb')}
@@ -47,9 +46,11 @@ const WeatherInformation: FunctionComponent<ComponentProps> = ({
             <Text style={styles.temperature}>{Math.round(current.temp)}°</Text>
           </View>
           <View>
-            <Text>{current.desc}</Text>
-            <Text>{Math.round(current.temp)}°</Text>
-            <Text>{`Feels like ${Math.round(current.feels_like)}`}°</Text>
+            <Text style={styles.desc}>{current.desc}</Text>
+            <Text style={styles.temp}>{Math.round(current.temp)}°</Text>
+            <Text style={styles.feel}>
+              {`Feels like ${Math.round(current.feels_like)}`}°
+            </Text>
           </View>
         </View>
       )}
@@ -74,11 +75,22 @@ const styles = StyleSheet.create({
   header: {
     marginBottom: 10,
   },
+  desc: {
+    color: TEXT_COLOR_WHITE,
+  },
+  temp: {
+    color: TEXT_COLOR_WHITE,
+  },
+  feel: {
+    color: TEXT_COLOR_WHITE,
+  },
   headerText: {
     fontSize: 24,
+    color: TEXT_COLOR_WHITE,
   },
   date: {
     fontSize: 11,
+    color: TEXT_COLOR_WHITE,
   },
   weather: {
     justifyContent: 'space-between',
@@ -87,6 +99,7 @@ const styles = StyleSheet.create({
   },
   temperature: {
     fontSize: 40,
+    color: TEXT_COLOR_WHITE,
   },
   hourlyContainer: {
     justifyContent: 'space-between',

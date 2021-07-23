@@ -16,7 +16,7 @@ const History: FunctionComponent<ComponentProps> = ({ daily, loaded }) => {
   if (!loaded) {
     return (
       <Card style={styles.container}>
-        <ActivityIndicator size="large" color="#36454F" />
+        <ActivityIndicator size="large" color="whitesmoke" />
       </Card>
     );
   }

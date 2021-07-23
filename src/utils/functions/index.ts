@@ -52,7 +52,6 @@ export function composeWeatherResults(data: any) {
 
 export function getDisplayIcon(name: string): string {
   const formattedName = name.replace(/\W/, '-');
-  console.log('for', formattedName);
   switch (formattedName) {
     case 'clear-sky':
       return 'sunny-outline';

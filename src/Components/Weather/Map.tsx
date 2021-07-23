@@ -37,6 +37,7 @@ const styles = StyleSheet.create({
   container: {
     marginTop: 20,
     height: 200,
+    backgroundColor: 'whitesmoke',
   },
   map: {
     flex: 1,

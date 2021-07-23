@@ -14,7 +14,7 @@ const Card: FunctionComponent<ComponentProps> = props => {
 const styles = StyleSheet.create({
   container: {
     height: 250,
-    backgroundColor: 'whitesmoke',
+    backgroundColor: '#36454F',
     marginHorizontal: 10,
     borderRadius: 7,
     elevation: 5,
