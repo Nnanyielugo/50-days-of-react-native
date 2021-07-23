@@ -10,6 +10,8 @@ import { ScrollView } from 'react-native-gesture-handler';
 import Geolocation from 'react-native-geolocation-service';
 import Config from 'react-native-config';
 import coverImage from '../assets/weather.jpeg';
+import coverImage2 from '../assets/weather2.jpeg';
+import coverImage3 from '../assets/weather3.jpeg';
 
 import WeatherInformation from '../Components/Weather/WeatherInformation';
 import History from '../Components/Weather/History';
@@ -48,6 +50,23 @@ async function getYesterday(coords?: Coords) {
   }
 }
 
+interface Background {
+  module: any;
+}
+
+const BackgroundImages: Background[] = [
+  {
+    module: coverImage,
+  },
+
+  {
+    module: coverImage2,
+  },
+  {
+    module: coverImage3,
+  },
+];
+
 interface ComponentProps {}
 interface ComponentState {
   coords?: Coords;
@@ -59,6 +78,7 @@ interface ComponentState {
     temp: number;
   };
   loaded: boolean;
+  backgroundImage: Background;
 }
 
 class Weather extends Component<ComponentProps, ComponentState> {
@@ -70,8 +90,11 @@ class Weather extends Component<ComponentProps, ComponentState> {
       maximumAge: 10000,
     };
 
+    const randomIndex = Math.floor(Math.random() * BackgroundImages.length);
+
     this.state = {
       loaded: false,
+      backgroundImage: BackgroundImages[randomIndex],
     };
 
     Geolocation.getCurrentPosition(
@@ -125,7 +148,7 @@ class Weather extends Component<ComponentProps, ComponentState> {
         <ImageBackground
           style={styles.backgroundImage}
           imageStyle={{ opacity: 1 }}
-          source={coverImage}
+          source={this.state.backgroundImage.module}
           resizeMode="cover">
           <ScrollView style={styles.scroll}>
             <View style={styles.headerContainer}>

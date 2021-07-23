@@ -5,7 +5,7 @@
   "scripts": {
     "android": "react-native run-android",
     "ios": "react-native run-ios",
-    "set-env": "export $(cat .env | grep \"^[^#;]\" |xargs)",
+    "set-env": "export $(cat .env | xargs)",
     "start": "react-native start",
     "test": "jest",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
