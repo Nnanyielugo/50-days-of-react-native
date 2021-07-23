@@ -167,7 +167,11 @@ class Weather extends Component<ComponentProps, ComponentState> {
               address={this.state?.address}
               loaded={this.state.loaded}
             />
-            <History loaded={this.state.loaded} daily={this.state.daily} />
+            <History
+              yesterday={this.state.yesterday}
+              loaded={this.state.loaded}
+              daily={this.state.daily}
+            />
             {this.state.coords && (
               <>
                 <Map coords={this.state.coords} />
