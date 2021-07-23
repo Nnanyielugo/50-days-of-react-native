@@ -25,9 +25,7 @@ const Hour: FunctionComponent<ComponentProps> = ({ hour }) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    // marginHorizontal: 5,
-  },
+  container: {},
   text: {
     color: TEXT_COLOR_WHITE,
     marginBottom: 5,

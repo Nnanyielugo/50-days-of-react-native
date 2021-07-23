@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
-import type { ViewStyle, TextStyle, ImageStyle } from 'react-native';
 import type { FunctionComponent } from 'react';
 import type { NamedStyles } from '../../utils/interfaces';
 

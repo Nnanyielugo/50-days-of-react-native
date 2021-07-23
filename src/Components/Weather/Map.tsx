@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 import Mapview from 'react-native-maps';
 
 import Card from '../utils/Card';
@@ -14,8 +14,6 @@ interface ComponentProps {
 const Map: FunctionComponent<ComponentProps> = ({ coords }) => {
   const region = {
     ...coords,
-    // latitude: 37.78825,
-    // longitude: -122.4324,
     longitudeDelta: 0.0421,
     latitudeDelta: 0.0922,
   };
