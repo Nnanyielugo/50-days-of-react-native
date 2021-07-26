@@ -1,11 +1,5 @@
 import * as React from 'react';
-import {
-  View,
-  StyleSheet,
-  Dimensions,
-  ScrollView,
-  SafeAreaView,
-} from 'react-native';
+import { View, StyleSheet, Dimensions, SafeAreaView } from 'react-native';
 
 import Timer from '../Components/StopWatch/Timer';
 import Controls from '../Components/StopWatch/Controls';
@@ -13,7 +7,6 @@ import LapList from '../Components/StopWatch/LapList';
 import { format } from '../Components/StopWatch/utils';
 import Button from '../Components/utils/Button';
 
-interface ComponentProps {}
 interface ComponentState {
   timeElapsed: number;
   laps: number[];
@@ -30,13 +23,10 @@ function getInitialState(): ComponentState {
   };
 }
 
-export default class StopWatch extends React.Component<
-  ComponentProps,
-  ComponentState
-> {
+export default class StopWatch extends React.Component<{}, ComponentState> {
   private timing!: number;
   private timer!: NodeJS.Timer;
-  constructor(props: ComponentProps) {
+  constructor(props: {}) {
     super(props);
     this.state = getInitialState();
   }
@@ -84,38 +74,34 @@ export default class StopWatch extends React.Component<
     const { timeElapsed, laps, running, lastLap } = this.state;
     return (
       <SafeAreaView style={styles.container}>
-        <ScrollView contentContainerStyle={styles.scollContainer}>
-          <View style={styles.header}>
-            <Timer
-              time={format(timeElapsed)}
-              lastLap={format(lastLap)}
-              lastLapColor={running ? 'red' : 'grey'}
-            />
-          </View>
-          <View style={styles.body}>
-            <Controls
-              stop={this.stop}
-              start={this.start}
-              split={this.split}
-              running={running}
-              startColor={running ? 'grey' : 'blue'}
-            />
-          </View>
-          <View style={styles.lapListContainer}>
-            <LapList laps={laps} />
-          </View>
-          <View style={styles.cancelContainer}>
-            <Button
-              onPress={this.reset}
-              disabled={!running && laps.length === 0}
-              style={{
-                container: styles.cancelButton,
-                text: styles.cancelButtonText,
-              }}>
-              Reset
-            </Button>
-          </View>
-        </ScrollView>
+        <View style={styles.header}>
+          <Timer
+            time={format(timeElapsed)}
+            lastLap={format(lastLap)}
+            lastLapColor={running ? 'red' : 'grey'}
+          />
+        </View>
+        <View style={styles.body}>
+          <Controls
+            stop={this.stop}
+            start={this.start}
+            split={this.split}
+            running={running}
+            startColor={running ? 'grey' : 'blue'}
+          />
+        </View>
+        <LapList laps={laps} />
+        <View style={styles.cancelContainer}>
+          <Button
+            onPress={this.reset}
+            disabled={!running && laps.length === 0}
+            style={{
+              container: styles.cancelButton,
+              text: styles.cancelButtonText,
+            }}>
+            Reset
+          </Button>
+        </View>
       </SafeAreaView>
     );
   }
@@ -125,14 +111,11 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: 'whitesmoke',
     alignItems: 'center',
-    // flexGrow: 1,
+    flex: 1,
   },
   scollContainer: {
     flexGrow: 1,
     alignItems: 'center',
-  },
-  lapListContainer: {
-    width: Dimensions.get('screen').width * 0.9,
   },
   header: {
     backgroundColor: 'white',
@@ -152,8 +135,9 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 0,
     width: Dimensions.get('screen').width,
-    paddingBottom: 20,
+    // marginBottom: 20,
     backgroundColor: 'whitesmoke',
+    marginTop: 50,
   },
   cancelButton: {
     marginVertical: 10,
