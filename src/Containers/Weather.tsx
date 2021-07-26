@@ -9,11 +9,11 @@ import {
 import { ScrollView } from 'react-native-gesture-handler';
 import Geolocation from 'react-native-geolocation-service';
 import Config from 'react-native-config';
-import coverImage from '../assets/weather.jpeg';
-import coverImage2 from '../assets/weather2.jpeg';
-import coverImage3 from '../assets/weather3.jpeg';
-import coverImage4 from '../assets/weather4.jpeg';
-import coverImage5 from '../assets/weather5.jpeg';
+import coverImage from '../assets/weather/weather.jpeg';
+import coverImage2 from '../assets/weather/weather2.jpeg';
+import coverImage3 from '../assets/weather/weather3.jpeg';
+import coverImage4 from '../assets/weather/weather4.jpeg';
+import coverImage5 from '../assets/weather/weather5.jpeg';
 
 import WeatherInformation from '../Components/Weather/WeatherInformation';
 import History from '../Components/Weather/History';
