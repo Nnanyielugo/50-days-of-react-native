@@ -30,6 +30,8 @@ const LapList: FunctionComponent<LapListProps> = ({ laps }) => {
     return <ListItem lap={lap} />;
   };
 
+  let componentRef: any;
+
   const _keyExtractor = (item: number, index: number) => index.toString();
 
   const _itemSeperator = () => <View style={styles.separator} />;
@@ -41,6 +43,8 @@ const LapList: FunctionComponent<LapListProps> = ({ laps }) => {
         ItemSeparatorComponent={_itemSeperator}
         keyExtractor={_keyExtractor}
         scrollEnabled={true}
+        ref={ref => (componentRef = ref)}
+        onContentSizeChange={() => componentRef.scrollToEnd()}
       />
     </View>
   );
