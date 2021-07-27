@@ -9,16 +9,18 @@ import {
 import { ScrollView } from 'react-native-gesture-handler';
 import Geolocation from 'react-native-geolocation-service';
 import Config from 'react-native-config';
-import coverImage from '../assets/weather/weather.jpeg';
-import coverImage2 from '../assets/weather/weather2.jpeg';
-import coverImage3 from '../assets/weather/weather3.jpeg';
-import coverImage4 from '../assets/weather/weather4.jpeg';
-import coverImage5 from '../assets/weather/weather5.jpeg';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 import WeatherInformation from '../Components/Weather/WeatherInformation';
 import History from '../Components/Weather/History';
 import Map from '../Components/Weather/Map';
 import { composeWeatherResults } from '../utils/functions';
+
+import coverImage from '../assets/weather/weather.jpeg';
+import coverImage2 from '../assets/weather/weather2.jpeg';
+import coverImage3 from '../assets/weather/weather3.jpeg';
+import coverImage4 from '../assets/weather/weather4.jpeg';
+import coverImage5 from '../assets/weather/weather5.jpeg';
 
 import type {
   Coords,
@@ -158,6 +160,10 @@ class Weather extends Component<ComponentProps, ComponentState> {
           source={this.state.backgroundImage.module}
           resizeMode="cover">
           <ScrollView style={styles.scroll}>
+            <View style={styles.menu}>
+              <Icon name="menu-outline" color="#FFF" size={40} />
+              <Icon name="add-outline" color="#FFF" size={40} />
+            </View>
             <View style={styles.headerContainer}>
               <Text style={styles.headerText}>Weather</Text>
             </View>
@@ -208,6 +214,12 @@ const styles = StyleSheet.create({
     fontSize: 34,
     color: 'whitesmoke',
     alignSelf: 'center',
+  },
+  menu: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 10,
+    marginTop: 10,
   },
 });
 
