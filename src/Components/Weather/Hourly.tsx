@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Dimensions } from 'react-native';
 import format from 'date-fns/format';
 import Icon from 'react-native-vector-icons/Ionicons';
 
@@ -17,19 +17,24 @@ const Hour: FunctionComponent<ComponentProps> = ({ hour }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.text}>{format(hour.date * 1000, 'h aaa')}</Text>
-      <Icon color="grey" size={20} name={getDisplayIcon(hour.desc)} />
-      <Text style={styles.text}>{Math.round(hour.temp)}°</Text>
-      <Text style={styles.text}>{hour.pop * 100}%</Text>
+      <View style={styles.subContainer}>
+        <Icon color="grey" size={20} name={getDisplayIcon(hour.desc)} />
+        <Text style={styles.text}>{Math.round(hour.temp)}°</Text>
+        <Text style={styles.text}>{Math.round(hour.pop * 100)}%</Text>
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {},
+  container: {
+    width: Dimensions.get('window').width * 0.18,
+  },
   text: {
     color: TEXT_COLOR_WHITE,
     marginBottom: 5,
   },
+  subContainer: { paddingLeft: 5 },
 });
 
 export default Hour;

@@ -1,5 +1,11 @@
 import * as React from 'react';
-import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ActivityIndicator,
+  ScrollView,
+} from 'react-native';
 import format from 'date-fns/format';
 import Card from '../utils/Card';
 import Hour from './Hourly';
@@ -56,11 +62,11 @@ const WeatherInformation: FunctionComponent<ComponentProps> = ({
       )}
 
       {hourly && (
-        <View style={styles.hourlyContainer}>
+        <ScrollView horizontal contentContainerStyle={styles.hourlyContainer}>
           {hourly.map((hour: Hourly) => (
             <Hour key={hour.date} hour={hour} />
           ))}
-        </View>
+        </ScrollView>
       )}
     </Card>
   );
@@ -102,8 +108,8 @@ const styles = StyleSheet.create({
     color: TEXT_COLOR_WHITE,
   },
   hourlyContainer: {
-    justifyContent: 'space-between',
-    flexDirection: 'row',
+    // justifyContent: 'space-between',
+    // flexDirection: 'row',
   },
 });
 

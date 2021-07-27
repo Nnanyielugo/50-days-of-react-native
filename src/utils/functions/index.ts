@@ -20,7 +20,6 @@ export function composeWeatherResults(data: any) {
   //   if (current.date > hour.dt) continue
   // })
   for (let hour of data.hourly) {
-    if (hours.length === 5) break;
     if (current.date > hour.dt) continue;
     const hourly: Hourly = {
       date: hour.dt,
