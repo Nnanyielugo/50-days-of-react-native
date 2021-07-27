@@ -192,7 +192,7 @@ const styles = StyleSheet.create({
   },
   backgroundImage: {
     flex: 1,
-    opacity: 0.8,
+    opacity: 0.85,
     zIndex: 0,
   },
   scroll: {
