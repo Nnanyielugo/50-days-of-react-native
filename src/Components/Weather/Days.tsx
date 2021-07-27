@@ -17,7 +17,10 @@ const Days: FunctionComponent<ComponentProps> = ({ day }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.day}>{format(day.date * 1000, 'eeee')}</Text>
-      <Text style={styles.pop}>{day.pop * 100}%</Text>
+      <View style={styles.popContainer}>
+        <Icon name="water-outline" color="aqua" size={12} />
+        <Text style={styles.pop}>{day.pop * 100}%</Text>
+      </View>
       <Icon color="grey" name={getDisplayIcon(day.desc)} size={20} />
       <Text style={styles.DN}>{`${Math.round(day.day)}°/${Math.round(
         day.night,
@@ -39,9 +42,14 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: TEXT_COLOR_WHITE,
   },
+  popContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
   pop: {
     width: 35,
     color: TEXT_COLOR_WHITE,
+    fontSize: 9,
   },
   DN: {
     color: TEXT_COLOR_WHITE,

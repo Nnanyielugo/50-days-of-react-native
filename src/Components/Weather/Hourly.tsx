@@ -20,7 +20,10 @@ const Hour: FunctionComponent<ComponentProps> = ({ hour }) => {
       <View style={styles.subContainer}>
         <Icon color="grey" size={20} name={getDisplayIcon(hour.desc)} />
         <Text style={styles.text}>{Math.round(hour.temp)}°</Text>
-        <Text style={styles.text}>{Math.round(hour.pop * 100)}%</Text>
+        <View style={styles.popContainer}>
+          <Icon color="aqua" size={8} name="water-outline" />
+          <Text style={styles.pop}>{Math.round(hour.pop * 100)}%</Text>
+        </View>
       </View>
     </View>
   );
@@ -35,6 +38,13 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   subContainer: { paddingLeft: 5 },
+  popContainer: {
+    flexDirection: 'row',
+  },
+  pop: {
+    fontSize: 9,
+    marginLeft: 2,
+  },
 });
 
 export default Hour;
