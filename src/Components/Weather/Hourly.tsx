@@ -16,7 +16,7 @@ interface ComponentProps {
 const Hour: FunctionComponent<ComponentProps> = ({ hour }) => {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>{format(hour.date * 1000, 'h bbb')}</Text>
+      <Text style={styles.text}>{format(hour.date * 1000, 'h aaa')}</Text>
       <Icon color="grey" size={20} name={getDisplayIcon(hour.desc)} />
       <Text style={styles.text}>{Math.round(hour.temp)}°</Text>
       <Text style={styles.text}>{hour.pop * 100}%</Text>
