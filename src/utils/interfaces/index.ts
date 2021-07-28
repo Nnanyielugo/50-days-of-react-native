@@ -4,6 +4,7 @@ export type RootStackParamList = {
   Home: any;
   StopWatch: any;
   Weather: any;
+  MusicPlayer: any;
 };
 
 export interface Page {

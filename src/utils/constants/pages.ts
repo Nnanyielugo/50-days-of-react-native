@@ -9,4 +9,8 @@ export const PAGES: Page[] = [
     name: 'Weather',
     componentName: 'Weather',
   },
+  {
+    name: 'Music Player',
+    componentName: 'MusicPlayer',
+  },
 ];

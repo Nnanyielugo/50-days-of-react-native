@@ -22,7 +22,7 @@ interface HomeProps {
 }
 
 export default function Home(props: HomeProps) {
-  const renderComponent = (page: Page, index: number) => {
+  const renderComponent = (page: Page, _index: number) => {
     return (
       <TouchableOpacity
         key={page.componentName}
