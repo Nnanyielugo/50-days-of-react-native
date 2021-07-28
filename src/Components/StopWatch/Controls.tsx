@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import Button from '../utils/Button';
 
 import type { FunctionComponent } from 'react';
@@ -28,6 +28,9 @@ const Controls: FunctionComponent<ComponentProps> = ({
         disabled={!running}
         inactiveColor="whitesmoke"
         style={{
+          container: {
+            backgroundColor: '#F4F4F4',
+          },
           text: {
             color: running ? 'grey' : 'grey',
           },
@@ -38,6 +41,9 @@ const Controls: FunctionComponent<ComponentProps> = ({
       <Button
         onPress={!running ? start : stop}
         style={{
+          container: {
+            backgroundColor: '#F4F4F4',
+          },
           text: {
             color: running ? 'red' : startColor,
           },

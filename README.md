@@ -30,7 +30,9 @@
 - [ ] action sheet
 - [ ] jumpbar
 - [ ] pull to refresh
+- [ ] calculator
 - [ ] tip calculator
 - [ ] basic charts
 - [ ] dynamic charts (with chart information)
 - [ ] Youtube music track page - playlist list transition animation
+- [ ] basic run tracker (hint: geolocation.watchPosition)

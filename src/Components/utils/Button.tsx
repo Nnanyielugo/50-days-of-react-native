@@ -1,21 +1,8 @@
 import * as React from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-} from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
-import type { ViewStyle, TextStyle, ImageStyle } from 'react-native';
 import type { FunctionComponent } from 'react';
-
-type NamedStyles = ViewStyle | TextStyle | ImageStyle;
-
-type Disabled = {
-  status: boolean;
-  inactiveColor: string;
-};
+import type { NamedStyles } from '../../utils/interfaces';
 
 interface ButtonProps {
   onPress?: () => any;
@@ -62,10 +49,11 @@ const styles = StyleSheet.create({
     padding: 10,
     elevation: 3,
     borderRadius: 3,
-    backgroundColor: '#F4F4F4',
+    backgroundColor: 'grey',
   },
   text: {
     color: '#FFF',
+    alignSelf: 'center',
   },
 });
 
