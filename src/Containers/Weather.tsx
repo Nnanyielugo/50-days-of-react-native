@@ -14,6 +14,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import WeatherInformation from '../Components/Weather/WeatherInformation';
 import History from '../Components/Weather/History';
 import Map from '../Components/Weather/Map';
+import SwitchLocationModal from '../Components/Weather/SwitchLocationModal';
 import { composeWeatherResults } from '../utils/functions';
 
 import coverImage from '../assets/weather/weather.jpeg';
@@ -37,7 +38,14 @@ async function fetchWeatherData(coords?: Coords) {
   }
 }
 
-async function geocode(coords?: Coords) {
+async function geocode(address: string) {
+  const uri = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
+    address,
+  )}&key=${Config.GOOGLE_MAPS_API_KEY}`;
+  return await fetch(uri).then(resp => resp.json());
+}
+
+async function reverseGeocode(coords?: Coords) {
   if (coords) {
     const uri = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${coords.latitude},${coords.longitude}&result_type=locality&key=${Config.GOOGLE_MAPS_API_KEY}`;
     return await fetch(uri).then(resp => resp.json());
@@ -88,6 +96,7 @@ interface ComponentState {
   };
   loaded: boolean;
   backgroundImage: Background;
+  modalIsVisible: boolean;
 }
 
 class Weather extends Component<ComponentProps, ComponentState> {
@@ -104,6 +113,7 @@ class Weather extends Component<ComponentProps, ComponentState> {
     this.state = {
       loaded: false,
       backgroundImage: BackgroundImages[randomIndex],
+      modalIsVisible: false,
     };
 
     Geolocation.getCurrentPosition(
@@ -120,16 +130,44 @@ class Weather extends Component<ComponentProps, ComponentState> {
     );
   }
 
+  toggleModal() {
+    this.setState(state => ({
+      ...state,
+      modalIsVisible: !state.modalIsVisible,
+    }));
+  }
+
   componentDidUpdate() {
     if (this.state.coords && !this.state.loaded) {
       this.makeRequest(this.state.coords);
     }
   }
 
+  handleGeocode = async (address: string) => {
+    const response = await geocode(address);
+    const { location } = response.results[0].geometry;
+    const coords: Coords = {
+      latitude: location.lat,
+      longitude: location.lng,
+    };
+    this.setState(
+      state => ({
+        ...state,
+        loaded: false,
+        coords,
+      }),
+      () => this.makeRequest(coords),
+    );
+    this.setState(state => ({
+      ...state,
+      modalIsVisible: false,
+    }));
+  };
+
   makeRequest(coords?: Coords) {
     Promise.all([
       fetchWeatherData(coords),
-      geocode(coords),
+      reverseGeocode(coords),
       getYesterday(coords),
     ]).then(([weatherData, geoResults, yesterday]) => {
       const formattedresults = composeWeatherResults(weatherData);
@@ -151,7 +189,7 @@ class Weather extends Component<ComponentProps, ComponentState> {
   }
 
   render() {
-    console.log('state', this.state);
+    console.log(this.state);
     return (
       <SafeAreaView style={styles.container}>
         <ImageBackground
@@ -159,10 +197,20 @@ class Weather extends Component<ComponentProps, ComponentState> {
           imageStyle={{ opacity: 1 }}
           source={this.state.backgroundImage.module}
           resizeMode="cover">
+          <SwitchLocationModal
+            closeModal={() => this.toggleModal()}
+            isVisible={this.state.modalIsVisible}
+            geocode={this.handleGeocode}
+          />
           <ScrollView style={styles.scroll}>
             <View style={styles.menu}>
               <Icon name="menu-outline" color="#FFF" size={40} />
-              <Icon name="add-outline" color="#FFF" size={40} />
+              <Icon
+                name="add-outline"
+                color="#FFF"
+                size={40}
+                onPress={() => this.toggleModal()}
+              />
             </View>
             <View style={styles.headerContainer}>
               <Text style={styles.headerText}>Weather</Text>

@@ -14,18 +14,20 @@ interface ComponentProps {
 const Map: FunctionComponent<ComponentProps> = ({ coords }) => {
   const region = {
     ...coords,
-    longitudeDelta: 0.0421,
-    latitudeDelta: 0.0922,
+    latitudeDelta: 0.0421,
+    longitudeDelta: 0.6922,
   };
+
   return (
     <Card style={styles.container}>
       <Mapview
+        provider="google"
         style={styles.map}
-        minZoomLevel={5}
+        region={region}
         initialRegion={region}
-        cacheEnabled={true}
         scrollEnabled={false}
-        showsUserLocation={true}
+        liteMode={true}
+        cacheEnabled={true}
       />
     </Card>
   );
@@ -40,6 +42,7 @@ const styles = StyleSheet.create({
   map: {
     flex: 1,
     margin: 5, // enabbles the parent Card's border-radius styling to take effect
+    ...StyleSheet.absoluteFillObject,
   },
 });
 

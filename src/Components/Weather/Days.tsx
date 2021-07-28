@@ -19,7 +19,7 @@ const Days: FunctionComponent<ComponentProps> = ({ day }) => {
       <Text style={styles.day}>{format(day.date * 1000, 'eeee')}</Text>
       <View style={styles.popContainer}>
         <Icon name="water-outline" color="aqua" size={12} />
-        <Text style={styles.pop}>{day.pop * 100}%</Text>
+        <Text style={styles.pop}>{Math.round(day.pop * 100)}%</Text>
       </View>
       <Icon color="grey" name={getDisplayIcon(day.desc)} size={20} />
       <Text style={styles.DN}>{`${Math.round(day.day)}°/${Math.round(
