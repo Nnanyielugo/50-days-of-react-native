@@ -13,6 +13,7 @@
 - [ ] music player
 - [ ] video player
 - [ ] core animation and masks (twitter entrance animation)
+- [ ] app menu
 - [ ] custom swipe transitions
 - [ ] segmented control views
 - [ ] mapview and find geolocation
