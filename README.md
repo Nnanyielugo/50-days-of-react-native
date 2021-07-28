@@ -9,7 +9,7 @@
 - [ ] welcome pages
 - [ ] tinder swipe cards
 - [ ] notes (Samsung notes implementation)
-- [ ] weather app
+- [x] weather app
 - [ ] music player
 - [ ] video player
 - [ ] core animation and masks (twitter entrance animation)
@@ -36,3 +36,4 @@
 - [ ] dynamic charts (with chart information)
 - [ ] Youtube music track page - playlist list transition animation
 - [ ] basic run tracker (hint: geolocation.watchPosition)
+- [ ] mapview with directions
