@@ -57,9 +57,11 @@ const SwitchLocationModal: FunctionComponent<ComponentProps> = ({
   const setPlace = async (place: string) => {
     changeText(place);
     setSuggestions([]);
+    setLoading(true);
     Keyboard.dismiss();
     await geocode(place);
     changeText('');
+    setLoading(false);
   };
 
   const _renderItem = (item: { item: PlaceSuggestion }) => {

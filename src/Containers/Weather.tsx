@@ -189,7 +189,6 @@ class Weather extends Component<ComponentProps, ComponentState> {
   }
 
   render() {
-    console.log(this.state);
     return (
       <SafeAreaView style={styles.container}>
         <ImageBackground
