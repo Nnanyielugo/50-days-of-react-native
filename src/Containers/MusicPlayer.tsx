@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-// import { View, Text, StyleSheet } from 'react-native';
 import TrackPlayer, { Capability } from 'react-native-track-player';
 import Player from '../Components/MusicPlayer';
 
@@ -25,13 +24,12 @@ class MusicPlayer extends Component<{}, ComponentState> {
     const { tracks } = this.state;
     await TrackPlayer.setupPlayer();
     await TrackPlayer.updateOptions({
-      // stopWithApp: true,
+      stopWithApp: true,
       capabilities: [
         Capability.Play,
         Capability.Pause,
         Capability.SkipToNext,
         Capability.SkipToPrevious,
-        Capability.Stop,
         Capability.SeekTo,
       ],
       compactCapabilities: [
@@ -42,8 +40,11 @@ class MusicPlayer extends Component<{}, ComponentState> {
       ],
     });
     await TrackPlayer.add(tracks);
-    // await TrackPlayer.play();
   };
+
+  componentWillUnmount() {
+    TrackPlayer.destroy();
+  }
 
   componentDidMount() {
     const url = 'https:/api.deezer.com/chart/0?limit=30';

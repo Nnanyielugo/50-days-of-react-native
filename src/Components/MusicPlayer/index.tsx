@@ -11,6 +11,8 @@ import TrackPlayer, {
   State,
 } from 'react-native-track-player';
 
+import { formatTrackDuration } from '../../utils/functions';
+
 // import type { FunctionComponent } from 'react';
 
 const Player = () => {
@@ -50,6 +52,10 @@ const Player = () => {
           maximumValue={duration}
           style={styles.progress}
         />
+        <View style={styles.progressTextContainer}>
+          <Text>{formatTrackDuration(position)}</Text>
+          <Text>{formatTrackDuration(duration - position)}</Text>
+        </View>
       </View>
       <View style={styles.controlsContainer}>
         <Icon name="repeat" size={20} />
@@ -91,6 +97,10 @@ const styles = StyleSheet.create({
     width: Dimensions.get('window').width * 0.9,
     padding: 0,
     margin: 0,
+  },
+  progressTextContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   controlsContainer: {
     width: Dimensions.get('window').width * 0.9,
