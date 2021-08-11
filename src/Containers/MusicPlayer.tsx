@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import TrackPlayer from 'react-native-track-player';
+// import { View, Text, StyleSheet } from 'react-native';
+import TrackPlayer, { Capability } from 'react-native-track-player';
+import Player from '../Components/MusicPlayer';
 
 interface Track {
   id: number;
@@ -26,29 +27,30 @@ class MusicPlayer extends Component<{}, ComponentState> {
     await TrackPlayer.updateOptions({
       // stopWithApp: true,
       capabilities: [
-        TrackPlayer.CAPABILITY_PLAY,
-        TrackPlayer.CAPABILITY_PAUSE,
-        TrackPlayer.CAPABILITY_SKIP_TO_NEXT,
-        TrackPlayer.CAPABILITY_SKIP_TO_PREVIOUS,
-        TrackPlayer.CAPABILITY_STOP,
+        Capability.Play,
+        Capability.Pause,
+        Capability.SkipToNext,
+        Capability.SkipToPrevious,
+        Capability.Stop,
+        Capability.SeekTo,
       ],
       compactCapabilities: [
-        TrackPlayer.CAPABILITY_PLAY,
-        TrackPlayer.CAPABILITY_PAUSE,
-        TrackPlayer.CAPABILITY_SKIP_TO_NEXT,
-        TrackPlayer.CAPABILITY_SKIP_TO_PREVIOUS,
+        Capability.Play,
+        Capability.Pause,
+        Capability.SkipToNext,
+        Capability.SkipToPrevious,
       ],
     });
     await TrackPlayer.add(tracks);
     // await TrackPlayer.play();
   };
+
   componentDidMount() {
-    const url2 = 'https:/api.deezer.com/chart/0?limit=30';
-    fetch(url2)
+    const url = 'https:/api.deezer.com/chart/0?limit=30';
+    fetch(url)
       .then(res => res.json())
       .then(response => {
         const tracks: Track[] = [];
-        console.log('resp', response);
         response.tracks.data.map((track: any) => {
           return tracks.push({
             id: track.id,
@@ -66,22 +68,10 @@ class MusicPlayer extends Component<{}, ComponentState> {
         );
       });
   }
+
   render() {
-    return (
-      <View style={styles.container}>
-        <Text>MusicPlayer</Text>
-      </View>
-    );
+    return <Player />;
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#2c3e50',
-  },
-});
 
 export default MusicPlayer;
