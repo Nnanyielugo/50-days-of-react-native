@@ -1,4 +1,3 @@
-//import liraries
 import * as React from 'react';
 import { View, Text, StyleSheet, Dimensions } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -13,13 +12,18 @@ import TrackPlayer, {
 
 import { formatTrackDuration } from '../../utils/functions';
 
-// import type { FunctionComponent } from 'react';
+import type { FunctionComponent } from 'react';
+import type { Track } from '../../utils/interfaces';
 
-const Player = () => {
+interface ComponentProps {
+  tracks: Track[];
+}
+
+const Player: FunctionComponent<ComponentProps> = ({ tracks }) => {
+  const [currentTrack, setCurrentTrack] = React.useState<Track>();
   const { position, duration } = useProgress();
   const playbackState = usePlaybackState();
-  // console.log(progress);
-  // console.log(playbackState);
+
   let trackPlayerElem = (
     <Icon onPress={() => TrackPlayer.play()} name="play" size={30} />
   );
@@ -40,8 +44,15 @@ const Player = () => {
       if (event.type === Event.RemotePause) {
         TrackPlayer.pause();
       }
+      if (event.type === Event.PlaybackTrackChanged) {
+        const currentTrackIndex = await TrackPlayer.getCurrentTrack();
+        console.log('curr', currentTrackIndex);
+        setCurrentTrack(tracks[currentTrackIndex]);
+      }
     },
   );
+
+  console.log('currentTrack', currentTrack);
   return (
     <View style={styles.container}>
       <View style={styles.trackArtContainer}></View>
@@ -52,11 +63,21 @@ const Player = () => {
           maximumValue={duration}
           style={styles.progress}
         />
+
         <View style={styles.progressTextContainer}>
           <Text>{formatTrackDuration(position)}</Text>
           <Text>{formatTrackDuration(duration - position)}</Text>
         </View>
       </View>
+
+      <View style={styles.trackInformation}>
+        <Text style={styles.trackTitle}>{currentTrack?.title}</Text>
+        <Text
+          style={
+            styles.artistAndTitle
+          }>{`${currentTrack?.artist} - ${currentTrack?.title}`}</Text>
+      </View>
+
       <View style={styles.controlsContainer}>
         <Icon name="repeat" size={20} />
         <Icon name="play-skip-back" size={30} />
@@ -101,6 +122,18 @@ const styles = StyleSheet.create({
   progressTextContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+  },
+  trackInformation: {},
+  trackTitle: {
+    fontWeight: '700',
+    fontSize: 16,
+    textAlign: 'center',
+    color: '#3C3C3C',
+  },
+  artistAndTitle: {
+    fontSize: 14,
+    textAlign: 'center',
+    color: '#626262',
   },
   controlsContainer: {
     width: Dimensions.get('window').width * 0.9,

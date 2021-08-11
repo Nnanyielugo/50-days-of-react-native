@@ -2,15 +2,9 @@ import React, { Component } from 'react';
 import TrackPlayer, { Capability } from 'react-native-track-player';
 import Player from '../Components/MusicPlayer';
 
-interface Track {
-  id: number;
-  title: string;
-  url: string;
-  artwork: string;
-  artist: string;
-}
+import type { Track } from '../utils/interfaces';
 
-interface ComponentState {
+export interface ComponentState {
   tracks: Track[];
 }
 
@@ -71,7 +65,8 @@ class MusicPlayer extends Component<{}, ComponentState> {
   }
 
   render() {
-    return <Player />;
+    const { tracks } = this.state;
+    return <Player tracks={tracks} />;
   }
 }
 
