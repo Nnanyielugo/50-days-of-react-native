@@ -14,7 +14,6 @@ class MusicPlayer extends Component<{}, ComponentState> {
   };
 
   startPlayer = async () => {
-    console.log('tracks', this.state.tracks);
     const { tracks } = this.state;
     await TrackPlayer.setupPlayer();
     await TrackPlayer.updateOptions({
@@ -41,28 +40,32 @@ class MusicPlayer extends Component<{}, ComponentState> {
   }
 
   componentDidMount() {
-    const url = 'https:/api.deezer.com/chart/0?limit=30';
-    fetch(url)
-      .then(res => res.json())
-      .then(response => {
-        console.log(response);
-        const tracks: Track[] = [];
-        response.tracks.data.map((track: any) => {
-          return tracks.push({
-            id: track.id,
-            title: track.title,
-            url: track.preview,
-            artwork: track.album.cover_big,
-            artist: track.artist.name,
+    try {
+      const url = 'https:/api.deezer.com/chart/0?limit=30';
+      fetch(url)
+        .then(res => res.json())
+        .then(response => {
+          const tracks: Track[] = [];
+          response.tracks.data.map((track: any) => {
+            return tracks.push({
+              id: track.id,
+              title: track.title,
+              url: track.preview,
+              artwork: track.album.cover_big,
+              artist: track.artist.name,
+            });
           });
+          this.setState(
+            _state => ({
+              tracks,
+            }),
+            () => this.startPlayer(),
+          );
         });
-        this.setState(
-          _state => ({
-            tracks,
-          }),
-          () => this.startPlayer(),
-        );
-      });
+    } catch (err) {
+      console.log('error', err);
+      throw err;
+    }
   }
 
   render() {

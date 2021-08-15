@@ -1,5 +1,12 @@
 import * as React from 'react';
-import { View, Text, StyleSheet, Dimensions, Image } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Dimensions,
+  Image,
+  ActivityIndicator,
+} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Slider from 'react-native-slider';
 import TrackPlayer, {
@@ -9,6 +16,7 @@ import TrackPlayer, {
   useTrackPlayerEvents,
   State,
 } from 'react-native-track-player';
+import albumArt from '../../assets/music-player/album-art-placeholder.jpeg';
 
 import { formatTrackDuration } from '../../utils/functions';
 
@@ -50,18 +58,22 @@ const Player: FunctionComponent<ComponentProps> = ({ tracks }) => {
     },
   );
 
-  // console.log(currentTrack);
-
   return (
     <View style={styles.container}>
-      <View style={styles.trackArtContainer}>
-        <Image
-          style={styles.trackArt}
-          source={{
-            uri: currentTrack?.artwork,
-          }}
-        />
-      </View>
+      {currentTrack ? (
+        <View style={styles.trackArtContainer}>
+          <Image
+            style={styles.trackArt}
+            source={{
+              uri: currentTrack?.artwork,
+            }}
+          />
+        </View>
+      ) : (
+        <View style={styles.trackArtContainer}>
+          <Image style={styles.trackArt} source={albumArt} />
+        </View>
+      )}
       <View style={styles.progressContainer}>
         <Slider
           minimumValue={0}
@@ -76,13 +88,19 @@ const Player: FunctionComponent<ComponentProps> = ({ tracks }) => {
         </View>
       </View>
 
-      <View style={styles.trackInformation}>
-        <Text style={styles.trackTitle}>{currentTrack?.title}</Text>
-        <Text
-          style={
-            styles.artistAndTitle
-          }>{`${currentTrack?.artist} - ${currentTrack?.title}`}</Text>
-      </View>
+      {currentTrack ? (
+        <View style={styles.trackInformation}>
+          <Text style={styles.trackTitle}>{currentTrack.title}</Text>
+          <Text
+            style={
+              styles.artistAndTitle
+            }>{`${currentTrack.artist} - ${currentTrack.title}`}</Text>
+        </View>
+      ) : (
+        <View style={styles.noTrackInformation}>
+          <ActivityIndicator size="small" color="black" />
+        </View>
+      )}
 
       <View style={styles.controlsContainer}>
         <Icon name="repeat" size={20} />
@@ -115,9 +133,9 @@ const styles = StyleSheet.create({
   trackArtContainer: {
     width: Dimensions.get('window').width * 0.9,
     height: Dimensions.get('window').height * 0.5,
-    // backgroundColor: 'grey',
+    backgroundColor: 'grey',
     marginTop: 30,
-    // elevation: 5,
+    elevation: 5,
     borderRadius: 5,
   },
   trackArt: {
@@ -139,6 +157,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   trackInformation: {},
+  noTrackInformation: {
+    height: 40,
+    justifyContent: 'center',
+  },
   trackTitle: {
     fontWeight: '700',
     fontSize: 16,
