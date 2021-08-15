@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Text, StyleSheet, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, Dimensions, Image } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Slider from 'react-native-slider';
 import TrackPlayer, {
@@ -25,19 +25,18 @@ const Player: FunctionComponent<ComponentProps> = ({ tracks }) => {
   const playbackState = usePlaybackState();
 
   let trackPlayerElem = (
-    <Icon onPress={() => TrackPlayer.play()} name="play" size={30} />
+    <Icon onPress={TrackPlayer.play} name="play" size={30} />
   );
 
   if (playbackState === State.Playing) {
     trackPlayerElem = (
-      <Icon onPress={() => TrackPlayer.pause()} name="pause" size={30} />
+      <Icon onPress={TrackPlayer.pause} name="pause" size={30} />
     );
   }
 
   useTrackPlayerEvents(
     [Event.PlaybackTrackChanged, Event.RemotePlay, Event.RemotePause],
     async event => {
-      console.log('event', event);
       if (event.type === Event.RemotePlay) {
         TrackPlayer.play();
       }
@@ -46,16 +45,23 @@ const Player: FunctionComponent<ComponentProps> = ({ tracks }) => {
       }
       if (event.type === Event.PlaybackTrackChanged) {
         const currentTrackIndex = await TrackPlayer.getCurrentTrack();
-        console.log('curr', currentTrackIndex);
         setCurrentTrack(tracks[currentTrackIndex]);
       }
     },
   );
 
-  console.log('currentTrack', currentTrack);
+  // console.log(currentTrack);
+
   return (
     <View style={styles.container}>
-      <View style={styles.trackArtContainer}></View>
+      <View style={styles.trackArtContainer}>
+        <Image
+          style={styles.trackArt}
+          source={{
+            uri: currentTrack?.artwork,
+          }}
+        />
+      </View>
       <View style={styles.progressContainer}>
         <Slider
           minimumValue={0}
@@ -80,9 +86,17 @@ const Player: FunctionComponent<ComponentProps> = ({ tracks }) => {
 
       <View style={styles.controlsContainer}>
         <Icon name="repeat" size={20} />
-        <Icon name="play-skip-back" size={30} />
+        <Icon
+          name="play-skip-back"
+          onPress={TrackPlayer.skipToPrevious}
+          size={30}
+        />
         {trackPlayerElem}
-        <Icon name="play-skip-forward" size={30} />
+        <Icon
+          name="play-skip-forward"
+          onPress={TrackPlayer.skipToNext}
+          size={30}
+        />
         <Icon name="shuffle" size={20} />
       </View>
       <View style={styles.playlistContainer}>
@@ -95,23 +109,24 @@ const Player: FunctionComponent<ComponentProps> = ({ tracks }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'whitesmoke',
   },
   trackArtContainer: {
     width: Dimensions.get('window').width * 0.9,
     height: Dimensions.get('window').height * 0.5,
-    backgroundColor: 'grey',
+    // backgroundColor: 'grey',
     marginTop: 30,
-    elevation: 5,
+    // elevation: 5,
     borderRadius: 5,
   },
-  trackArt: {},
+  trackArt: {
+    width: Dimensions.get('window').width * 0.9,
+    height: Dimensions.get('window').height * 0.5,
+    borderRadius: 5,
+  },
   progressContainer: {
-    // width: Dimensions.get('window').width * 0.9,
     height: Dimensions.get('window').height * 0.1,
-    // alignItems: 'center',
     marginTop: 30,
   },
   progress: {

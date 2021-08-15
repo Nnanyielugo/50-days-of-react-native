@@ -45,13 +45,14 @@ class MusicPlayer extends Component<{}, ComponentState> {
     fetch(url)
       .then(res => res.json())
       .then(response => {
+        console.log(response);
         const tracks: Track[] = [];
         response.tracks.data.map((track: any) => {
           return tracks.push({
             id: track.id,
             title: track.title,
             url: track.preview,
-            artwork: track.md5_image,
+            artwork: track.album.cover_big,
             artist: track.artist.name,
           });
         });
