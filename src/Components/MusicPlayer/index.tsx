@@ -18,7 +18,10 @@ import TrackPlayer, {
 } from 'react-native-track-player';
 import albumArt from '../../assets/music-player/album-art-placeholder.jpeg';
 
-import { formatTrackDuration } from '../../utils/functions';
+import {
+  formatTrackDuration,
+  setRandomBackgroundColor,
+} from '../../utils/functions';
 
 import type { FunctionComponent } from 'react';
 import type { Track } from '../../utils/interfaces';
@@ -28,6 +31,9 @@ interface ComponentProps {
 }
 
 const Player: FunctionComponent<ComponentProps> = ({ tracks }) => {
+  const [backgroundColor, setBackgroundColor] = React.useState<string>(
+    setRandomBackgroundColor(),
+  );
   const [currentTrack, setCurrentTrack] = React.useState<Track>();
   const { position, duration } = useProgress();
   const playbackState = usePlaybackState();
@@ -54,12 +60,13 @@ const Player: FunctionComponent<ComponentProps> = ({ tracks }) => {
       if (event.type === Event.PlaybackTrackChanged) {
         const currentTrackIndex = await TrackPlayer.getCurrentTrack();
         setCurrentTrack(tracks[currentTrackIndex]);
+        setBackgroundColor(setRandomBackgroundColor());
       }
     },
   );
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor }]}>
       {currentTrack ? (
         <View style={styles.trackArtContainer}>
           <Image
@@ -128,7 +135,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    backgroundColor: 'whitesmoke',
   },
   trackArtContainer: {
     width: Dimensions.get('window').width * 0.9,
