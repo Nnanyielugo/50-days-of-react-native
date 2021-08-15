@@ -34,6 +34,8 @@ const Player: FunctionComponent<ComponentProps> = ({ tracks }) => {
   const [backgroundColor, setBackgroundColor] = React.useState<string>(
     setRandomBackgroundColor(),
   );
+  const [prevDisabled, setPrevDisabled] = React.useState(true);
+  const [nextDisabled, setNextDisabled] = React.useState(false);
   const [currentTrack, setCurrentTrack] = React.useState<Track>();
   const { position, duration } = useProgress();
   const playbackState = usePlaybackState();
@@ -61,6 +63,18 @@ const Player: FunctionComponent<ComponentProps> = ({ tracks }) => {
         const currentTrackIndex = await TrackPlayer.getCurrentTrack();
         setCurrentTrack(tracks[currentTrackIndex]);
         setBackgroundColor(setRandomBackgroundColor());
+
+        // enable/disable previous/next buttons
+        if (event.nextTrack > 0) {
+          setPrevDisabled(false);
+        } else {
+          setPrevDisabled(true);
+        }
+        if (event.nextTrack && event.nextTrack === tracks.length - 1) {
+          setNextDisabled(true);
+        } else {
+          setNextDisabled(false);
+        }
       }
     },
   );
@@ -111,16 +125,19 @@ const Player: FunctionComponent<ComponentProps> = ({ tracks }) => {
 
       <View style={styles.controlsContainer}>
         <Icon name="repeat" size={20} />
+
         <Icon
           name="play-skip-back"
-          onPress={TrackPlayer.skipToPrevious}
+          onPress={prevDisabled ? () => {} : TrackPlayer.skipToPrevious}
           size={30}
+          color={prevDisabled ? 'grey' : 'black'}
         />
         {trackPlayerElem}
         <Icon
           name="play-skip-forward"
-          onPress={TrackPlayer.skipToNext}
+          onPress={nextDisabled ? () => {} : TrackPlayer.skipToNext}
           size={30}
+          color={nextDisabled ? 'grey' : 'black'}
         />
         <Icon name="shuffle" size={20} />
       </View>
