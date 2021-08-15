@@ -101,6 +101,7 @@ const Player: FunctionComponent<ComponentProps> = ({ tracks }) => {
           value={position}
           maximumValue={duration}
           style={styles.progress}
+          onValueChange={(value: number) => TrackPlayer.seekTo(value)}
         />
 
         <View style={styles.progressTextContainer}>
