@@ -37,7 +37,9 @@ import {
   Dimensions,
   Animated,
   PanResponder,
+  ScrollView,
 } from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 import type {
   GestureResponderEvent,
@@ -58,9 +60,13 @@ const Playlist: FunctionComponent<AppProps> = ({ background }) => {
   // Solution step 1
   let posY: number = 0;
   const pan = React.useRef(new Animated.ValueXY()).current;
+  const [open, setOpen] = React.useState(false);
   const panResponder = React.useRef(
     PanResponder.create({
-      onMoveShouldSetPanResponder: () => true,
+      onMoveShouldSetPanResponder: () => {
+        setOpen(true);
+        return true;
+      },
       onPanResponderGrant: () => {
         pan.setOffset({
           x: (pan.x as any)._value,
@@ -100,6 +106,7 @@ const Playlist: FunctionComponent<AppProps> = ({ background }) => {
     }).start(() => {
       // Solution 4.a
       posY = 0;
+      setOpen(false);
     });
   };
 
@@ -112,6 +119,8 @@ const Playlist: FunctionComponent<AppProps> = ({ background }) => {
       posY = SWIPE_AUTO_HEIGHT;
     });
   };
+
+  console.log(posY);
   return (
     <Animated.View
       style={{
@@ -122,13 +131,18 @@ const Playlist: FunctionComponent<AppProps> = ({ background }) => {
         ],
       }}
       {...panResponder.panHandlers}>
-      <View
+      <ScrollView
         style={[
           styles.playlistContainner,
           { backgroundColor: background.dark },
         ]}>
+        <Icon
+          name={open ? 'remove-outline' : 'filter-outline'}
+          size={30}
+          style={styles.icon}
+        />
         <Text>Playlist</Text>
-      </View>
+      </ScrollView>
     </Animated.View>
   );
 };
@@ -140,6 +154,9 @@ const styles = StyleSheet.create({
     elevation: 10,
     zIndex: 999,
     opacity: 0.8,
+  },
+  icon: {
+    alignSelf: 'center',
   },
 });
 
