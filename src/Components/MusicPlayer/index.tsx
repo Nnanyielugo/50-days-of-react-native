@@ -8,6 +8,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import MDIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Slider from 'react-native-slider';
 import TrackPlayer, {
   useProgress,
@@ -15,6 +16,7 @@ import TrackPlayer, {
   usePlaybackState,
   useTrackPlayerEvents,
   State,
+  RepeatMode,
 } from 'react-native-track-player';
 import albumArt from '../../assets/music-player/album-art-placeholder.jpeg';
 
@@ -30,15 +32,62 @@ interface ComponentProps {
   tracks: Track[];
 }
 
+enum Repeat {
+  off,
+  track,
+  queue,
+}
+
+enum RepeatIcon {
+  off = 'repeat-off',
+  track = 'repeat-once',
+  queue = 'repeat',
+}
+
 const Player: FunctionComponent<ComponentProps> = ({ tracks }) => {
   const [backgroundColor, setBackgroundColor] = React.useState<string>(
     setRandomBackgroundColor(),
+  );
+  const [repeat, setRepeat] = React.useState<Repeat>(Repeat.off);
+  const [repeatIcon, setRepeatIcon] = React.useState<RepeatIcon>(
+    RepeatIcon.off,
   );
   const [prevDisabled, setPrevDisabled] = React.useState(true);
   const [nextDisabled, setNextDisabled] = React.useState(false);
   const [currentTrack, setCurrentTrack] = React.useState<Track>();
   const { position, duration } = useProgress();
   const playbackState = usePlaybackState();
+
+  const handleSetRepeat = async () => {
+    const currentTrackIndex = await TrackPlayer.getCurrentTrack();
+    switch (repeat) {
+      case Repeat.off:
+        await TrackPlayer.setRepeatMode(RepeatMode.Queue);
+        setRepeat(Repeat.queue);
+        setRepeatIcon(RepeatIcon.queue);
+        // enable next button in case it is disabled
+        setNextDisabled(false);
+        break;
+      case Repeat.queue:
+        await TrackPlayer.setRepeatMode(RepeatMode.Track);
+        setRepeat(Repeat.track);
+        setRepeatIcon(RepeatIcon.track);
+        // disable next button if track is last on queue
+        if (currentTrackIndex === tracks.length - 1) {
+          setNextDisabled(true);
+        }
+        break;
+      case Repeat.track:
+        await TrackPlayer.setRepeatMode(RepeatMode.Off);
+        setRepeat(Repeat.off);
+        setRepeatIcon(RepeatIcon.off);
+        // disable next button if track is last on queue
+        if (currentTrackIndex === tracks.length - 1) {
+          setNextDisabled(true);
+        }
+        break;
+    }
+  };
 
   let trackPlayerElem = (
     <Icon onPress={TrackPlayer.play} name="play" size={30} />
@@ -53,6 +102,8 @@ const Player: FunctionComponent<ComponentProps> = ({ tracks }) => {
   useTrackPlayerEvents(
     [Event.PlaybackTrackChanged, Event.RemotePlay, Event.RemotePause],
     async event => {
+      const repeatMode = await TrackPlayer.getRepeatMode();
+
       if (event.type === Event.RemotePlay) {
         TrackPlayer.play();
       }
@@ -70,7 +121,17 @@ const Player: FunctionComponent<ComponentProps> = ({ tracks }) => {
         } else {
           setPrevDisabled(true);
         }
-        if (event.nextTrack && event.nextTrack === tracks.length - 1) {
+        if (
+          event.nextTrack &&
+          event.nextTrack === tracks.length - 1 &&
+          repeatMode !== RepeatMode.Queue
+        ) {
+          setNextDisabled(true);
+        } else if (
+          event.track &&
+          event.track === tracks.length - 1 &&
+          repeatMode !== RepeatMode.Queue
+        ) {
           setNextDisabled(true);
         } else {
           setNextDisabled(false);
@@ -125,7 +186,12 @@ const Player: FunctionComponent<ComponentProps> = ({ tracks }) => {
       )}
 
       <View style={styles.controlsContainer}>
-        <Icon name="repeat" size={20} />
+        <MDIcon
+          name={repeatIcon}
+          onPress={handleSetRepeat}
+          size={18}
+          color="black"
+        />
 
         <Icon
           name="play-skip-back"
