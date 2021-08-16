@@ -5,3 +5,8 @@ export interface Track {
   artwork: string;
   artist: string;
 }
+
+export interface BackgroundColor {
+  light: string;
+  dark: string;
+}

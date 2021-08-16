@@ -27,7 +27,7 @@ import {
 } from '../../utils/functions';
 
 import type { FunctionComponent } from 'react';
-import type { Track } from '../../utils/interfaces';
+import type { Track, BackgroundColor } from '../../utils/interfaces';
 
 interface ComponentProps {
   tracks: Track[];
@@ -46,7 +46,7 @@ enum RepeatIcon {
 }
 
 const Player: FunctionComponent<ComponentProps> = ({ tracks }) => {
-  const [backgroundColor, setBackgroundColor] = React.useState<string>(
+  const [backgroundColor, setBackgroundColor] = React.useState<BackgroundColor>(
     setRandomBackgroundColor(),
   );
   const [repeat, setRepeat] = React.useState<Repeat>(Repeat.off);
@@ -142,8 +142,8 @@ const Player: FunctionComponent<ComponentProps> = ({ tracks }) => {
   );
 
   return (
-    <>
-      <View style={[styles.container, { backgroundColor }]}>
+    <View style={{ backgroundColor: backgroundColor.light }}>
+      <View style={[styles.container]}>
         {currentTrack ? (
           <View style={styles.trackArtContainer}>
             <Image
@@ -221,15 +221,14 @@ const Player: FunctionComponent<ComponentProps> = ({ tracks }) => {
             // top: Dimensions.get('window').height * 0.9,
           }
         }> */}
-      <Playlist />
+      <Playlist background={backgroundColor} />
       {/* </View> */}
-    </>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    // flex: 1,
     alignItems: 'center',
   },
   trackArtContainer: {
@@ -237,13 +236,15 @@ const styles = StyleSheet.create({
     height: Dimensions.get('window').height * 0.5,
     backgroundColor: 'grey',
     marginTop: 30,
-    elevation: 5,
+    // elevation: 5,
     borderRadius: 5,
+    zIndex: 0,
   },
   trackArt: {
     width: Dimensions.get('window').width * 0.9,
     height: Dimensions.get('window').height * 0.5,
     borderRadius: 5,
+    zIndex: 0,
   },
   progressContainer: {
     height: Dimensions.get('window').height * 0.1,

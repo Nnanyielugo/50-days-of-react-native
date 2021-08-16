@@ -38,16 +38,23 @@ import {
   Animated,
   PanResponder,
 } from 'react-native';
+
 import type {
   GestureResponderEvent,
   PanResponderGestureState,
 } from 'react-native';
+import type { FunctionComponent } from 'react';
+import type { BackgroundColor } from '../../utils/interfaces';
+
+interface AppProps {
+  background: BackgroundColor;
+}
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 const SWIPE_AUTO_HEIGHT = -(SCREEN_HEIGHT * 0.8);
 const SWIPE_THRESHOLD = -(SCREEN_HEIGHT * 0.45);
 
-const Playlist = () => {
+const Playlist: FunctionComponent<AppProps> = ({ background }) => {
   // Solution step 1
   let posY: number = 0;
   const pan = React.useRef(new Animated.ValueXY()).current;
@@ -115,7 +122,11 @@ const Playlist = () => {
         ],
       }}
       {...panResponder.panHandlers}>
-      <View style={styles.playlistContainner}>
+      <View
+        style={[
+          styles.playlistContainner,
+          { backgroundColor: background.dark },
+        ]}>
         <Text>Playlist</Text>
       </View>
     </Animated.View>
@@ -123,14 +134,12 @@ const Playlist = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#B2CBE3',
-  },
   playlistContainner: {
     width: Dimensions.get('window').width,
     height: SCREEN_HEIGHT * 2,
-    backgroundColor: '#2c3e50',
     elevation: 10,
+    zIndex: 999,
+    opacity: 0.8,
   },
 });
 
