@@ -19,6 +19,7 @@ import TrackPlayer, {
   RepeatMode,
 } from 'react-native-track-player';
 import albumArt from '../../assets/music-player/album-art-placeholder.jpeg';
+import Playlist from './Playlist';
 
 import {
   formatTrackDuration,
@@ -141,83 +142,94 @@ const Player: FunctionComponent<ComponentProps> = ({ tracks }) => {
   );
 
   return (
-    <View style={[styles.container, { backgroundColor }]}>
-      {currentTrack ? (
-        <View style={styles.trackArtContainer}>
-          <Image
-            style={styles.trackArt}
-            source={{
-              uri: currentTrack?.artwork,
-            }}
+    <>
+      <View style={[styles.container, { backgroundColor }]}>
+        {currentTrack ? (
+          <View style={styles.trackArtContainer}>
+            <Image
+              style={styles.trackArt}
+              source={{
+                uri: currentTrack?.artwork,
+              }}
+            />
+          </View>
+        ) : (
+          <View style={styles.trackArtContainer}>
+            <Image style={styles.trackArt} source={albumArt} />
+          </View>
+        )}
+        <View style={styles.progressContainer}>
+          <Slider
+            minimumValue={0}
+            value={position}
+            maximumValue={duration}
+            style={styles.progress}
+            onValueChange={(value: number) => TrackPlayer.seekTo(value)}
           />
-        </View>
-      ) : (
-        <View style={styles.trackArtContainer}>
-          <Image style={styles.trackArt} source={albumArt} />
-        </View>
-      )}
-      <View style={styles.progressContainer}>
-        <Slider
-          minimumValue={0}
-          value={position}
-          maximumValue={duration}
-          style={styles.progress}
-          onValueChange={(value: number) => TrackPlayer.seekTo(value)}
-        />
 
-        <View style={styles.progressTextContainer}>
-          <Text>{formatTrackDuration(position)}</Text>
-          <Text>{formatTrackDuration(duration - position)}</Text>
+          <View style={styles.progressTextContainer}>
+            <Text>{formatTrackDuration(position)}</Text>
+            <Text>{formatTrackDuration(duration - position)}</Text>
+          </View>
+        </View>
+
+        {currentTrack ? (
+          <View style={styles.trackInformation}>
+            <Text style={styles.trackTitle}>{currentTrack.title}</Text>
+            <Text
+              style={
+                styles.artistAndTitle
+              }>{`${currentTrack.artist} - ${currentTrack.title}`}</Text>
+          </View>
+        ) : (
+          <View style={styles.noTrackInformation}>
+            <ActivityIndicator size="small" color="black" />
+          </View>
+        )}
+
+        <View style={styles.controlsContainer}>
+          <MDIcon
+            name={repeatIcon}
+            onPress={handleSetRepeat}
+            size={18}
+            color="black"
+          />
+
+          <Icon
+            name="play-skip-back"
+            onPress={prevDisabled ? () => {} : TrackPlayer.skipToPrevious}
+            size={30}
+            color={prevDisabled ? 'grey' : 'black'}
+          />
+          {trackPlayerElem}
+          <Icon
+            name="play-skip-forward"
+            onPress={nextDisabled ? () => {} : TrackPlayer.skipToNext}
+            size={30}
+            color={nextDisabled ? 'grey' : 'black'}
+          />
+          <Icon name="shuffle" size={20} />
         </View>
       </View>
-
-      {currentTrack ? (
-        <View style={styles.trackInformation}>
-          <Text style={styles.trackTitle}>{currentTrack.title}</Text>
-          <Text
-            style={
-              styles.artistAndTitle
-            }>{`${currentTrack.artist} - ${currentTrack.title}`}</Text>
-        </View>
-      ) : (
-        <View style={styles.noTrackInformation}>
-          <ActivityIndicator size="small" color="black" />
-        </View>
-      )}
-
-      <View style={styles.controlsContainer}>
-        <MDIcon
-          name={repeatIcon}
-          onPress={handleSetRepeat}
-          size={18}
-          color="black"
-        />
-
-        <Icon
-          name="play-skip-back"
-          onPress={prevDisabled ? () => {} : TrackPlayer.skipToPrevious}
-          size={30}
-          color={prevDisabled ? 'grey' : 'black'}
-        />
-        {trackPlayerElem}
-        <Icon
-          name="play-skip-forward"
-          onPress={nextDisabled ? () => {} : TrackPlayer.skipToNext}
-          size={30}
-          color={nextDisabled ? 'grey' : 'black'}
-        />
-        <Icon name="shuffle" size={20} />
-      </View>
-      <View style={styles.playlistContainer}>
-        <Text>Playlist</Text>
-      </View>
-    </View>
+      {/* <View
+        style={
+          {
+            // flex: 1,
+            // width: Dimensions.get('window').width,
+            // height: Dimensions.get('window').height * 0.9,
+            // position: 'absolute',
+            // top: Dimensions.get('window').height * 0.9,
+          }
+        }> */}
+      <Playlist />
+      {/* </View> */}
+    </>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    // flex: 1,
     alignItems: 'center',
   },
   trackArtContainer: {

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import TrackPlayer, { Capability } from 'react-native-track-player';
-import Player from '../Components/MusicPlayer';
+import Player from '../Components/MusicPlayer/Player';
+// import Playlist from '../Components/MusicPlayer/Playlist';
 
 import type { Track } from '../utils/interfaces';
 
