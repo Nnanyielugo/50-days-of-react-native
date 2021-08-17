@@ -42,7 +42,7 @@ class MusicPlayer extends Component<{}, ComponentState> {
 
   componentDidMount() {
     try {
-      const url = 'https:/api.deezer.com/chart/0?limit=30';
+      const url = 'https:/api.deezer.com/chart/0?limit=50';
       fetch(url)
         .then(res => res.json())
         .then(response => {

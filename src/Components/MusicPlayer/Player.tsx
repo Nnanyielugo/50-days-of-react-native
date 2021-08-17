@@ -211,18 +211,7 @@ const Player: FunctionComponent<ComponentProps> = ({ tracks }) => {
           <Icon name="shuffle" size={20} />
         </View>
       </View>
-      {/* <View
-        style={
-          {
-            // flex: 1,
-            // width: Dimensions.get('window').width,
-            // height: Dimensions.get('window').height * 0.9,
-            // position: 'absolute',
-            // top: Dimensions.get('window').height * 0.9,
-          }
-        }> */}
-      <Playlist background={backgroundColor} />
-      {/* </View> */}
+      <Playlist tracks={tracks} background={backgroundColor} />
     </View>
   );
 };
@@ -236,7 +225,6 @@ const styles = StyleSheet.create({
     height: Dimensions.get('window').height * 0.5,
     backgroundColor: 'grey',
     marginTop: 30,
-    // elevation: 5,
     borderRadius: 5,
     zIndex: 0,
   },

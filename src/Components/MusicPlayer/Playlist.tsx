@@ -27,12 +27,20 @@
  *   a. if snap to 0, reset the Y tracker to 0 in Animated animation.start() callback in resetPosition()
  *   b. if snap to SWIPE_AUTO_HEIGHT, reset the Y tracker to SWIPE_AUTO_HEIGHT in Animated animation.start() callback in keepUp()
  *  - this keeps the Y tracker ready for the next drag - regardless of which snap back was triggered.
+ *
+ *
+ * Problem 2:
+ * Panresponder refuses to grant scroll captures to the child scroll view. This means that
+ * the playlist drags open quite alright, but the contents do not scroll.
+ * Solution:
+ * 1. determine logical drag points for dragging open and closing the playlist View.
+ * 2. in onMoveShouldSetPanResponder, tell the callback to make the parent the responder
+ *    only on touch and move events that fit the logical drag points criteria
  */
 
 import * as React from 'react';
 import {
   View,
-  Text,
   StyleSheet,
   Dimensions,
   Animated,
@@ -45,27 +53,33 @@ import type {
   GestureResponderEvent,
   PanResponderGestureState,
 } from 'react-native';
+import PlayListItem from './PlaylistItem';
 import type { FunctionComponent } from 'react';
-import type { BackgroundColor } from '../../utils/interfaces';
+import type { BackgroundColor, Track } from '../../utils/interfaces';
 
-interface AppProps {
+interface ComponentProps {
   background: BackgroundColor;
+  tracks: Track[];
 }
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 const SWIPE_AUTO_HEIGHT = -(SCREEN_HEIGHT * 0.8);
-const SWIPE_THRESHOLD = -(SCREEN_HEIGHT * 0.45);
+const SWIPE_THRESHOLD = -(SCREEN_HEIGHT * 0.4);
 
-const Playlist: FunctionComponent<AppProps> = ({ background }) => {
-  // Solution step 1
+const Playlist: FunctionComponent<ComponentProps> = ({
+  background,
+  tracks,
+}) => {
   let posY: number = 0;
   const pan = React.useRef(new Animated.ValueXY()).current;
-  const [open, setOpen] = React.useState(false);
+  const fadeAnim = React.useRef(new Animated.Value(0)).current;
+
   const panResponder = React.useRef(
     PanResponder.create({
-      onMoveShouldSetPanResponder: () => {
-        setOpen(true);
-        return true;
+      onMoveShouldSetPanResponder: (_evt, gesture) => {
+        // problem 2.solution
+        const yExtremes = gesture.moveY < 80 || gesture.moveY > 620;
+        return yExtremes;
       },
       onPanResponderGrant: () => {
         pan.setOffset({
@@ -74,6 +88,12 @@ const Playlist: FunctionComponent<AppProps> = ({ background }) => {
         });
       },
       onPanResponderMove: (_event, gesture) => {
+        let faded = false;
+        if (gesture.moveY < 600 && !faded) {
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          faded = true;
+          fadeIn();
+        }
         pan.setValue({
           x: gesture.dx,
           y: gesture.dy,
@@ -106,7 +126,7 @@ const Playlist: FunctionComponent<AppProps> = ({ background }) => {
     }).start(() => {
       // Solution 4.a
       posY = 0;
-      setOpen(false);
+      fadeOut();
     });
   };
 
@@ -120,7 +140,22 @@ const Playlist: FunctionComponent<AppProps> = ({ background }) => {
     });
   };
 
-  console.log(posY);
+  const fadeIn = () => {
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 1000,
+      useNativeDriver: false,
+    }).start();
+  };
+
+  const fadeOut = () => {
+    Animated.timing(fadeAnim, {
+      toValue: 0,
+      duration: 500,
+      useNativeDriver: false,
+    }).start();
+  };
+
   return (
     <Animated.View
       style={{
@@ -131,29 +166,34 @@ const Playlist: FunctionComponent<AppProps> = ({ background }) => {
         ],
       }}
       {...panResponder.panHandlers}>
-      <ScrollView
-        style={[
-          styles.playlistContainner,
-          { backgroundColor: background.dark },
-        ]}>
-        <Icon
-          name={open ? 'remove-outline' : 'filter-outline'}
-          size={30}
-          style={styles.icon}
-        />
-        <Text>Playlist</Text>
-      </ScrollView>
+      <View style={{ height: SCREEN_HEIGHT * 0.89 }}>
+        <ScrollView
+          style={[
+            styles.playlistContainer,
+            {
+              backgroundColor: background.dark,
+            },
+          ]}>
+          <View>
+            <Icon name={'filter-outline'} size={30} style={styles.icon} />
+          </View>
+          <Animated.View style={{ opacity: fadeAnim }}>
+            {tracks.map((track: Track, index: number) => (
+              <PlayListItem key={track.id} track={track} index={index} />
+            ))}
+          </Animated.View>
+        </ScrollView>
+      </View>
     </Animated.View>
   );
 };
 
 const styles = StyleSheet.create({
-  playlistContainner: {
+  playlistContainer: {
     width: Dimensions.get('window').width,
-    height: SCREEN_HEIGHT * 2,
     elevation: 10,
     zIndex: 999,
-    opacity: 0.8,
+    opacity: 0.9,
   },
   icon: {
     alignSelf: 'center',
