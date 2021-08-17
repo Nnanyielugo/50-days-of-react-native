@@ -74,6 +74,10 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     marginVertical: 5,
     flexDirection: 'row',
+    borderBottomColor: 'grey',
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderStyle: 'solid',
+    paddingBottom: 10,
   },
   title: {
     fontWeight: '700',
