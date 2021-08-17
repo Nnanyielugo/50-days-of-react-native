@@ -211,7 +211,11 @@ const Player: FunctionComponent<ComponentProps> = ({ tracks }) => {
           <Icon name="shuffle" size={20} />
         </View>
       </View>
-      <Playlist tracks={tracks} background={backgroundColor} />
+      <Playlist
+        currentTrack={currentTrack}
+        tracks={tracks}
+        background={backgroundColor}
+      />
     </View>
   );
 };

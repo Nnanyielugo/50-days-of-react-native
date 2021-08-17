@@ -4,21 +4,41 @@ import {
   Text,
   StyleSheet,
   Image,
-  TouchableWithoutFeedback,
   TouchableOpacity,
   Dimensions,
 } from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
+import TrackPlayer, {
+  State,
+  usePlaybackState,
+} from 'react-native-track-player';
+
 import type { FunctionComponent } from 'react';
 import type { Track } from '../../utils/interfaces';
 
 interface ComponentProps {
   track: Track;
   index: number;
+  currentTrack?: Track;
 }
 
-const PlayListItem: FunctionComponent<ComponentProps> = ({ track, index }) => {
-  const handlePress = () => {
-    console.log('pressed');
+const PlayListItem: FunctionComponent<ComponentProps> = ({
+  track,
+  index,
+  currentTrack,
+}) => {
+  const playbackState = usePlaybackState();
+  const handlePress = async () => {
+    if (track.id === currentTrack?.id) {
+      if (playbackState === State.Playing) {
+        TrackPlayer.pause();
+      } else {
+        TrackPlayer.play();
+      }
+    } else {
+      await TrackPlayer.skip(index);
+      await TrackPlayer.play();
+    }
   };
   return (
     <TouchableOpacity onPress={handlePress}>
@@ -37,8 +57,11 @@ const PlayListItem: FunctionComponent<ComponentProps> = ({ track, index }) => {
         </View>
         <View>
           <Text style={styles.title}>{track.title}</Text>
-          <View>
+          <View style={styles.artistContainer}>
             <Text>{track.artist}</Text>
+            {currentTrack && track.id === currentTrack.id && (
+              <Icon name="volume-medium" size={17} />
+            )}
           </View>
         </View>
       </View>
@@ -60,6 +83,11 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 3,
     marginRight: 10,
+  },
+  artistContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: Dimensions.get('window').width * 0.7,
   },
 });
 

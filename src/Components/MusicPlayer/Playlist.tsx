@@ -60,6 +60,7 @@ import type { BackgroundColor, Track } from '../../utils/interfaces';
 interface ComponentProps {
   background: BackgroundColor;
   tracks: Track[];
+  currentTrack?: Track;
 }
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
@@ -69,6 +70,7 @@ const SWIPE_THRESHOLD = -(SCREEN_HEIGHT * 0.4);
 const Playlist: FunctionComponent<ComponentProps> = ({
   background,
   tracks,
+  currentTrack,
 }) => {
   let posY: number = 0;
   const pan = React.useRef(new Animated.ValueXY()).current;
@@ -179,7 +181,12 @@ const Playlist: FunctionComponent<ComponentProps> = ({
           </View>
           <Animated.View style={{ opacity: fadeAnim }}>
             {tracks.map((track: Track, index: number) => (
-              <PlayListItem key={track.id} track={track} index={index} />
+              <PlayListItem
+                currentTrack={currentTrack}
+                key={track.id}
+                track={track}
+                index={index}
+              />
             ))}
           </Animated.View>
         </ScrollView>
