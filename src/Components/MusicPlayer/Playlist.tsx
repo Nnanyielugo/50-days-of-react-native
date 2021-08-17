@@ -79,8 +79,11 @@ const Playlist: FunctionComponent<ComponentProps> = ({
   const panResponder = React.useRef(
     PanResponder.create({
       onMoveShouldSetPanResponder: (_evt, gesture) => {
+        console.log(gesture.moveY);
         // problem 2.solution
-        const yExtremes = gesture.moveY < 80 || gesture.moveY > 620;
+        const dragUpBand = gesture.moveY > 605;
+        const dragDownBand = gesture.moveY > 50 && gesture.moveY < 78;
+        const yExtremes = dragUpBand || dragDownBand;
         return yExtremes;
       },
       onPanResponderGrant: () => {
