@@ -1,4 +1,13 @@
 # 50-days-of-react-native
+### Installation:
+Please note that the setup instruction assumes that you have setup your development environment to run react native apps. If you haven't, see instructions [here](https://reactnative.dev/docs/environment-setup)
+- download the repository as a zip file or clone it via `git clone https://github.com/Nnanyielugo/50-days-of-react-native.git`. If you use ssh, replace the url with `git@github.com:Nnanyielugo/50-days-of-react-native.git`
+- navigate to the root folder of the project.
+- create a `.env` file in the root folder and add `OPEN_WEATHER_API_KEY` and `GOOGLE_MAPS_API_KEY` from [open weather](https://openweathermap.org/api) and [google cloud console](https://developers.google.com/maps/documentation/javascript/get-api-key).
+- make sure you enable Geocoding API, Maps SDK, and Places API on google maps API.
+- run `npm install`
+- run `npm run set-env && npm run android` to run the app. Please note that ios support is in progress.
+
 
 ### TODO
 
@@ -8,9 +17,10 @@
 - [x] add basic navigation
 - [ ] welcome pages
 - [ ] tinder swipe cards
+- [ ] add ios support
 - [ ] notes (Samsung notes implementation)
 - [x] weather app
-- [ ] music player
+- [x] music player
 - [ ] video player
 - [ ] core animation and masks (twitter entrance animation)
 - [ ] app menu
@@ -32,9 +42,9 @@
 - [ ] jumpbar
 - [ ] pull to refresh
 - [ ] calculator
-- [ ] tip calculator
 - [ ] basic charts
 - [ ] dynamic charts (with chart information)
-- [ ] Youtube music track page - playlist list transition animation
 - [ ] basic run tracker (hint: geolocation.watchPosition)
 - [ ] mapview with directions
+- [ ] animated chat heads
+- [ ] google calendar
