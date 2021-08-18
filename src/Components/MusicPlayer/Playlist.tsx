@@ -79,6 +79,9 @@ const Playlist: FunctionComponent<ComponentProps> = ({
   let posY: number = 0;
   const pan = React.useRef(new Animated.ValueXY()).current;
   const fadeAnim = React.useRef(new Animated.Value(0)).current;
+  const scrollViewContainerHeight = React.useRef(
+    new Animated.Value(SCREEN_HEIGHT * 1.89),
+  ).current;
   // problem 2 solution 3.a
   let upBand = 580;
 
@@ -86,6 +89,7 @@ const Playlist: FunctionComponent<ComponentProps> = ({
     PanResponder.create({
       onMoveShouldSetPanResponder: (_evt, gesture) => {
         console.log(gesture.moveY, upBand, gesture.moveY > upBand);
+        console.log('height', scrollViewContainerHeight);
         // problem 2.solution
         const dragUpBand = gesture.moveY > upBand;
         const dragDownBand = gesture.moveY > 50 && gesture.moveY < 78;
@@ -138,6 +142,10 @@ const Playlist: FunctionComponent<ComponentProps> = ({
       // Solution 4.a
       posY = 0;
       fadeOut();
+      Animated.timing(scrollViewContainerHeight, {
+        toValue: SCREEN_HEIGHT * 1.89,
+        useNativeDriver: false,
+      }).start();
     });
   };
 
@@ -148,6 +156,12 @@ const Playlist: FunctionComponent<ComponentProps> = ({
     }).start(() => {
       // Solution 4.b
       posY = SWIPE_AUTO_HEIGHT;
+      // problem 2 solution 3.b
+      upBand = 700;
+      Animated.timing(scrollViewContainerHeight, {
+        toValue: SCREEN_HEIGHT * 0.89,
+        useNativeDriver: false,
+      }).start();
     });
   };
 
@@ -156,10 +170,7 @@ const Playlist: FunctionComponent<ComponentProps> = ({
       toValue: 1,
       duration: 1000,
       useNativeDriver: false,
-    }).start(() => {
-      // problem 2 solution 3.b
-      upBand = 700;
-    });
+    }).start(() => {});
   };
 
   const fadeOut = () => {
@@ -183,7 +194,10 @@ const Playlist: FunctionComponent<ComponentProps> = ({
         ],
       }}
       {...panResponder.panHandlers}>
-      <View style={{ height: SCREEN_HEIGHT * 0.89 }}>
+      <Animated.View
+        style={{
+          height: scrollViewContainerHeight,
+        }}>
         <ScrollView
           style={[
             styles.playlistContainer,
@@ -205,7 +219,7 @@ const Playlist: FunctionComponent<ComponentProps> = ({
             ))}
           </Animated.View>
         </ScrollView>
-      </View>
+      </Animated.View>
     </Animated.View>
   );
 };
