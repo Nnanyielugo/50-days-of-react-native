@@ -3,10 +3,10 @@ import { View, Text, StyleSheet, Dimensions } from 'react-native';
 import format from 'date-fns/format';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-import { getDisplayIcon } from '../../utils/functions';
-import { TEXT_COLOR_WHITE } from '../../utils/constants';
+import { getDisplayIcon } from '../utils';
+import { TEXT_COLOR_WHITE } from '../constants';
 
-import type { Hourly } from '../../utils/interfaces';
+import type { Hourly } from '../interface';
 import type { FunctionComponent } from 'react';
 
 interface ComponentProps {

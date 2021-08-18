@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import TrackPlayer, { Capability } from 'react-native-track-player';
-import Player from '../Components/MusicPlayer/Player';
-// import Playlist from '../Components/MusicPlayer/Playlist';
+import Player from './components/Player';
 
-import type { Track } from '../utils/interfaces';
+import type { Track } from './interface';
 
 export interface ComponentState {
   tracks: Track[];

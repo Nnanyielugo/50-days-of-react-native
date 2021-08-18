@@ -46,7 +46,6 @@ import * as React from 'react';
 import {
   View,
   StyleSheet,
-  Dimensions,
   Animated,
   PanResponder,
   ScrollView,
@@ -59,17 +58,19 @@ import type {
 } from 'react-native';
 import PlayListItem from './PlaylistItem';
 import type { FunctionComponent } from 'react';
-import type { BackgroundColor, Track } from '../../utils/interfaces';
+import type { BackgroundColor, Track } from '../interface';
+import {
+  SCREEN_HEIGHT,
+  SCREEN_WIDTH,
+  SWIPE_AUTO_HEIGHT,
+  SWIPE_THRESHOLD,
+} from '../constants';
 
 interface ComponentProps {
   background: BackgroundColor;
   tracks: Track[];
   currentTrack?: Track;
 }
-
-const SCREEN_HEIGHT = Dimensions.get('window').height;
-const SWIPE_AUTO_HEIGHT = -(SCREEN_HEIGHT * 0.8);
-const SWIPE_THRESHOLD = -(SCREEN_HEIGHT * 0.4);
 
 const Playlist: FunctionComponent<ComponentProps> = ({
   background,
@@ -225,7 +226,7 @@ const Playlist: FunctionComponent<ComponentProps> = ({
 
 const styles = StyleSheet.create({
   playlistContainer: {
-    width: Dimensions.get('window').width,
+    width: SCREEN_WIDTH,
     zIndex: 1,
     opacity: 0.9,
   },

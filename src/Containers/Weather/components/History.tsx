@@ -2,9 +2,9 @@ import * as React from 'react';
 import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 
 import type { FunctionComponent } from 'react';
-import type { Daily } from '../../utils/interfaces';
+import type { Daily } from '../interface';
 
-import Card from '../utils/Card';
+import { Card } from '../../../components';
 import Day from './Days';
 
 interface YesterdayProps {

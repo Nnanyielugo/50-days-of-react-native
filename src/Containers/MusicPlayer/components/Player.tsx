@@ -18,16 +18,13 @@ import TrackPlayer, {
   State,
   RepeatMode,
 } from 'react-native-track-player';
-import albumArt from '../../assets/music-player/album-art-placeholder.jpeg';
+import albumArt from '../assets/album-art-placeholder.jpeg';
 import Playlist from './Playlist';
 
-import {
-  formatTrackDuration,
-  setRandomBackgroundColor,
-} from '../../utils/functions';
+import { formatTrackDuration, setRandomBackgroundColor } from '../utils';
 
 import type { FunctionComponent } from 'react';
-import type { Track, BackgroundColor } from '../../utils/interfaces';
+import type { Track, BackgroundColor } from '../interface';
 
 interface ComponentProps {
   tracks: Track[];

@@ -2,12 +2,13 @@ import * as React from 'react';
 import { View, StyleSheet } from 'react-native';
 
 import type { FunctionComponent } from 'react';
-import type { NamedStyles } from '../../utils/interfaces';
+import type { NamedStyles } from '../utils/interfaces';
 
 interface ComponentProps {
   style?: NamedStyles;
 }
-const Card: FunctionComponent<ComponentProps> = props => {
+
+export const Card: FunctionComponent<ComponentProps> = props => {
   return <View style={[styles.container, props.style]}>{props.children}</View>;
 };
 

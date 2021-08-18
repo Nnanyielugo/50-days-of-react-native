@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { View, StyleSheet, Dimensions, SafeAreaView } from 'react-native';
 
-import Timer from '../Components/StopWatch/Timer';
-import Controls from '../Components/StopWatch/Controls';
-import LapList from '../Components/StopWatch/LapList';
-import { format } from '../Components/StopWatch/utils';
-import Button from '../Components/utils/Button';
+import Timer from './components/Timer';
+import Controls from './components/Controls';
+import LapList from './components/LapList';
+import { format } from './utils';
+import { Button } from '../../components';
 
 interface ComponentState {
   timeElapsed: number;
@@ -135,7 +135,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 0,
     width: Dimensions.get('screen').width,
-    // marginBottom: 20,
     backgroundColor: 'whitesmoke',
     marginTop: 50,
   },
