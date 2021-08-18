@@ -88,8 +88,6 @@ const Playlist: FunctionComponent<ComponentProps> = ({
   const panResponder = React.useRef(
     PanResponder.create({
       onMoveShouldSetPanResponder: (_evt, gesture) => {
-        console.log(gesture.moveY, upBand, gesture.moveY > upBand);
-        console.log('height', scrollViewContainerHeight);
         // problem 2.solution
         const dragUpBand = gesture.moveY > upBand;
         const dragDownBand = gesture.moveY > 50 && gesture.moveY < 78;
