@@ -176,7 +176,7 @@ const Playlist: FunctionComponent<ComponentProps> = ({
   const fadeOut = () => {
     Animated.timing(fadeAnim, {
       toValue: 0,
-      duration: 500,
+      duration: 100,
       useNativeDriver: false,
     }).start(() => {
       // problem 2 solution 3.c
@@ -197,7 +197,11 @@ const Playlist: FunctionComponent<ComponentProps> = ({
       <Animated.View
         style={{
           height: scrollViewContainerHeight,
+          backgroundColor: background.dark,
         }}>
+        <View style={styles.iconContainer}>
+          <Icon name={'filter-outline'} size={30} style={styles.icon} />
+        </View>
         <ScrollView
           style={[
             styles.playlistContainer,
@@ -205,9 +209,6 @@ const Playlist: FunctionComponent<ComponentProps> = ({
               backgroundColor: background.dark,
             },
           ]}>
-          <View>
-            <Icon name={'filter-outline'} size={30} style={styles.icon} />
-          </View>
           <Animated.View style={{ opacity: fadeAnim }}>
             {tracks.map((track: Track, index: number) => (
               <PlayListItem
@@ -227,12 +228,15 @@ const Playlist: FunctionComponent<ComponentProps> = ({
 const styles = StyleSheet.create({
   playlistContainer: {
     width: Dimensions.get('window').width,
-    elevation: 10,
-    zIndex: 999,
+    zIndex: 1,
     opacity: 0.9,
   },
   icon: {
     alignSelf: 'center',
+  },
+  iconContainer: {
+    zIndex: 1,
+    opacity: 0.9,
   },
 });
 
