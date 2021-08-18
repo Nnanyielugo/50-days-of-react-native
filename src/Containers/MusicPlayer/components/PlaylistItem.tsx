@@ -14,7 +14,7 @@ import TrackPlayer, {
 } from 'react-native-track-player';
 
 import type { FunctionComponent } from 'react';
-import type { Track } from '../../utils/interfaces';
+import type { Track } from '../interface';
 
 interface ComponentProps {
   track: Track;

@@ -1,9 +1,9 @@
 import React from 'react';
-import { View, Text, StyleSheet, Modal, Dimensions } from 'react-native';
+import { View, StyleSheet, Modal, Dimensions } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 import type { FunctionComponent } from 'react';
-import type { NamedStyles } from '../../utils/interfaces';
+import type { NamedStyles } from '../utils/interfaces';
 
 interface ComponentProps {
   isVisible: boolean;
@@ -14,7 +14,7 @@ interface ComponentProps {
   iconStyle?: NamedStyles;
 }
 
-const ModalComp: FunctionComponent<ComponentProps> = ({
+export const ModalComp: FunctionComponent<ComponentProps> = ({
   isVisible,
   closeModal,
   children,

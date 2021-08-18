@@ -1,6 +1,4 @@
 import type { ViewStyle, TextStyle, ImageStyle } from 'react-native';
-export * from './weather';
-export * from './music-player';
 
 export type RootStackParamList = {
   Home: any;

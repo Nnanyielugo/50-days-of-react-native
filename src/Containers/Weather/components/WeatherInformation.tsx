@@ -7,12 +7,12 @@ import {
   ScrollView,
 } from 'react-native';
 import format from 'date-fns/format';
-import Card from '../utils/Card';
+import { Card } from '../../../components';
 import Hour from './Hourly';
 
 import type { FunctionComponent } from 'react';
-import type { Address, Current, Hourly } from '../../utils/interfaces';
-import { CARD_COLOR_WHITE, TEXT_COLOR_WHITE } from '../../utils/constants';
+import type { Address, Current, Hourly } from '../interface';
+import { CARD_COLOR_WHITE, TEXT_COLOR_WHITE } from '../constants';
 
 interface ComponentProps {
   address?: Address;

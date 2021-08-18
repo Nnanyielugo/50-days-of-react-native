@@ -2,7 +2,7 @@ import * as React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
 import type { FunctionComponent } from 'react';
-import type { NamedStyles } from '../../utils/interfaces';
+import type { NamedStyles } from '../utils/interfaces';
 
 interface ButtonProps {
   onPress?: () => any;
@@ -14,7 +14,7 @@ interface ButtonProps {
   inactiveColor?: string;
 }
 
-const Button: FunctionComponent<ButtonProps> = (props): JSX.Element => {
+export const Button: FunctionComponent<ButtonProps> = (props): JSX.Element => {
   const button = (
     <View
       style={[

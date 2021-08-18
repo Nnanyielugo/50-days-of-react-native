@@ -1,10 +1,9 @@
-//import liraries
 import * as React from 'react';
 import { View, Text, StyleSheet, FlatList, Dimensions } from 'react-native';
 
-import type { FunctionComponent } from 'react';
+import { format, padZero } from '../utils';
 
-import { format, padZero } from './utils';
+import type { FunctionComponent } from 'react';
 
 interface LapListProps {
   laps: number[];

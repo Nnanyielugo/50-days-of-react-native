@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 
-import { PAGES } from '../utils/constants/pages';
+import { PAGES } from '../utils/constants';
 
 import type { StackNavigationProp } from '@react-navigation/stack';
 import type { RootStackParamList, Page } from '../utils/interfaces';

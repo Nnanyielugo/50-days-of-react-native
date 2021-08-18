@@ -11,25 +11,19 @@ import Geolocation from 'react-native-geolocation-service';
 import Config from 'react-native-config';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-import WeatherInformation from '../Components/Weather/WeatherInformation';
-import History from '../Components/Weather/History';
-import Map from '../Components/Weather/Map';
-import SwitchLocationModal from '../Components/Weather/SwitchLocationModal';
-import { composeWeatherResults } from '../utils/functions';
+import WeatherInformation from './components/WeatherInformation';
+import History from './components/History';
+import Map from './components/Map';
+import SwitchLocationModal from './components/SwitchLocationModal';
+import { composeWeatherResults } from './utils';
 
-import coverImage from '../assets/weather/weather.jpeg';
-import coverImage2 from '../assets/weather/weather2.jpeg';
-import coverImage3 from '../assets/weather/weather3.jpeg';
-import coverImage4 from '../assets/weather/weather4.jpeg';
-import coverImage5 from '../assets/weather/weather5.jpeg';
+import coverImage from './assets/weather.jpeg';
+import coverImage2 from './assets/weather2.jpeg';
+import coverImage3 from './assets/weather3.jpeg';
+import coverImage4 from './assets/weather4.jpeg';
+import coverImage5 from './assets/weather5.jpeg';
 
-import type {
-  Coords,
-  Current,
-  Hourly,
-  Daily,
-  Address,
-} from '../utils/interfaces';
+import type { Coords, Current, Hourly, Daily, Address } from './interface';
 
 async function fetchWeatherData(coords?: Coords) {
   if (coords) {

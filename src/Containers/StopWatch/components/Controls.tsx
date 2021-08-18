@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { View, StyleSheet } from 'react-native';
-import Button from '../utils/Button';
+import { Button } from '../../../components';
 
 import type { FunctionComponent } from 'react';
 
@@ -35,7 +35,7 @@ const Controls: FunctionComponent<ComponentProps> = ({
             color: running ? 'grey' : 'grey',
           },
         }}>
-        Lap
+        Split
       </Button>
 
       <Button

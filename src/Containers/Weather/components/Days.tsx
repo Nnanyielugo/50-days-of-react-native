@@ -3,11 +3,11 @@ import { View, Text, StyleSheet } from 'react-native';
 import format from 'date-fns/format';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-import { getDisplayIcon } from '../../utils/functions';
-import { TEXT_COLOR_WHITE } from '../../utils/constants';
+import { getDisplayIcon } from '../utils';
+import { TEXT_COLOR_WHITE } from '../constants';
 
 import type { FunctionComponent } from 'react';
-import type { Daily } from '../../utils/interfaces';
+import type { Daily } from '../interface';
 
 interface ComponentProps {
   day: Daily;

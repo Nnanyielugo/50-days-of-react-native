@@ -1,4 +1,4 @@
-import type { Current, Daily, Hourly } from '../interfaces';
+import type { Current, Daily, Hourly } from './interface';
 
 export function composeWeatherResults(data: any) {
   const current: Current = {

@@ -2,9 +2,9 @@ import * as React from 'react';
 import { StyleSheet } from 'react-native';
 import Mapview from 'react-native-maps';
 
-import Card from '../utils/Card';
+import { Card } from '../../../components';
 
-import type { Coords } from '../../utils/interfaces';
+import type { Coords } from '../interface';
 import type { FunctionComponent } from 'react';
 
 interface ComponentProps {

@@ -1,4 +1,4 @@
-import type { BackgroundColor } from '../interfaces/music-player';
+import type { BackgroundColor } from './interface';
 export function formatTrackDuration(duration: number): string {
   let minutes: number | string = Math.floor(duration / 60);
   let seconds: number | string = Math.floor(duration - minutes * 60);
