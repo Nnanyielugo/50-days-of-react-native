@@ -35,7 +35,11 @@
  * Solution:
  * 1. determine logical drag points for dragging open and closing the playlist View.
  * 2. in onMoveShouldSetPanResponder, tell the callback to make the parent the responder
- *    only on touch and move events that fit the logical drag points criteria
+ *    only on touch and move events that fit the logical drag points criteria.
+ * 3. set different dragUpbands depending on whether the playlist is dragged or not
+ *    a. initialize
+ *    b. mutate on dragUp
+ *    c. reset back to initial on dragDown
  */
 
 import * as React from 'react';
@@ -75,12 +79,15 @@ const Playlist: FunctionComponent<ComponentProps> = ({
   let posY: number = 0;
   const pan = React.useRef(new Animated.ValueXY()).current;
   const fadeAnim = React.useRef(new Animated.Value(0)).current;
+  // problem 2 solution 3.a
+  let upBand = 580;
 
   const panResponder = React.useRef(
     PanResponder.create({
       onMoveShouldSetPanResponder: (_evt, gesture) => {
+        console.log(gesture.moveY, upBand, gesture.moveY > upBand);
         // problem 2.solution
-        const dragUpBand = gesture.moveY > 600;
+        const dragUpBand = gesture.moveY > upBand;
         const dragDownBand = gesture.moveY > 50 && gesture.moveY < 78;
         const yExtremes = dragUpBand || dragDownBand;
         return yExtremes;
@@ -149,7 +156,10 @@ const Playlist: FunctionComponent<ComponentProps> = ({
       toValue: 1,
       duration: 1000,
       useNativeDriver: false,
-    }).start();
+    }).start(() => {
+      // problem 2 solution 3.b
+      upBand = 700;
+    });
   };
 
   const fadeOut = () => {
@@ -157,7 +167,10 @@ const Playlist: FunctionComponent<ComponentProps> = ({
       toValue: 0,
       duration: 500,
       useNativeDriver: false,
-    }).start();
+    }).start(() => {
+      // problem 2 solution 3.c
+      upBand = 580;
+    });
   };
 
   return (
