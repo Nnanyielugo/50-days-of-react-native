@@ -98,7 +98,13 @@ const Player: FunctionComponent<ComponentProps> = ({ tracks }) => {
   }
 
   useTrackPlayerEvents(
-    [Event.PlaybackTrackChanged, Event.RemotePlay, Event.RemotePause],
+    [
+      Event.PlaybackTrackChanged,
+      Event.RemotePlay,
+      Event.RemotePause,
+      Event.RemoteNext,
+      Event.RemotePrevious,
+    ],
     async event => {
       const repeatMode = await TrackPlayer.getRepeatMode();
 
@@ -107,6 +113,12 @@ const Player: FunctionComponent<ComponentProps> = ({ tracks }) => {
       }
       if (event.type === Event.RemotePause) {
         TrackPlayer.pause();
+      }
+      if (event.type === Event.RemoteNext) {
+        TrackPlayer.skipToNext();
+      }
+      if (event.type === Event.RemotePrevious) {
+        TrackPlayer.skipToPrevious();
       }
       if (event.type === Event.PlaybackTrackChanged) {
         const currentTrackIndex = await TrackPlayer.getCurrentTrack();
