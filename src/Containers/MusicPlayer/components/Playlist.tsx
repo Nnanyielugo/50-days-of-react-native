@@ -40,6 +40,22 @@
  *    a. initialize
  *    b. mutate on dragUp
  *    c. reset back to initial on dragDown
+ *
+ * Problem 3:
+ * When PanContainer is up (and ScrollView View container height is reset to window height * .89 to show all scroll items),
+ * Dragging the pan up results in moving the entire panContainer up and the bottom of the now shorter View
+ * moves above the bottom of the screen. Basically, the PanCOntainer moves up and its bottom does not lap with screen bottom anymore
+ *
+ * Action:
+ * We want to:
+ * 1. Prevent dragging the PanContainer upwards above SWIPE_AUTO_HEIGHT when it is already up
+ * 2. Allow dragging the PanContainer above SWIPE_AUTO_HEIGHT when dragging from closed to open (down to up)
+ *
+ * Solutions:
+ * 1. allow PanResponderMove only when gesture.moveY is greater than MoveYLimit or
+ *    gesture.y0 is greater than GestureYLimit.
+ * 2. Set posY (and by extension, pan.y) to equal current value + 0 when gesture.moveY is above MoveYLimit and posY is greater than 0,
+ *    else, increment posY by the value of gesture.dy
  */
 
 import * as React from 'react';
@@ -63,7 +79,11 @@ import {
   SCREEN_HEIGHT,
   SCREEN_WIDTH,
   SWIPE_AUTO_HEIGHT,
+  UP_SWIPE_THRESHOLD,
+  DOWN_SWIPE_THRESHOLD,
   SWIPE_THRESHOLD,
+  MOVE_Y_LIMIT,
+  GESTURE_Y_LIMIT,
 } from '../constants';
 
 interface ComponentProps {
@@ -108,20 +128,38 @@ const Playlist: FunctionComponent<ComponentProps> = ({
           faded = true;
           fadeIn();
         }
-        pan.setValue({
-          x: gesture.dx,
-          y: gesture.dy,
-        });
+
+        // Problem 3, Solution 1.
+        if (gesture.moveY > MOVE_Y_LIMIT || gesture.y0 > GESTURE_Y_LIMIT) {
+          pan.setValue({
+            x: gesture.dx,
+            y: gesture.dy,
+          });
+        }
       },
       onPanResponderRelease: (
         _event: GestureResponderEvent,
         gesture: PanResponderGestureState,
       ) => {
-        // Solution step 2
-        posY += gesture.dy;
+        // Problem 3, Solution 2.
+        if (gesture.moveY < MOVE_Y_LIMIT && posY) {
+          posY += 0;
+        } else {
+          // Solution step 2
+          posY += gesture.dy;
+        }
         // Solution step 3
         (pan.y as any)._value = posY;
+        // adjust auto up/down thresholds according to gesture.y0 value
+        // and as fall back, leave previous simple posY vs threshold conditionals
         if (posY > 0) {
+          resetPosition();
+        } else if (gesture.y0 > GESTURE_Y_LIMIT && posY < UP_SWIPE_THRESHOLD) {
+          keepUp();
+        } else if (
+          gesture.y0 < GESTURE_Y_LIMIT &&
+          posY > DOWN_SWIPE_THRESHOLD
+        ) {
           resetPosition();
         } else if (posY < SWIPE_THRESHOLD) {
           keepUp();
