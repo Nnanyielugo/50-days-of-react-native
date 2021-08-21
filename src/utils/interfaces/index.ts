@@ -5,6 +5,7 @@ export type RootStackParamList = {
   StopWatch: any;
   Weather: any;
   MusicPlayer: any;
+  TinderSwipe: any;
 };
 
 export interface Page {

@@ -13,4 +13,8 @@ export const PAGES: Page[] = [
     name: 'Music Player',
     componentName: 'MusicPlayer',
   },
+  {
+    name: 'Tinder Swipe',
+    componentName: 'TinderSwipe',
+  },
 ];
