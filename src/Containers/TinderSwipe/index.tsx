@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
 import SwipeCards from './components/SwipeCards';
 import { fetchProfiles } from './api';
 import { Profile } from './interfaces';
@@ -20,7 +19,6 @@ class TinderSwipe extends Component<ComponentProps, ComponentState> {
   componentDidMount() {
     fetchProfiles()
       .then(profiles => {
-        console.log(profiles);
         this.setState({
           error: null,
           profiles,
@@ -36,21 +34,8 @@ class TinderSwipe extends Component<ComponentProps, ComponentState> {
 
   render() {
     const { profiles, loaded, error } = this.state;
-    return (
-      <View style={styles.container}>
-        <SwipeCards profiles={profiles} loaded={loaded} error={error} />
-      </View>
-    );
+    return <SwipeCards profiles={profiles} loaded={loaded} error={error} />;
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    // alignItems: 'center',
-    backgroundColor: 'whitesmoke',
-  },
-});
 
 export default TinderSwipe;

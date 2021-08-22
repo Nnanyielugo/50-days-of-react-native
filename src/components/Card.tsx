@@ -5,7 +5,6 @@ import type { FunctionComponent } from 'react';
 import type { NamedStyles } from '../utils/interfaces';
 
 interface Raised {
-  status: boolean;
   height: number;
 }
 interface ComponentProps {
@@ -20,11 +19,7 @@ export const Card: FunctionComponent<ComponentProps> = ({
 }) => {
   return (
     <View
-      style={[
-        styles.container,
-        style,
-        raised?.status && { elevation: raised.height },
-      ]}>
+      style={[styles.container, style, raised && { elevation: raised.height }]}>
       {children}
     </View>
   );
