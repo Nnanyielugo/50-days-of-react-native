@@ -16,7 +16,7 @@ Please note that the setup instruction assumes that you have setup your developm
 - [x] refactor stopwatch
 - [x] add basic navigation
 - [ ] welcome pages
-- [ ] tinder swipe cards
+- [x] tinder swipe cards
 - [ ] add ios support
 - [ ] notes (Samsung notes implementation)
 - [x] weather app
