@@ -44,14 +44,13 @@ class TinderSwipe extends Component<ComponentProps, ComponentState> {
   };
 
   render() {
-    const { profiles, loaded, error } = this.state;
+    const { profiles, loaded } = this.state;
     return (
       <View style={styles.container}>
         <SwipeCards
           remove={this.removeCard}
           profiles={profiles}
           loaded={loaded}
-          error={error}
           refresh={this.handleFetchProfiles}
         />
       </View>

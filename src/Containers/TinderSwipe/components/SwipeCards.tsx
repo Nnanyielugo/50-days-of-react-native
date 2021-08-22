@@ -29,7 +29,6 @@ import { Button } from '../../../components';
 interface ComponentProps {
   profiles: Profile[];
   loaded: boolean;
-  error: string | null;
   remove: () => void;
   refresh: () => void;
 }
@@ -43,11 +42,9 @@ if (Platform.OS === 'android') {
 const SwipeCards: FunctionComponent<ComponentProps> = ({
   profiles,
   loaded,
-  error,
   remove,
   refresh,
 }) => {
-  const [cardIndex, setCardIndex] = React.useState(0);
   const pan = React.useRef(new Animated.ValueXY()).current;
   const panResponder = React.useRef(
     PanResponder.create({
@@ -170,7 +167,6 @@ const SwipeCards: FunctionComponent<ComponentProps> = ({
 const styles = StyleSheet.create({
   container: {
     marginTop: 50,
-    // backgroundColor: 'grey',
   },
   card: {
     position: 'absolute',

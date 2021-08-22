@@ -1,19 +1,10 @@
 import React from 'react';
 import { View, Text, StyleSheet, Dimensions, Image } from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons';
 import { Card } from '../../../components';
 
 import placeholder from '../assets/placeholder-person.png';
 
-import type { FunctionComponent } from 'react';
-import { Profile } from '../interfaces';
-
-interface ComponentProps {
-  // active?: boolean;
-  // profile: Profile;
-}
-
-const NoCards: FunctionComponent<ComponentProps> = () => {
+const NoCards = () => {
   return (
     <Card
       style={{ ...styles.card, backgroundColor: '#DFECEC' }}
