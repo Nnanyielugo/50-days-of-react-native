@@ -6,6 +6,10 @@ import {
   Animated,
   PanResponder,
   Dimensions,
+  Platform,
+  UIManager,
+  LayoutAnimation,
+  ActivityIndicator,
 } from 'react-native';
 import {
   SCREEN_WIDTH,
@@ -25,12 +29,20 @@ interface ComponentProps {
   profiles: Profile[];
   loaded: boolean;
   error: string | null;
+  remove: () => void;
+}
+
+if (Platform.OS === 'android') {
+  if (UIManager.setLayoutAnimationEnabledExperimental) {
+    UIManager.setLayoutAnimationEnabledExperimental(true);
+  }
 }
 
 const SwipeCards: FunctionComponent<ComponentProps> = ({
   profiles,
   loaded,
   error,
+  remove,
 }) => {
   const [cardIndex, setCardIndex] = React.useState(0);
   const pan = React.useRef(new Animated.ValueXY()).current;
@@ -77,7 +89,15 @@ const SwipeCards: FunctionComponent<ComponentProps> = ({
       },
       useNativeDriver: false,
       duration: SWIPE_OUT_DURATION,
-    }).start();
+    }).start(() => onComplete(direction));
+  };
+
+  const onComplete = (direction: string) => {
+    const item = profiles[0];
+    console.log('item', profiles);
+    remove();
+    pan.setValue({ x: 0, y: 0 });
+    LayoutAnimation.linear();
   };
 
   const getCardStyle = () => {
@@ -97,11 +117,14 @@ const SwipeCards: FunctionComponent<ComponentProps> = ({
         // if (index < cardIndex) {
         //   return null;
         // }
+
+        console.log(profile.name, index);
+
         if (index === 0) {
           return (
             <Animated.View
               key={profile.id}
-              style={[{ ...getCardStyle() }, styles.card]}
+              style={[{ ...getCardStyle(), zIndex: 1 }, styles.card]}
               {...panResponder.panHandlers}>
               <SwipeCard profile={profile} active />
             </Animated.View>
@@ -119,16 +142,25 @@ const SwipeCards: FunctionComponent<ComponentProps> = ({
       .reverse();
   };
 
+  if (!loaded)
+    return (
+      <ActivityIndicator style={styles.indicator} size="large" color="grey" />
+    );
+
   return <View style={styles.container}>{renderCards()}</View>;
 };
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 100,
+    marginTop: 50,
+    // backgroundColor: 'grey',
   },
   card: {
     position: 'absolute',
     alignItems: 'center',
+  },
+  indicator: {
+    marginTop: Dimensions.get('window').height * 0.45,
   },
 });
 
