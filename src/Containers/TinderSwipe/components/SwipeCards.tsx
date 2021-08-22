@@ -1,7 +1,6 @@
 import * as React from 'react';
 import {
   View,
-  Text,
   StyleSheet,
   Animated,
   PanResponder,
@@ -24,6 +23,8 @@ import type {
   PanResponderGestureState,
 } from 'react-native';
 import type { FunctionComponent } from 'react';
+import NoCards from './NoCards';
+import { Button } from '../../../components';
 
 interface ComponentProps {
   profiles: Profile[];
@@ -89,12 +90,10 @@ const SwipeCards: FunctionComponent<ComponentProps> = ({
       },
       useNativeDriver: false,
       duration: SWIPE_OUT_DURATION,
-    }).start(() => onComplete(direction));
+    }).start(() => onComplete());
   };
 
-  const onComplete = (direction: string) => {
-    const item = profiles[0];
-    console.log('item', profiles);
+  const onComplete = () => {
     remove();
     pan.setValue({ x: 0, y: 0 });
     LayoutAnimation.linear();
@@ -114,12 +113,6 @@ const SwipeCards: FunctionComponent<ComponentProps> = ({
   const renderCards = () => {
     return profiles
       .map((profile, index) => {
-        // if (index < cardIndex) {
-        //   return null;
-        // }
-
-        console.log(profile.name, index);
-
         if (index === 0) {
           return (
             <Animated.View
@@ -145,6 +138,27 @@ const SwipeCards: FunctionComponent<ComponentProps> = ({
   if (!loaded)
     return (
       <ActivityIndicator style={styles.indicator} size="large" color="grey" />
+    );
+
+  if (!profiles.length)
+    return (
+      <View style={styles.container}>
+        <NoCards />
+        <Button
+          style={{
+            container: {
+              width: Dimensions.get('window').width * 0.88,
+              alignSelf: 'center',
+              backgroundColor: '#D3DFDF',
+            },
+            text: {
+              color: 'gray',
+              fontSize: 16,
+            },
+          }}>
+          Refresh
+        </Button>
+      </View>
     );
 
   return <View style={styles.container}>{renderCards()}</View>;
