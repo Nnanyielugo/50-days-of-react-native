@@ -31,6 +31,7 @@ interface ComponentProps {
   loaded: boolean;
   error: string | null;
   remove: () => void;
+  refresh: () => void;
 }
 
 if (Platform.OS === 'android') {
@@ -44,6 +45,7 @@ const SwipeCards: FunctionComponent<ComponentProps> = ({
   loaded,
   error,
   remove,
+  refresh,
 }) => {
   const [cardIndex, setCardIndex] = React.useState(0);
   const pan = React.useRef(new Animated.ValueXY()).current;
@@ -145,6 +147,7 @@ const SwipeCards: FunctionComponent<ComponentProps> = ({
       <View style={styles.container}>
         <NoCards />
         <Button
+          onPress={refresh}
           style={{
             container: {
               width: Dimensions.get('window').width * 0.88,

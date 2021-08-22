@@ -17,7 +17,7 @@ class TinderSwipe extends Component<ComponentProps, ComponentState> {
     error: null,
   };
 
-  componentDidMount() {
+  handleFetchProfiles = () => {
     fetchProfiles()
       .then(profiles => {
         this.setState({
@@ -31,6 +31,10 @@ class TinderSwipe extends Component<ComponentProps, ComponentState> {
           error: err,
         });
       });
+  };
+
+  componentDidMount() {
+    this.handleFetchProfiles();
   }
 
   removeCard = () => {
@@ -48,6 +52,7 @@ class TinderSwipe extends Component<ComponentProps, ComponentState> {
           profiles={profiles}
           loaded={loaded}
           error={error}
+          refresh={this.handleFetchProfiles}
         />
       </View>
     );
