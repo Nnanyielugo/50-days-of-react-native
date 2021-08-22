@@ -36,7 +36,7 @@ const WeatherInformation: FunctionComponent<ComponentProps> = ({
   }
 
   return (
-    <Card style={styles.container}>
+    <Card style={styles.container} raised={{ height: 5 }}>
       <View style={styles.header}>
         <Text style={styles.headerText}>{address && address.locality}</Text>
         {current && (

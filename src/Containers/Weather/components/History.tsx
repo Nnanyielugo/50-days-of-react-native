@@ -43,7 +43,7 @@ const History: FunctionComponent<ComponentProps> = ({
     );
   }
   return (
-    <Card style={styles.container}>
+    <Card style={styles.container} raised={{ height: 5 }}>
       {yesterday && <Yesterday day={yesterday} />}
       {daily && daily.map((day: Daily) => <Day day={day} key={day.date} />)}
     </Card>

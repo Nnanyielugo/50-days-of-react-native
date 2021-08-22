@@ -19,7 +19,7 @@ const Map: FunctionComponent<ComponentProps> = ({ coords }) => {
   };
 
   return (
-    <Card style={styles.container}>
+    <Card style={styles.container} raised={{ height: 5 }}>
       <Mapview
         provider="google"
         style={styles.map}
@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
   },
   map: {
     flex: 1,
-    margin: 5, // enabbles the parent Card's border-radius styling to take effect
+    margin: 5, // enables the parent Card's border-radius styling to take effect
     ...StyleSheet.absoluteFillObject,
   },
 });
