@@ -1,10 +1,28 @@
 import React, { Component } from 'react';
 import type { RefObject } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import Video from 'react-native-video';
 import VideoComp from './components/video';
+import { fetchVideos } from './api';
+import { Video as TVideo } from './interfaces';
 
-class VideoPlayer extends Component {
+interface State {
+  videos: TVideo[];
+  selectedIndex: number;
+}
+
+class VideoPlayer extends Component<{}, State> {
+  state = {
+    videos: [],
+    selectedIndex: 0,
+  };
+
+  componentDidMount() {
+    fetchVideos().then(videos => {
+      this.setState({ videos });
+    });
+  }
+
   video: RefObject<Video> = React.createRef();
   onBuffer(data: any) {
     console.log('bbuff', data);
@@ -20,14 +38,24 @@ class VideoPlayer extends Component {
     console.log('loaded', data);
   }
   render() {
+    const { videos, selectedIndex } = this.state;
+    if (!videos.length) {
+      return (
+        <View style={styles.videoPlaceholder}>
+          <ActivityIndicator color={'grey'} size={'large'} />
+        </View>
+      );
+    }
+    console.log(this.state.videos[this.state.selectedIndex]);
+
     return (
       <View style={styles.container}>
-        {/* <Text>VideoPlayer</Text> */}
         <VideoComp
           onError={this.onError}
           onLoad={this.onLoad}
           onBuffer={this.onBuffer}
           refObj={this.video}
+          currentVideo={videos[selectedIndex]}
         />
       </View>
     );
@@ -37,14 +65,14 @@ class VideoPlayer extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // justifyContent: 'center',
-    // alignItems: 'center',
     backgroundColor: 'whitesmoke',
   },
-  video: {
-    height: 400,
+  videoPlaceholder: {
+    height: 225,
     width: 400,
-    backgroundColor: 'red',
+    backgroundColor: '#ECECEC',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 
