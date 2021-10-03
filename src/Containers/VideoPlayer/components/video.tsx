@@ -4,6 +4,7 @@ import { View, Text, StyleSheet, Dimensions } from 'react-native';
 import Video from 'react-native-video';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { Video as TVideo } from '../interfaces';
+import Slider from '@react-native-community/slider';
 
 type VoidFn = (arg: any) => void;
 
@@ -44,12 +45,46 @@ const VideoComp: FunctionComponent<ComponentProps> = ({
       />
       {showControls && (
         <View style={styles.controls}>
-          <Icon
-            name={paused ? 'play' : 'pause'}
-            size={20}
-            onPress={() => setPaused(!paused)}
-            style={{ alignSelf: 'center' }}
-          />
+          <View></View>
+          <View style={styles.playbackControls}>
+            <Icon
+              name="play-skip-forward"
+              size={32}
+              color="white"
+              // onPress={() => setPaused(!paused)}
+            />
+            <Icon
+              name={paused ? 'play' : 'pause'}
+              size={32}
+              color="white"
+              onPress={() => setPaused(!paused)}
+            />
+            <Icon
+              name="play-skip-forward"
+              size={32}
+              color="white"
+              // onPress={() => setPaused(!paused)}
+            />
+          </View>
+          <View>
+            <View style={styles.duationContainer}>
+              <Text style={styles.duration}>0:00/0:00</Text>
+              <Icon
+                name="tablet-landscape-outline"
+                size={20}
+                color="white"
+                // onPress={() => setPaused(!paused)}
+              />
+            </View>
+            <Slider
+              style={styles.slider}
+              minimumValue={0}
+              maximumValue={1}
+              minimumTrackTintColor="#FFFFFF"
+              maximumTrackTintColor="#000000"
+              thumbTintColor={'red'}
+            />
+          </View>
         </View>
       )}
     </>
@@ -64,9 +99,33 @@ const styles = StyleSheet.create({
     backgroundColor: '#ECECEC',
   },
   controls: {
-    backgroundColor: 'whitesmoke',
-    marginTop: -20,
-    opacity: 0.5,
+    backgroundColor: 'black',
+    height: 225,
+    width: Dimensions.get('window').width,
+    marginTop: -225,
+    opacity: 0.6,
+    justifyContent: 'space-between',
+  },
+  playbackControls: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 10,
+  },
+  duration: {
+    color: 'white',
+  },
+  duationContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 10,
+  },
+  slider: {
+    width: Dimensions.get('window').width,
+    height: 1,
+    margin: 0,
+    padding: 0,
+    marginLeft: -10,
+    marginRight: -10,
   },
 });
 

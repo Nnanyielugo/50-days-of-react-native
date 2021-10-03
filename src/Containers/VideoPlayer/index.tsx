@@ -46,7 +46,6 @@ class VideoPlayer extends Component<{}, State> {
         </View>
       );
     }
-    console.log(this.state.videos[this.state.selectedIndex]);
 
     return (
       <View style={styles.container}>
