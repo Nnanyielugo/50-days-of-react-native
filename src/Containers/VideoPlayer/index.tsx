@@ -1,8 +1,15 @@
 import React, { Component } from 'react';
 import type { RefObject } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ActivityIndicator,
+  ScrollView,
+} from 'react-native';
 import Video from 'react-native-video';
 import VideoComp from './components/video';
+import Preview from './components/preview';
 import { fetchVideos } from './api';
 import { Video as TVideo } from './interfaces';
 
@@ -56,6 +63,12 @@ class VideoPlayer extends Component<{}, State> {
           refObj={this.video}
           currentVideo={videos[selectedIndex]}
         />
+        <ScrollView>
+          {videos.map((video, index) => {
+            if (index !== selectedIndex)
+              return <Preview video={video} key={index} />;
+          })}
+        </ScrollView>
       </View>
     );
   }
