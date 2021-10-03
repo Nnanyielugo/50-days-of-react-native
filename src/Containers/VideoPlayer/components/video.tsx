@@ -33,9 +33,11 @@ const VideoComp: FunctionComponent<ComponentProps> = ({
   currentVideo,
   currentVideoDetails,
 }) => {
-  console.log('curr', currentVideoDetails);
   const [paused, setPaused] = React.useState(false);
   const [showControls, setShowControls] = React.useState(false);
+  const onSeek = (value: number) => {
+    refObj.current?.seek(value);
+  };
   return (
     <>
       <Video
@@ -101,9 +103,10 @@ const VideoComp: FunctionComponent<ComponentProps> = ({
               minimumValue={0}
               maximumValue={currentVideoDetails.duration || 0}
               value={currentVideoDetails.currentTime || 0}
-              minimumTrackTintColor="#FFFFFF"
+              minimumTrackTintColor="red"
               maximumTrackTintColor="#000000"
-              thumbTintColor={'red'}
+              thumbTintColor="red"
+              onValueChange={value => onSeek(value)}
             />
           </View>
         </View>
@@ -156,9 +159,11 @@ const styles = StyleSheet.create({
   },
   slider: {
     width: Dimensions.get('window').width,
-    height: 1,
-    margin: 0,
+    // paffi
+    height: 20,
+    marginBottom: -10,
     padding: 0,
+    // paddingTop: 9,
     marginLeft: -10,
     marginRight: -10,
   },

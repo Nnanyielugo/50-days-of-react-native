@@ -41,7 +41,6 @@ class VideoPlayer extends Component<{}, State> {
   }
 
   onProgress = (data: any) => {
-    console.log('progress hjkjdfhf', data);
     this.setState(state => ({
       ...state,
       currentVideoDetails: {
