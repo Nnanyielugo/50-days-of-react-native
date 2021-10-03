@@ -1,16 +1,29 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image, Dimensions } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  Dimensions,
+  Pressable,
+} from 'react-native';
 import type { FunctionComponent } from 'react';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { Video } from '../interfaces';
 
 interface ComponentProps {
   video: Video;
+  setCurrent: (index: number) => void;
+  index: number;
 }
 
-const Preview: FunctionComponent<ComponentProps> = ({ video }) => {
+const Preview: FunctionComponent<ComponentProps> = ({
+  video,
+  setCurrent,
+  index,
+}) => {
   return (
-    <View style={styles.container}>
+    <Pressable style={styles.container} onPress={() => setCurrent(index)}>
       <Image source={{ uri: video.thumb }} style={styles.image} />
       <View style={styles.descriptionContainer}>
         <Icon name="person-circle-outline" size={40} />
@@ -21,7 +34,7 @@ const Preview: FunctionComponent<ComponentProps> = ({ video }) => {
           </Text>
         </View>
       </View>
-    </View>
+    </Pressable>
   );
 };
 

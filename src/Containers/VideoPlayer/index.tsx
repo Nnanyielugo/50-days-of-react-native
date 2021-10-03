@@ -41,6 +41,13 @@ class VideoPlayer extends Component<{}, State> {
     // this.video.current.
   }
 
+  setCurrent = (index: number) => {
+    this.setState(state => ({
+      ...state,
+      selectedIndex: index,
+    }));
+  };
+
   onLoad(data: any) {
     console.log('loaded', data);
   }
@@ -66,7 +73,14 @@ class VideoPlayer extends Component<{}, State> {
         <ScrollView>
           {videos.map((video, index) => {
             if (index !== selectedIndex)
-              return <Preview video={video} key={index} />;
+              return (
+                <Preview
+                  setCurrent={this.setCurrent}
+                  video={video}
+                  key={index}
+                  index={index}
+                />
+              );
           })}
         </ScrollView>
       </View>
