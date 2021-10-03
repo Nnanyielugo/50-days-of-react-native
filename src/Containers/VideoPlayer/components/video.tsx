@@ -5,6 +5,7 @@ import Video from 'react-native-video';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { Video as TVideo } from '../interfaces';
 import Slider from '@react-native-community/slider';
+import { formatVideoDuration } from '../utils';
 
 type VoidFn = (arg: any) => void;
 
@@ -12,17 +13,27 @@ interface ComponentProps {
   onError: VoidFn;
   onLoad: VoidFn;
   onBuffer: VoidFn;
+  onProgress: VoidFn;
   refObj: RefObject<Video>;
   currentVideo: TVideo;
+  currentVideoDetails: {
+    duration?: number;
+    naturalSize?: {};
+    currentTime?: number;
+    playableDuration?: number;
+  };
 }
 
 const VideoComp: FunctionComponent<ComponentProps> = ({
   onError,
   onBuffer,
   onLoad,
+  onProgress,
   refObj,
   currentVideo,
+  currentVideoDetails,
 }) => {
+  console.log('curr', currentVideoDetails);
   const [paused, setPaused] = React.useState(false);
   const [showControls, setShowControls] = React.useState(false);
   return (
@@ -36,6 +47,7 @@ const VideoComp: FunctionComponent<ComponentProps> = ({
         onBuffer={onBuffer}
         onError={onError}
         onLoad={onLoad}
+        onProgress={onProgress}
         resizeMode={'contain'}
         paused={paused}
         onTouchStart={() => {
@@ -48,7 +60,7 @@ const VideoComp: FunctionComponent<ComponentProps> = ({
           <View></View>
           <View style={styles.playbackControls}>
             <Icon
-              name="play-skip-forward"
+              name="play-skip-back"
               size={32}
               color="white"
               // onPress={() => setPaused(!paused)}
@@ -68,7 +80,15 @@ const VideoComp: FunctionComponent<ComponentProps> = ({
           </View>
           <View>
             <View style={styles.duationContainer}>
-              <Text style={styles.duration}>0:00/0:00</Text>
+              {currentVideoDetails.duration &&
+              currentVideoDetails.currentTime ? (
+                <Text style={styles.duration}>
+                  {formatVideoDuration(currentVideoDetails.currentTime)}/
+                  {formatVideoDuration(currentVideoDetails.duration)}
+                </Text>
+              ) : (
+                <Text>0:00/0:00</Text>
+              )}
               <Icon
                 name="tablet-landscape-outline"
                 size={20}
@@ -79,7 +99,8 @@ const VideoComp: FunctionComponent<ComponentProps> = ({
             <Slider
               style={styles.slider}
               minimumValue={0}
-              maximumValue={1}
+              maximumValue={currentVideoDetails.duration || 0}
+              value={currentVideoDetails.currentTime || 0}
               minimumTrackTintColor="#FFFFFF"
               maximumTrackTintColor="#000000"
               thumbTintColor={'red'}

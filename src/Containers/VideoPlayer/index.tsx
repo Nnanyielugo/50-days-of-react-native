@@ -16,12 +16,14 @@ import { Video as TVideo } from './interfaces';
 interface State {
   videos: TVideo[];
   selectedIndex: number;
+  currentVideoDetails: {};
 }
 
 class VideoPlayer extends Component<{}, State> {
   state = {
     videos: [],
     selectedIndex: 0,
+    currentVideoDetails: {},
   };
 
   componentDidMount() {
@@ -37,9 +39,18 @@ class VideoPlayer extends Component<{}, State> {
   onError(err: any) {
     console.log('err', err);
   }
-  pause() {
-    // this.video.current.
-  }
+
+  onProgress = (data: any) => {
+    console.log('progress hjkjdfhf', data);
+    this.setState(state => ({
+      ...state,
+      currentVideoDetails: {
+        ...state.currentVideoDetails,
+        currentTime: data.currentTime,
+        playableDuration: data.playableDuration,
+      },
+    }));
+  };
 
   setCurrent = (index: number) => {
     this.setState(state => ({
@@ -48,11 +59,18 @@ class VideoPlayer extends Component<{}, State> {
     }));
   };
 
-  onLoad(data: any) {
+  onLoad = (data: any) => {
     console.log('loaded', data);
-  }
+    this.setState(state => ({
+      ...state,
+      currentVideoDetails: {
+        duration: data.duration,
+        naturalSize: data.naturalSize,
+      },
+    }));
+  };
   render() {
-    const { videos, selectedIndex } = this.state;
+    const { videos, selectedIndex, currentVideoDetails } = this.state;
     if (!videos.length) {
       return (
         <View style={styles.videoPlaceholder}>
@@ -67,8 +85,10 @@ class VideoPlayer extends Component<{}, State> {
           onError={this.onError}
           onLoad={this.onLoad}
           onBuffer={this.onBuffer}
+          onProgress={this.onProgress}
           refObj={this.video}
           currentVideo={videos[selectedIndex]}
+          currentVideoDetails={currentVideoDetails}
         />
         <ScrollView>
           {videos.map((video, index) => {
