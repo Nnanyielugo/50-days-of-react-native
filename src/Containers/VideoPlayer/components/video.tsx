@@ -87,6 +87,20 @@ const VideoComp: FunctionComponent<ComponentProps> = ({
           </View>
         </View>
       )}
+      <View style={styles.subscript}>
+        <View style={styles.titleContainer}>
+          <Text style={styles.title}>{currentVideo.title}</Text>
+          <Icon
+            name="chevron-down-outline"
+            size={20}
+            color="black"
+            // onPress={() => setPaused(!paused)}
+          />
+        </View>
+        <Text style={styles.description} numberOfLines={1}>
+          {currentVideo.description}
+        </Text>
+      </View>
     </>
   );
 };
@@ -126,6 +140,23 @@ const styles = StyleSheet.create({
     padding: 0,
     marginLeft: -10,
     marginRight: -10,
+  },
+  subscript: {
+    marginVertical: 5,
+    paddingHorizontal: 5,
+  },
+  titleContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 3,
+  },
+  title: {
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  description: {
+    fontSize: 13,
+    color: '#6D6D6D',
   },
 });
 

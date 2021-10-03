@@ -16,7 +16,9 @@ const Preview: FunctionComponent<ComponentProps> = ({ video }) => {
         <Icon name="person-circle-outline" size={40} />
         <View>
           <Text style={styles.title}>{video.title}</Text>
-          <Text numberOfLines={3}>{video.description}</Text>
+          <Text style={styles.description} numberOfLines={3}>
+            {video.description}
+          </Text>
         </View>
       </View>
     </View>
@@ -31,6 +33,9 @@ const styles = StyleSheet.create({
   },
   title: {
     fontWeight: 'bold',
+  },
+  description: {
+    color: '#6D6D6D',
   },
   descriptionContainer: {
     flexDirection: 'row',
