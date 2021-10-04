@@ -1,12 +1,6 @@
 import React, { Component } from 'react';
 import type { RefObject } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  ActivityIndicator,
-  ScrollView,
-} from 'react-native';
+import { View, StyleSheet, ScrollView } from 'react-native';
 import Video from 'react-native-video';
 import VideoComp from './components/video';
 import Preview from './components/preview';
@@ -18,6 +12,7 @@ interface State {
   videos: TVideo[];
   selectedIndex: number;
   currentVideoDetails: {};
+  loadedSelectedVideo: boolean;
 }
 
 class VideoPlayer extends Component<{}, State> {
@@ -25,6 +20,7 @@ class VideoPlayer extends Component<{}, State> {
     videos: [],
     selectedIndex: 0,
     currentVideoDetails: {},
+    loadedSelectedVideo: false,
   };
 
   componentDidMount() {
@@ -56,6 +52,7 @@ class VideoPlayer extends Component<{}, State> {
     this.setState(state => ({
       ...state,
       selectedIndex: index,
+      loadedSelectedVideo: false,
     }));
   };
 
@@ -67,19 +64,18 @@ class VideoPlayer extends Component<{}, State> {
         duration: data.duration,
         naturalSize: data.naturalSize,
       },
+      loadedSelectedVideo: true,
     }));
   };
   render() {
-    const { videos, selectedIndex, currentVideoDetails } = this.state;
+    const { videos, selectedIndex, currentVideoDetails, loadedSelectedVideo } =
+      this.state;
     if (!videos.length) {
       return (
         <>
           <LoadingVideo />
           <LoadingList />
         </>
-        // <View style={styles.videoPlaceholder}>
-        //   <ActivityIndicator color={'grey'} size={'large'} />
-        // </View>
       );
     }
 
@@ -93,6 +89,7 @@ class VideoPlayer extends Component<{}, State> {
           refObj={this.video}
           currentVideo={videos[selectedIndex]}
           currentVideoDetails={currentVideoDetails}
+          loaded={loadedSelectedVideo}
         />
         <ScrollView>
           {videos.map((video, index) => {

@@ -1,6 +1,12 @@
 import React from 'react';
 import type { FunctionComponent, RefObject } from 'react';
-import { View, Text, StyleSheet, Dimensions } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Dimensions,
+  ActivityIndicator,
+} from 'react-native';
 import Video from 'react-native-video';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { Video as TVideo } from '../interfaces';
@@ -16,6 +22,7 @@ interface ComponentProps {
   onProgress: VoidFn;
   refObj: RefObject<Video>;
   currentVideo: TVideo;
+  loaded: boolean;
   currentVideoDetails: {
     duration?: number;
     naturalSize?: {};
@@ -32,12 +39,23 @@ const VideoComp: FunctionComponent<ComponentProps> = ({
   refObj,
   currentVideo,
   currentVideoDetails,
+  loaded,
 }) => {
   const [paused, setPaused] = React.useState(false);
   const [showControls, setShowControls] = React.useState(false);
   const onSeek = (value: number) => {
     refObj.current?.seek(value);
   };
+
+  // console.log(currentVideoDetails);
+
+  // if () {
+  //   return (
+  //     <View style={styles.videoPlaceholder}>
+  //       <ActivityIndicator color={'grey'} size={'large'} />
+  //     </View>
+  //   );
+  // }
   return (
     <>
       <Video
@@ -57,6 +75,11 @@ const VideoComp: FunctionComponent<ComponentProps> = ({
           setTimeout(() => setShowControls(false), 2000);
         }}
       />
+      {!loaded && (
+        <View style={styles.videoPlaceholder}>
+          <ActivityIndicator color={'white'} size={'large'} />
+        </View>
+      )}
       {showControls && (
         <View style={styles.controls}>
           <View></View>
@@ -183,6 +206,14 @@ const styles = StyleSheet.create({
   description: {
     fontSize: 13,
     color: '#6D6D6D',
+  },
+  videoPlaceholder: {
+    height: 225,
+    marginTop: -225,
+    width: Dimensions.get('window').width,
+    backgroundColor: '#999999',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 
