@@ -50,3 +50,4 @@ Please note that the setup instruction assumes that you have setup your developm
 - [ ] google calendar
 - [ ] shopping cart/e-commerce
 - [ ] run tracker
+- [ ] currency converter
