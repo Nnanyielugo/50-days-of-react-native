@@ -1,11 +1,12 @@
 import type { ViewStyle, TextStyle, ImageStyle } from 'react-native';
 
 export type RootStackParamList = {
-  Home: any;
-  StopWatch: any;
-  Weather: any;
-  MusicPlayer: any;
-  TinderSwipe: any;
+  Home: undefined;
+  StopWatch: undefined;
+  Weather: undefined;
+  MusicPlayer: undefined;
+  TinderSwipe: undefined;
+  VideoPlayer: undefined;
 };
 
 export interface Page {

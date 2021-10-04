@@ -17,4 +17,8 @@ export const PAGES: Page[] = [
     name: 'Tinder Swipe',
     componentName: 'TinderSwipe',
   },
+  {
+    name: 'Video Player',
+    componentName: 'VideoPlayer',
+  },
 ];

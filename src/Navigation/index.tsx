@@ -8,6 +8,7 @@ import StopWatch from '../Containers/StopWatch';
 import Weather from '../Containers/Weather';
 import MusicPlayer from '../Containers/MusicPlayer';
 import TinderSwipe from '../Containers/TinderSwipe';
+import VideoPlayer from '../Containers/VideoPlayer';
 
 export default function Navigator() {
   const Stack = createStackNavigator();
@@ -20,6 +21,7 @@ export default function Navigator() {
         <Stack.Screen name="Weather" component={Weather} />
         <Stack.Screen name="MusicPlayer" component={MusicPlayer} />
         <Stack.Screen name="TinderSwipe" component={TinderSwipe} />
+        <Stack.Screen name="VideoPlayer" component={VideoPlayer} />
       </Stack.Navigator>
     </NavigationContainer>
   );
