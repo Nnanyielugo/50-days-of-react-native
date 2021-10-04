@@ -51,6 +51,7 @@ const VideoComp: FunctionComponent<ComponentProps> = ({
 }) => {
   const [paused, setPaused] = React.useState(false);
   const [showControls, setShowControls] = React.useState(false);
+  const [toggledDescription, toggleDescription] = React.useState(false);
   const onSeek = (value: number) => {
     refObj.current?.seek(value);
   };
@@ -138,11 +139,24 @@ const VideoComp: FunctionComponent<ComponentProps> = ({
         <View style={styles.subscript}>
           <View style={styles.titleContainer}>
             <Text style={styles.title}>{currentVideo.title}</Text>
-            <Icon name="chevron-down-outline" size={20} color="black" />
+            <Icon
+              name={
+                toggledDescription
+                  ? 'chevron-up-outline'
+                  : 'chevron-down-outline'
+              }
+              size={20}
+              color="black"
+              onPress={() => toggleDescription(!toggledDescription)}
+            />
           </View>
-          <Text style={styles.description} numberOfLines={1}>
-            {currentVideo.description}
-          </Text>
+          {toggledDescription ? (
+            <Text style={styles.description}>{currentVideo.description}</Text>
+          ) : (
+            <Text style={styles.description} numberOfLines={1}>
+              {currentVideo.description}
+            </Text>
+          )}
         </View>
       )}
     </>
