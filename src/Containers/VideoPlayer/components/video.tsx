@@ -1,5 +1,4 @@
 import React from 'react';
-import type { FunctionComponent, RefObject } from 'react';
 import {
   View,
   Text,
@@ -9,16 +8,16 @@ import {
 } from 'react-native';
 import Video from 'react-native-video';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { Video as TVideo, Direction } from '../interfaces';
 import Slider from '@react-native-community/slider';
 import { formatVideoDuration } from '../utils';
+
+import type { FunctionComponent, RefObject } from 'react';
+import { Video as TVideo, Direction } from '../interfaces';
 
 type VoidFn = (arg: any) => void;
 
 interface ComponentProps {
-  onError: VoidFn;
   onLoad: VoidFn;
-  onBuffer: VoidFn;
   onProgress: VoidFn;
   onEnd: () => void;
   onSkip: (direction: Direction) => void;
@@ -36,8 +35,6 @@ interface ComponentProps {
 }
 
 const VideoComp: FunctionComponent<ComponentProps> = ({
-  onError,
-  onBuffer,
   onLoad,
   onProgress,
   onEnd,
@@ -64,8 +61,6 @@ const VideoComp: FunctionComponent<ComponentProps> = ({
         }}
         ref={refObj}
         style={fullScreen ? styles.fullScreen : styles.video}
-        onBuffer={onBuffer}
-        onError={onError}
         onLoad={onLoad}
         onEnd={onEnd}
         onProgress={onProgress}

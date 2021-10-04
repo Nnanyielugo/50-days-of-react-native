@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import type { RefObject } from 'react';
 import { View, StyleSheet, ScrollView } from 'react-native';
 import Video from 'react-native-video';
 import VideoComp from './components/video';
 import Preview from './components/preview';
 import { LoadingList, LoadingVideo } from './components/loading';
 import { fetchVideos } from './api';
+
+import type { RefObject } from 'react';
 import { Video as TVideo, Direction } from './interfaces';
 
 interface State {
@@ -70,14 +71,6 @@ class VideoPlayer extends Component<{}, State> {
     }));
   };
 
-  onBuffer(data: any) {
-    console.log('bbuff', data);
-  }
-
-  onError(err: any) {
-    console.log('err', err);
-  }
-
   onProgress = (data: any) => {
     this.setState(state => ({
       ...state,
@@ -98,7 +91,6 @@ class VideoPlayer extends Component<{}, State> {
   };
 
   onLoad = (data: any) => {
-    console.log('loaded', data);
     this.setState(state => ({
       ...state,
       currentVideoDetails: {
@@ -128,9 +120,7 @@ class VideoPlayer extends Component<{}, State> {
     return (
       <View style={styles.container}>
         <VideoComp
-          onError={this.onError}
           onLoad={this.onLoad}
-          onBuffer={this.onBuffer}
           onProgress={this.onProgress}
           refObj={this.video}
           currentVideo={videos[selectedIndex]}
