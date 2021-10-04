@@ -10,6 +10,7 @@ import {
 import Video from 'react-native-video';
 import VideoComp from './components/video';
 import Preview from './components/preview';
+import { LoadingList, LoadingVideo } from './components/loading';
 import { fetchVideos } from './api';
 import { Video as TVideo } from './interfaces';
 
@@ -72,9 +73,13 @@ class VideoPlayer extends Component<{}, State> {
     const { videos, selectedIndex, currentVideoDetails } = this.state;
     if (!videos.length) {
       return (
-        <View style={styles.videoPlaceholder}>
-          <ActivityIndicator color={'grey'} size={'large'} />
-        </View>
+        <>
+          <LoadingVideo />
+          <LoadingList />
+        </>
+        // <View style={styles.videoPlaceholder}>
+        //   <ActivityIndicator color={'grey'} size={'large'} />
+        // </View>
       );
     }
 
