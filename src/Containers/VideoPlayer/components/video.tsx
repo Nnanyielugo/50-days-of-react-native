@@ -22,9 +22,11 @@ interface ComponentProps {
   onProgress: VoidFn;
   onEnd: () => void;
   onSkip: (direction: Direction) => void;
+  onTogglefullScreen: VoidFn;
   refObj: RefObject<Video>;
   currentVideo: TVideo;
   loaded: boolean;
+  fullScreen: boolean;
   currentVideoDetails: {
     duration?: number;
     naturalSize?: {};
@@ -40,6 +42,8 @@ const VideoComp: FunctionComponent<ComponentProps> = ({
   onProgress,
   onEnd,
   onSkip,
+  onTogglefullScreen,
+  fullScreen,
   refObj,
   currentVideo,
   currentVideoDetails,
@@ -58,7 +62,7 @@ const VideoComp: FunctionComponent<ComponentProps> = ({
           uri: currentVideo.source,
         }}
         ref={refObj}
-        style={styles.video}
+        style={fullScreen ? styles.fullScreen : styles.video}
         onBuffer={onBuffer}
         onError={onError}
         onLoad={onLoad}
@@ -77,7 +81,7 @@ const VideoComp: FunctionComponent<ComponentProps> = ({
         </View>
       )}
       {showControls && (
-        <View style={styles.controls}>
+        <View style={fullScreen ? styles.fullScreenControls : styles.controls}>
           <View></View>
           <View style={styles.playbackControls}>
             <Icon
@@ -114,7 +118,7 @@ const VideoComp: FunctionComponent<ComponentProps> = ({
                 name="tablet-landscape-outline"
                 size={20}
                 color="white"
-                // onPress={() => setPaused(!paused)}
+                onPress={() => onTogglefullScreen(true)}
               />
             </View>
             <Slider
@@ -130,20 +134,17 @@ const VideoComp: FunctionComponent<ComponentProps> = ({
           </View>
         </View>
       )}
-      <View style={styles.subscript}>
-        <View style={styles.titleContainer}>
-          <Text style={styles.title}>{currentVideo.title}</Text>
-          <Icon
-            name="chevron-down-outline"
-            size={20}
-            color="black"
-            // onPress={() => setPaused(!paused)}
-          />
+      {!fullScreen && (
+        <View style={styles.subscript}>
+          <View style={styles.titleContainer}>
+            <Text style={styles.title}>{currentVideo.title}</Text>
+            <Icon name="chevron-down-outline" size={20} color="black" />
+          </View>
+          <Text style={styles.description} numberOfLines={1}>
+            {currentVideo.description}
+          </Text>
         </View>
-        <Text style={styles.description} numberOfLines={1}>
-          {currentVideo.description}
-        </Text>
-      </View>
+      )}
     </>
   );
 };
@@ -154,6 +155,23 @@ const styles = StyleSheet.create({
     height: 225,
     width: 400,
     backgroundColor: '#ECECEC',
+  },
+  fullScreen: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
+  },
+  fullScreenControls: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
+    backgroundColor: 'black',
+    opacity: 0.6,
+    justifyContent: 'space-between',
   },
   controls: {
     backgroundColor: 'black',
@@ -178,11 +196,9 @@ const styles = StyleSheet.create({
   },
   slider: {
     width: Dimensions.get('window').width,
-    // paffi
     height: 20,
     marginBottom: -10,
     padding: 0,
-    // paddingTop: 9,
     marginLeft: -10,
     marginRight: -10,
   },

@@ -13,6 +13,7 @@ interface State {
   selectedIndex: number;
   currentVideoDetails: {};
   loadedSelectedVideo: boolean;
+  fullScreen: boolean;
 }
 
 class VideoPlayer extends Component<{}, State> {
@@ -21,6 +22,7 @@ class VideoPlayer extends Component<{}, State> {
     selectedIndex: 0,
     currentVideoDetails: {},
     loadedSelectedVideo: false,
+    fullScreen: false,
   };
 
   componentDidMount() {
@@ -30,6 +32,22 @@ class VideoPlayer extends Component<{}, State> {
   }
 
   video: RefObject<Video> = React.createRef();
+
+  toggleFullScreen = (toggle: boolean) => {
+    if (toggle) {
+      this.video.current?.presentFullscreenPlayer();
+      this.setState(state => ({
+        ...state,
+        fullScreen: true,
+      }));
+    } else {
+      this.video.current?.dismissFullscreenPlayer();
+      this.setState(state => ({
+        ...state,
+        fullScreen: true,
+      }));
+    }
+  };
 
   onEnd = () => {
     this.skip(Direction.Forward);
@@ -91,8 +109,13 @@ class VideoPlayer extends Component<{}, State> {
     }));
   };
   render() {
-    const { videos, selectedIndex, currentVideoDetails, loadedSelectedVideo } =
-      this.state;
+    const {
+      videos,
+      selectedIndex,
+      currentVideoDetails,
+      loadedSelectedVideo,
+      fullScreen,
+    } = this.state;
     if (!videos.length) {
       return (
         <>
@@ -115,19 +138,22 @@ class VideoPlayer extends Component<{}, State> {
           loaded={loadedSelectedVideo}
           onEnd={this.onEnd}
           onSkip={this.skip}
+          onTogglefullScreen={this.toggleFullScreen}
+          fullScreen={fullScreen}
         />
         <ScrollView>
-          {videos.map((video, index) => {
-            if (index !== selectedIndex)
-              return (
-                <Preview
-                  setCurrent={this.setCurrent}
-                  video={video}
-                  key={index}
-                  index={index}
-                />
-              );
-          })}
+          {!fullScreen &&
+            videos.map((video, index) => {
+              if (index !== selectedIndex)
+                return (
+                  <Preview
+                    setCurrent={this.setCurrent}
+                    video={video}
+                    key={index}
+                    index={index}
+                  />
+                );
+            })}
         </ScrollView>
       </View>
     );
