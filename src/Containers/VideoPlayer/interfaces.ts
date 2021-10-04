@@ -4,3 +4,8 @@ export interface Video {
   source: string;
   thumb: string;
 }
+
+export enum Direction {
+  Forward = 'forward',
+  Back = 'back',
+}

@@ -6,7 +6,7 @@ import VideoComp from './components/video';
 import Preview from './components/preview';
 import { LoadingList, LoadingVideo } from './components/loading';
 import { fetchVideos } from './api';
-import { Video as TVideo } from './interfaces';
+import { Video as TVideo, Direction } from './interfaces';
 
 interface State {
   videos: TVideo[];
@@ -30,9 +30,32 @@ class VideoPlayer extends Component<{}, State> {
   }
 
   video: RefObject<Video> = React.createRef();
+
+  onEnd = () => {
+    this.skip(Direction.Forward);
+  };
+
+  skip = (direction: Direction) => {
+    const { selectedIndex, videos } = this.state;
+    let indexToSkip =
+      direction === Direction.Forward ? selectedIndex + 1 : selectedIndex - 1;
+    if (indexToSkip < 0) {
+      indexToSkip = videos.length - 1;
+    }
+    if (indexToSkip > videos.length - 1) {
+      indexToSkip = 0;
+    }
+    this.setState(state => ({
+      ...state,
+      selectedIndex: indexToSkip,
+      loadedSelectedVideo: false,
+    }));
+  };
+
   onBuffer(data: any) {
     console.log('bbuff', data);
   }
+
   onError(err: any) {
     console.log('err', err);
   }
@@ -90,6 +113,8 @@ class VideoPlayer extends Component<{}, State> {
           currentVideo={videos[selectedIndex]}
           currentVideoDetails={currentVideoDetails}
           loaded={loadedSelectedVideo}
+          onEnd={this.onEnd}
+          onSkip={this.skip}
         />
         <ScrollView>
           {videos.map((video, index) => {

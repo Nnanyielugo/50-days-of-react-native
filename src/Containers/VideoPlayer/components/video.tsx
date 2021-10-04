@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import Video from 'react-native-video';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { Video as TVideo } from '../interfaces';
+import { Video as TVideo, Direction } from '../interfaces';
 import Slider from '@react-native-community/slider';
 import { formatVideoDuration } from '../utils';
 
@@ -20,6 +20,8 @@ interface ComponentProps {
   onLoad: VoidFn;
   onBuffer: VoidFn;
   onProgress: VoidFn;
+  onEnd: () => void;
+  onSkip: (direction: Direction) => void;
   refObj: RefObject<Video>;
   currentVideo: TVideo;
   loaded: boolean;
@@ -36,6 +38,8 @@ const VideoComp: FunctionComponent<ComponentProps> = ({
   onBuffer,
   onLoad,
   onProgress,
+  onEnd,
+  onSkip,
   refObj,
   currentVideo,
   currentVideoDetails,
@@ -47,15 +51,6 @@ const VideoComp: FunctionComponent<ComponentProps> = ({
     refObj.current?.seek(value);
   };
 
-  // console.log(currentVideoDetails);
-
-  // if () {
-  //   return (
-  //     <View style={styles.videoPlaceholder}>
-  //       <ActivityIndicator color={'grey'} size={'large'} />
-  //     </View>
-  //   );
-  // }
   return (
     <>
       <Video
@@ -67,6 +62,7 @@ const VideoComp: FunctionComponent<ComponentProps> = ({
         onBuffer={onBuffer}
         onError={onError}
         onLoad={onLoad}
+        onEnd={onEnd}
         onProgress={onProgress}
         resizeMode={'contain'}
         paused={paused}
@@ -88,7 +84,7 @@ const VideoComp: FunctionComponent<ComponentProps> = ({
               name="play-skip-back"
               size={32}
               color="white"
-              // onPress={() => setPaused(!paused)}
+              onPress={() => onSkip(Direction.Back)}
             />
             <Icon
               name={paused ? 'play' : 'pause'}
@@ -100,7 +96,7 @@ const VideoComp: FunctionComponent<ComponentProps> = ({
               name="play-skip-forward"
               size={32}
               color="white"
-              // onPress={() => setPaused(!paused)}
+              onPress={() => onSkip(Direction.Forward)}
             />
           </View>
           <View>
