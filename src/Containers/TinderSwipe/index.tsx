@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { StyleSheet, SafeAreaView } from 'react-native';
 import SwipeCards from './components/SwipeCards';
 import { fetchProfiles } from './api';
 import { Profile } from './interfaces';
@@ -46,14 +46,14 @@ class TinderSwipe extends Component<ComponentProps, ComponentState> {
   render() {
     const { profiles, loaded } = this.state;
     return (
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <SwipeCards
           remove={this.removeCard}
           profiles={profiles}
           loaded={loaded}
           refresh={this.handleFetchProfiles}
         />
-      </View>
+      </SafeAreaView>
     );
   }
 }

@@ -5,6 +5,7 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
+  SafeAreaView,
 } from 'react-native';
 
 import { PAGES } from '../utils/constants';
@@ -34,15 +35,17 @@ export default function Home(props: HomeProps) {
     );
   };
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      {PAGES.map((page, index) => renderComponent(page, index))}
-    </ScrollView>
+    <SafeAreaView style={{ flex: 1 }}>
+      <ScrollView contentContainerStyle={styles.container}>
+        {PAGES.map((page, index) => renderComponent(page, index))}
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    // flex: 1,
     // alignItems: 'center',
     backgroundColor: 'whitesmoke',
     paddingVertical: 20,
