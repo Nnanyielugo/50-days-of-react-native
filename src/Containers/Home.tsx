@@ -6,12 +6,16 @@ import {
   ScrollView,
   TouchableOpacity,
   SafeAreaView,
+  Dimensions,
 } from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import { PAGES } from '../utils/constants';
 
 import type { StackNavigationProp } from '@react-navigation/stack';
 import type { RootStackParamList, Page } from '../utils/interfaces';
+
+const WIDTH = Dimensions.get('window').width;
 
 type HomeScreenNavigationProps = StackNavigationProp<
   RootStackParamList,
@@ -29,6 +33,7 @@ export default function Home(props: HomeProps) {
         key={page.componentName}
         onPress={() => props.navigation.navigate(page.componentName)}>
         <View style={styles.component}>
+          <Icon name={page.icon} size={50} color="black" />
           <Text>{page.name}</Text>
         </View>
       </TouchableOpacity>
@@ -45,19 +50,24 @@ export default function Home(props: HomeProps) {
 
 const styles = StyleSheet.create({
   container: {
-    // flex: 1,
-    // alignItems: 'center',
     backgroundColor: 'whitesmoke',
-    paddingVertical: 20,
-    paddingHorizontal: 10,
+    paddingVertical: 10,
+    paddingHorizontal: WIDTH * 0.05,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
   },
   component: {
     borderColor: '#CAD3D6',
     borderStyle: 'solid',
     borderWidth: 1,
-    borderRadius: 3,
+    borderRadius: 12,
     paddingVertical: 5,
     paddingHorizontal: 10,
+    width: WIDTH * 0.25,
+    height: 100,
+    alignItems: 'center',
+    marginHorizontal: WIDTH * 0.025,
+    marginTop: 20,
   },
   text: {},
 });
