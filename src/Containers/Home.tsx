@@ -50,7 +50,8 @@ export default function Home(props: HomeProps) {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'whitesmoke',
+    backgroundColor: '#EFF6F9',
+    flex: 1,
     paddingVertical: 10,
     paddingHorizontal: WIDTH * 0.05,
     flexDirection: 'row',
