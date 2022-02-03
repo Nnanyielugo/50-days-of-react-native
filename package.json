@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "android": "react-native run-android",
+    "install-android-release": "react-native run-android --variant=release",
     "ios": "react-native run-ios",
     "set-env": "export $(cat .env | xargs)",
     "start": "react-native start",
