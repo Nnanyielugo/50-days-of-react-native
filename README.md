@@ -11,8 +11,20 @@ Please note that the setup instruction assumes that you have setup your developm
 - run `npm install`
 - run `npm run set-env && npm run android` to run the app. Please note that ios support is in progress.
 
+### Demos
 #### Menu
-<img src="assets/demos/Menu.jpeg" width="400" height="790">
+<img src="assets/demos/Menu.jpeg" width="270" height="500">
+
+#### [Music Player](https://github.com/Nnanyielugo/50-days-of-react-native/blob/master/src/Containers/MusicPlayer/readme.md)
+
+#### [StopWatch](https://github.com/Nnanyielugo/50-days-of-react-native/blob/master/src/Containers/StopWatch/readme.md)
+
+#### [Weather](https://github.com/Nnanyielugo/50-days-of-react-native/blob/master/src/Containers/Weather/readme.md)
+
+#### [Tinder Swipe](https://github.com/Nnanyielugo/50-days-of-react-native/blob/master/src/Containers/TinderSwipe/readme.md)
+
+#### Video is unfinished
+
 
 ### TODO
 
