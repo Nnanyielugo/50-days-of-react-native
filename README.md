@@ -34,7 +34,7 @@ Please note that the setup instruction assumes that you have setup your developm
 - [x] add basic navigation
 - [ ] welcome pages
 - [x] tinder swipe cards
-- [ ] add ios support
+- [x] add ios support
 - [ ] notes (Samsung notes implementation)
 - [x] weather app
 - [x] music player
