@@ -11,6 +11,9 @@ Please note that the setup instruction assumes that you have setup your developm
 - run `npm install`
 - run `npm run set-env && npm run android` to run the app. Please note that ios support is in progress.
 
+#### Menu
+<img src="assets/demos/Menu.jpeg" width="400" height="790">
+
 ### TODO
 
 - [x] Upgrade to RN 0.64xx
