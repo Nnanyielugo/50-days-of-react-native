@@ -12,6 +12,7 @@ export type RootStackParamList = {
 export interface Page {
   name: string;
   componentName: keyof RootStackParamList;
+  icon: string;
 }
 
 export type NamedStyles = ViewStyle | TextStyle | ImageStyle;

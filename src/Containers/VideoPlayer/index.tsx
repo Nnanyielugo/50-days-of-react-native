@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, ScrollView } from 'react-native';
+import { View, StyleSheet, ScrollView, SafeAreaView } from 'react-native';
 import Video from 'react-native-video';
 import VideoComp from './components/video';
 import Preview from './components/preview';
@@ -118,7 +118,7 @@ class VideoPlayer extends Component<{}, State> {
     }
 
     return (
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <VideoComp
           onLoad={this.onLoad}
           onProgress={this.onProgress}
@@ -145,7 +145,7 @@ class VideoPlayer extends Component<{}, State> {
                 );
             })}
         </ScrollView>
-      </View>
+      </SafeAreaView>
     );
   }
 }
