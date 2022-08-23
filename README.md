@@ -40,6 +40,7 @@ Please note that the setup instruction assumes that you have setup your developm
 - [x] music player
 - [x] video player
 - [ ] core animation and masks (twitter entrance animation)
+- [ ] tic-tac-toe
 - [ ] app menu
 - [ ] custom swipe transitions
 - [ ] segmented control views
