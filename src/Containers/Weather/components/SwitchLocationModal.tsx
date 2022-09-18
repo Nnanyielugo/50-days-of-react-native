@@ -80,7 +80,12 @@ const SwitchLocationModal: FunctionComponent<ComponentProps> = ({
     <Modal visible={isVisible} onRequestClose={closeModal} style={styles.modal}>
       <View style={styles.container}>
         <View style={styles.searchContainer}>
-          <Icon name="chevron-back-outline" size={25} color="whitesmoke" />
+          <Icon
+            onPress={closeModal}
+            name="chevron-back-outline"
+            size={25}
+            color="whitesmoke"
+          />
           <TextInput
             value={text}
             onChangeText={handleTextChange}
@@ -109,6 +114,7 @@ const SwitchLocationModal: FunctionComponent<ComponentProps> = ({
 const styles = StyleSheet.create({
   container: {
     marginTop: 0,
+    paddingTop: 30,
     backgroundColor: 'black',
     flex: 1,
   },
