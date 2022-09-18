@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { SafeAreaView } from 'react-native';
 import TrackPlayer, { Capability } from 'react-native-track-player';
 import Player from './components/Player';
 
@@ -71,11 +70,7 @@ class MusicPlayer extends Component<{}, ComponentState> {
 
   render() {
     const { tracks } = this.state;
-    return (
-      <SafeAreaView>
-        <Player tracks={tracks} />
-      </SafeAreaView>
-    );
+    return <Player tracks={tracks} />;
   }
 }
 
