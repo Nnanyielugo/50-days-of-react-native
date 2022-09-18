@@ -3,8 +3,8 @@ import {
   View,
   Text,
   StyleSheet,
-  SafeAreaView,
   ImageBackground,
+  Platform,
 } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import Geolocation from 'react-native-geolocation-service';
@@ -184,49 +184,48 @@ class Weather extends Component<ComponentProps, ComponentState> {
 
   render() {
     return (
-      <SafeAreaView style={styles.container}>
-        <ImageBackground
-          style={styles.backgroundImage}
-          imageStyle={{ opacity: 1 }}
-          source={this.state.backgroundImage.module}
-          resizeMode="cover">
-          <SwitchLocationModal
-            closeModal={() => this.toggleModal()}
-            isVisible={this.state.modalIsVisible}
-            geocode={this.handleGeocode}
+      <ImageBackground
+        style={styles.backgroundImage}
+        imageStyle={{ opacity: 1 }}
+        source={this.state.backgroundImage.module}
+        resizeMode="cover">
+        <SwitchLocationModal
+          closeModal={() => this.toggleModal()}
+          isVisible={this.state.modalIsVisible}
+          geocode={this.handleGeocode}
+        />
+        <ScrollView
+          style={[styles.scroll, Platform.OS === 'ios' && { marginTop: 30 }]}>
+          <View style={styles.menu}>
+            <Icon name="menu-outline" color="#FFF" size={40} />
+            <Icon
+              name="add-outline"
+              color="#FFF"
+              size={40}
+              onPress={() => this.toggleModal()}
+            />
+          </View>
+          <View style={styles.headerContainer}>
+            <Text style={styles.headerText}>Weather</Text>
+          </View>
+          <WeatherInformation
+            current={this.state?.current}
+            hourly={this.state?.hourly}
+            address={this.state?.address}
+            loaded={this.state.loaded}
           />
-          <ScrollView style={styles.scroll}>
-            <View style={styles.menu}>
-              <Icon name="menu-outline" color="#FFF" size={40} />
-              <Icon
-                name="add-outline"
-                color="#FFF"
-                size={40}
-                onPress={() => this.toggleModal()}
-              />
-            </View>
-            <View style={styles.headerContainer}>
-              <Text style={styles.headerText}>Weather</Text>
-            </View>
-            <WeatherInformation
-              current={this.state?.current}
-              hourly={this.state?.hourly}
-              address={this.state?.address}
-              loaded={this.state.loaded}
-            />
-            <History
-              yesterday={this.state.yesterday}
-              loaded={this.state.loaded}
-              daily={this.state.daily}
-            />
-            {this.state.coords && (
-              <>
-                <Map coords={this.state.coords} />
-              </>
-            )}
-          </ScrollView>
-        </ImageBackground>
-      </SafeAreaView>
+          <History
+            yesterday={this.state.yesterday}
+            loaded={this.state.loaded}
+            daily={this.state.daily}
+          />
+          {this.state.coords && (
+            <>
+              <Map coords={this.state.coords} />
+            </>
+          )}
+        </ScrollView>
+      </ImageBackground>
     );
   }
 }
@@ -245,6 +244,7 @@ const styles = StyleSheet.create({
   scroll: {
     marginBottom: 20,
     zIndex: 999,
+    marginTop: 10,
   },
   headerContainer: {
     marginTop: 20,
