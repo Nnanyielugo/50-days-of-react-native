@@ -40,8 +40,8 @@ export default function Home(props: HomeProps) {
     );
   };
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <ScrollView contentContainerStyle={styles.container}>
+    <SafeAreaView style={styles.container}>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
         {PAGES.map((page, index) => renderComponent(page, index))}
       </ScrollView>
     </SafeAreaView>
@@ -50,7 +50,10 @@ export default function Home(props: HomeProps) {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     backgroundColor: '#EFF6F9',
+  },
+  scrollContainer: {
     flex: 1,
     paddingVertical: 10,
     paddingHorizontal: WIDTH * 0.05,

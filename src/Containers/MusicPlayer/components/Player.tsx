@@ -151,7 +151,7 @@ const Player: FunctionComponent<ComponentProps> = ({ tracks }) => {
   );
 
   return (
-    <View style={{ backgroundColor: backgroundColor.light }}>
+    <View style={{ backgroundColor: backgroundColor.light, paddingTop: 20 }}>
       <View style={[styles.container]}>
         {currentTrack ? (
           <View style={styles.trackArtContainer}>

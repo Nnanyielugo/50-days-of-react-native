@@ -194,9 +194,9 @@ const Playlist: FunctionComponent<ComponentProps> = ({
       // Solution 4.b
       posY = SWIPE_AUTO_HEIGHT;
       // problem 2 solution 3.b
-      upBand = 700;
+      upBand = 1200;
       Animated.timing(scrollViewContainerHeight, {
-        toValue: SCREEN_HEIGHT * 0.89,
+        toValue: SCREEN_HEIGHT * 0.95,
         useNativeDriver: false,
       }).start();
     });
