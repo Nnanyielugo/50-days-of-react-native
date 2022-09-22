@@ -34,13 +34,7 @@ const Board: FunctionComponent<BoardProps> = ({
   const marginAnim = React.useRef(new Animated.Value(300)).current;
   const buttonMarginAnim = React.useRef(new Animated.Value(50)).current;
   const buttonFadeAnim = React.useRef(new Animated.Value(0)).current;
-  const fadeIn = () => {
-    Animated.timing(fadeAnim, {
-      toValue: 1,
-      duration: 1500,
-      useNativeDriver: false,
-    }).start();
-  };
+
   const growOut = () => {
     Animated.parallel([
       Animated.timing(sizeAnim, {
@@ -53,7 +47,12 @@ const Board: FunctionComponent<BoardProps> = ({
         duration: 1500,
         useNativeDriver: false,
       }),
-    ]).start(fadeIn);
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 1500,
+        useNativeDriver: false,
+      }),
+    ]).start();
   };
 
   React.useEffect(() => {
