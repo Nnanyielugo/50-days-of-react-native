@@ -7,7 +7,9 @@ interface SquareProps {
   value: string | null;
   tapSquare: () => void;
   index: number;
-  winningTiles: number[];
+  winningTiles: number[] | null;
+  currentSelection: number | null;
+  isFreshgame: boolean;
 }
 
 const Square: FunctionComponent<SquareProps> = ({
@@ -15,6 +17,8 @@ const Square: FunctionComponent<SquareProps> = ({
   tapSquare,
   index,
   winningTiles,
+  currentSelection,
+  isFreshgame,
 }) => {
   const fadeAnim = React.useRef(new Animated.Value(0.5)).current;
   const sizeAnim = React.useRef(new Animated.Value(20)).current;
@@ -38,8 +42,16 @@ const Square: FunctionComponent<SquareProps> = ({
 
   const growOutText = () => {
     Animated.timing(textSizeAnim, {
-      toValue: 40,
-      duration: 500,
+      toValue: 50,
+      duration: 300,
+      useNativeDriver: false,
+    }).start();
+  };
+
+  const growInText = () => {
+    Animated.timing(textSizeAnim, {
+      toValue: 20,
+      duration: 200,
       useNativeDriver: false,
     }).start();
   };
@@ -52,6 +64,13 @@ const Square: FunctionComponent<SquareProps> = ({
   React.useEffect(() => {
     growOut();
   }, []); //eslint-disable-line react-hooks/exhaustive-deps
+
+  React.useEffect(() => {
+    if (isFreshgame) {
+      growInText();
+    }
+  }, [isFreshgame]); //eslint-disable-line react-hooks/exhaustive-deps
+
   return (
     <Pressable onPress={handlePress}>
       <Animated.View
@@ -61,7 +80,15 @@ const Square: FunctionComponent<SquareProps> = ({
             opacity: fadeAnim,
             width: sizeAnim,
             height: sizeAnim,
-            borderColor: isWinningTile ? 'red' : 'grey',
+            borderColor: isWinningTile
+              ? 'red'
+              : currentSelection === index
+              ? 'whitesmoke'
+              : 'grey',
+            borderWidth:
+              currentSelection === index
+                ? StyleSheet.hairlineWidth * 2
+                : StyleSheet.hairlineWidth,
           },
         ]}>
         <Animated.Text style={[styles.text, { fontSize: textSizeAnim }]}>
@@ -77,7 +104,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#2c3e50',
-    borderWidth: StyleSheet.hairlineWidth,
     borderStyle: 'solid',
   },
   text: {

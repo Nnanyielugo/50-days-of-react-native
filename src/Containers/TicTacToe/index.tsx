@@ -10,14 +10,18 @@ interface ComponentState {
   isGameOver: boolean;
   winner: string;
   winningTiles: number[] | null;
+  currentSelection: number | null;
+  isFreshGame: boolean;
 }
 
-const stateObject = {
+const stateObject: ComponentState = {
   xIsNext: true,
   squares: Array(9).fill(''),
   isGameOver: false,
   winner: '',
   winningTiles: null,
+  currentSelection: null,
+  isFreshGame: true,
 };
 
 interface ComponentProps {}
@@ -42,6 +46,8 @@ class TicTacToe extends Component<ComponentProps, ComponentState> {
       {
         xIsNext: !this.state.xIsNext,
         squares,
+        currentSelection: index,
+        isFreshGame: false,
       },
       this.checkFilledSquares,
     );
@@ -82,6 +88,8 @@ class TicTacToe extends Component<ComponentProps, ComponentState> {
           winner={this.state.winner}
           resetState={this.resetState}
           winningTiles={this.state.winningTiles}
+          currentSelection={this.state.currentSelection}
+          isFreshgame={this.state.isFreshGame}
         />
       </View>
     );

@@ -13,7 +13,9 @@ interface BoardProps {
   isGameOver: boolean;
   winner: string;
   resetState: () => void;
-  winningTiles: number[];
+  winningTiles: number[] | null;
+  currentSelection: number | null;
+  isFreshgame: boolean;
 }
 
 const Board: FunctionComponent<BoardProps> = ({
@@ -24,6 +26,8 @@ const Board: FunctionComponent<BoardProps> = ({
   winner,
   resetState,
   winningTiles,
+  currentSelection,
+  isFreshgame,
 }) => {
   const fadeAnim = React.useRef(new Animated.Value(0)).current;
   const sizeAnim = React.useRef(new Animated.Value(0)).current;
@@ -75,12 +79,12 @@ const Board: FunctionComponent<BoardProps> = ({
     Animated.parallel([
       Animated.timing(buttonFadeAnim, {
         toValue: 0,
-        duration: 500,
+        duration: 200,
         useNativeDriver: false,
       }),
       Animated.timing(buttonMarginAnim, {
         toValue: 50,
-        duration: 500,
+        duration: 200,
         useNativeDriver: false,
       }),
     ]).start();
@@ -102,6 +106,8 @@ const Board: FunctionComponent<BoardProps> = ({
         tapSquare={() => tapSquare(index)}
         index={index}
         winningTiles={winningTiles}
+        currentSelection={currentSelection}
+        isFreshgame={isFreshgame}
       />
     );
   };
