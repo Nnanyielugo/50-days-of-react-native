@@ -23,6 +23,15 @@ class TicTacToe extends Component<ComponentProps, ComponentState> {
     };
   }
 
+  resetState = () => {
+    this.setState({
+      xIsNext: true,
+      squares: Array(9).fill(''),
+      isGameOver: false,
+      winner: '',
+    });
+  };
+
   tapSquare = (index: number) => {
     const squares = [...this.state.squares];
     if (this.state.isGameOver) {
@@ -71,6 +80,7 @@ class TicTacToe extends Component<ComponentProps, ComponentState> {
           xIsNext={this.state.xIsNext}
           isGameOver={this.state.isGameOver}
           winner={this.state.winner}
+          resetState={this.resetState}
         />
       </View>
     );

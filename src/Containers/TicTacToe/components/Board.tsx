@@ -2,6 +2,7 @@ import React from 'react';
 import { View, StyleSheet, Animated } from 'react-native';
 
 import Square from './Square';
+import { Button } from '../../../components';
 
 import type { FunctionComponent } from 'react';
 
@@ -11,6 +12,7 @@ interface BoardProps {
   squares: string[] | null[];
   isGameOver: boolean;
   winner: string;
+  resetState: () => void;
 }
 
 const Board: FunctionComponent<BoardProps> = ({
@@ -19,10 +21,13 @@ const Board: FunctionComponent<BoardProps> = ({
   squares,
   isGameOver,
   winner,
+  resetState,
 }) => {
   const fadeAnim = React.useRef(new Animated.Value(0)).current;
   const sizeAnim = React.useRef(new Animated.Value(0)).current;
   const marginAnim = React.useRef(new Animated.Value(300)).current;
+  const buttonMarginAnim = React.useRef(new Animated.Value(50)).current;
+  const buttonFadeAnim = React.useRef(new Animated.Value(0)).current;
   const fadeIn = () => {
     Animated.timing(fadeAnim, {
       toValue: 1,
@@ -38,7 +43,7 @@ const Board: FunctionComponent<BoardProps> = ({
         useNativeDriver: false,
       }),
       Animated.timing(marginAnim, {
-        toValue: 100,
+        toValue: 50,
         duration: 1500,
         useNativeDriver: false,
       }),
@@ -48,6 +53,44 @@ const Board: FunctionComponent<BoardProps> = ({
   React.useEffect(() => {
     growOut();
   }, []); //eslint-disable-line react-hooks/exhaustive-deps
+
+  const showResetButton = () => {
+    Animated.parallel([
+      Animated.timing(buttonFadeAnim, {
+        toValue: 1,
+        duration: 500,
+        useNativeDriver: false,
+      }),
+      Animated.timing(buttonMarginAnim, {
+        toValue: 20,
+        duration: 500,
+        useNativeDriver: false,
+      }),
+    ]).start();
+  };
+
+  const hideResetButton = () => {
+    Animated.parallel([
+      Animated.timing(buttonFadeAnim, {
+        toValue: 0,
+        duration: 500,
+        useNativeDriver: false,
+      }),
+      Animated.timing(buttonMarginAnim, {
+        toValue: 50,
+        duration: 500,
+        useNativeDriver: false,
+      }),
+    ]).start();
+  };
+
+  React.useEffect(() => {
+    if (isGameOver) {
+      showResetButton();
+    } else {
+      hideResetButton();
+    }
+  }, [isGameOver]); //eslint-disable-line react-hooks/exhaustive-deps
 
   const renderSquare = (index: number) => {
     return (
@@ -100,6 +143,17 @@ const Board: FunctionComponent<BoardProps> = ({
         </Animated.Text>
       </Animated.View>
       {renderRows()}
+      <Animated.View
+        style={{ opacity: buttonFadeAnim, marginTop: buttonMarginAnim }}>
+        <Button
+          onPress={resetState}
+          style={{
+            container: styles.buttonContainer,
+            text: styles.buttonText,
+          }}>
+          Reset
+        </Button>
+      </Animated.View>
     </View>
   );
 };
@@ -122,6 +176,18 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 16,
     fontWeight: '700',
+  },
+  buttonContainer: {
+    width: 300,
+    height: 50,
+    justifyContent: 'center',
+    borderRadius: 5,
+    backgroundColor: 'white',
+  },
+  buttonText: {
+    fontSize: 17,
+    fontWeight: '500',
+    color: '#2c3e50',
   },
 });
 
