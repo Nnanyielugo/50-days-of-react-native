@@ -1,27 +1,31 @@
 import React, { Component } from 'react';
 import { View, StyleSheet } from 'react-native';
+
 import Board from './components/Board';
+import { calculateWinner } from './utils';
 
 interface ComponentState {
   xIsNext: boolean;
   squares: string[];
   isGameOver: boolean;
+  winner: string;
 }
 
 interface ComponentProps {}
-class TickTacToe extends Component<ComponentProps, ComponentState> {
+class TicTacToe extends Component<ComponentProps, ComponentState> {
   constructor(props: ComponentProps) {
     super(props);
     this.state = {
       xIsNext: true,
       squares: Array(9).fill(''),
       isGameOver: false,
+      winner: '',
     };
   }
 
   tapSquare = (index: number) => {
     const squares = [...this.state.squares];
-    if (squares[index]) {
+    if (this.state.isGameOver) {
       return;
     }
 
@@ -43,6 +47,19 @@ class TickTacToe extends Component<ComponentProps, ComponentState> {
         isGameOver: true,
       });
     }
+
+    this.handleCalculateWinner();
+  };
+
+  handleCalculateWinner = () => {
+    const { squares } = this.state;
+    const winner = calculateWinner(squares);
+    if (winner) {
+      this.setState({
+        winner,
+        isGameOver: true,
+      });
+    }
   };
 
   render() {
@@ -53,6 +70,7 @@ class TickTacToe extends Component<ComponentProps, ComponentState> {
           squares={this.state.squares}
           xIsNext={this.state.xIsNext}
           isGameOver={this.state.isGameOver}
+          winner={this.state.winner}
         />
       </View>
     );
@@ -68,4 +86,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default TickTacToe;
+export default TicTacToe;
