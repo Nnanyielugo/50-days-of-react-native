@@ -13,6 +13,7 @@ interface BoardProps {
   isGameOver: boolean;
   winner: string;
   resetState: () => void;
+  winningTiles: number[];
 }
 
 const Board: FunctionComponent<BoardProps> = ({
@@ -22,6 +23,7 @@ const Board: FunctionComponent<BoardProps> = ({
   isGameOver,
   winner,
   resetState,
+  winningTiles,
 }) => {
   const fadeAnim = React.useRef(new Animated.Value(0)).current;
   const sizeAnim = React.useRef(new Animated.Value(0)).current;
@@ -98,7 +100,8 @@ const Board: FunctionComponent<BoardProps> = ({
         key={index}
         value={squares[index]}
         tapSquare={() => tapSquare(index)}
-        xIsNext={xIsNext}
+        index={index}
+        winningTiles={winningTiles}
       />
     );
   };

@@ -6,13 +6,21 @@ import type { FunctionComponent } from 'react';
 interface SquareProps {
   value: string | null;
   tapSquare: () => void;
-  xIsNext: boolean;
+  index: number;
+  winningTiles: number[];
 }
 
-const Square: FunctionComponent<SquareProps> = ({ value, tapSquare }) => {
+const Square: FunctionComponent<SquareProps> = ({
+  value,
+  tapSquare,
+  index,
+  winningTiles,
+}) => {
   const fadeAnim = React.useRef(new Animated.Value(0.5)).current;
   const sizeAnim = React.useRef(new Animated.Value(20)).current;
   const textSizeAnim = React.useRef(new Animated.Value(20)).current;
+  const isWinningTile =
+    winningTiles && winningTiles.some(tile => tile === index);
   const fadeIn = () => {
     Animated.timing(fadeAnim, {
       toValue: 1,
@@ -49,7 +57,12 @@ const Square: FunctionComponent<SquareProps> = ({ value, tapSquare }) => {
       <Animated.View
         style={[
           styles.container,
-          { opacity: fadeAnim, width: sizeAnim, height: sizeAnim },
+          {
+            opacity: fadeAnim,
+            width: sizeAnim,
+            height: sizeAnim,
+            borderColor: isWinningTile ? 'red' : 'grey',
+          },
         ]}>
         <Animated.Text style={[styles.text, { fontSize: textSizeAnim }]}>
           {value}
@@ -64,7 +77,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#2c3e50',
-    borderColor: 'grey',
     borderWidth: StyleSheet.hairlineWidth,
     borderStyle: 'solid',
   },
