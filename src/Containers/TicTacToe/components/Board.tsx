@@ -9,12 +9,14 @@ interface BoardProps {
   tapSquare: (index: number) => void;
   xIsNext: boolean;
   squares: string[] | null[];
+  isGameOver: boolean;
 }
 
 const Board: FunctionComponent<BoardProps> = ({
   tapSquare,
   xIsNext,
   squares,
+  isGameOver,
 }) => {
   const fadeAnim = React.useRef(new Animated.Value(0)).current;
   const sizeAnim = React.useRef(new Animated.Value(0)).current;
@@ -88,7 +90,7 @@ const Board: FunctionComponent<BoardProps> = ({
           { opacity: fadeAnim, marginTop: marginAnim },
         ]}>
         <Animated.Text style={[styles.instructions, { fontSize: sizeAnim }]}>
-          Next Player: {xIsNext ? 'X' : 'O'}
+          {isGameOver ? 'Game Over' : ` Next Player: ${xIsNext ? 'X' : 'O'}`}
         </Animated.Text>
       </Animated.View>
       {renderRows()}

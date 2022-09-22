@@ -5,6 +5,7 @@ import Board from './components/Board';
 interface ComponentState {
   xIsNext: boolean;
   squares: string[];
+  isGameOver: boolean;
 }
 
 interface ComponentProps {}
@@ -14,6 +15,7 @@ class TickTacToe extends Component<ComponentProps, ComponentState> {
     this.state = {
       xIsNext: true,
       squares: Array(9).fill(''),
+      isGameOver: false,
     };
   }
 
@@ -24,11 +26,25 @@ class TickTacToe extends Component<ComponentProps, ComponentState> {
     }
 
     squares[index] = this.state.xIsNext ? 'X' : 'O';
-    this.setState({
-      xIsNext: !this.state.xIsNext,
-      squares,
-    });
+    this.setState(
+      {
+        xIsNext: !this.state.xIsNext,
+        squares,
+      },
+      this.checkFilledSquares,
+    );
   };
+
+  checkFilledSquares = () => {
+    const { squares } = this.state;
+    const allFilled = squares.every(square => !!square);
+    if (allFilled) {
+      this.setState({
+        isGameOver: true,
+      });
+    }
+  };
+
   render() {
     return (
       <View style={styles.container}>
@@ -36,6 +52,7 @@ class TickTacToe extends Component<ComponentProps, ComponentState> {
           tapSquare={this.tapSquare}
           squares={this.state.squares}
           xIsNext={this.state.xIsNext}
+          isGameOver={this.state.isGameOver}
         />
       </View>
     );
