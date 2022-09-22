@@ -170,7 +170,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    backgroundColor: '#2c3e50',
+    backgroundColor: '#333',
     paddingTop: 50,
   },
   row: {

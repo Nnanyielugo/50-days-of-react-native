@@ -4,24 +4,33 @@ import { View, StyleSheet } from 'react-native';
 import Board from './components/Board';
 import { calculateWinner, returnWinningTiles } from './utils';
 
+interface History {
+  squares: string[];
+  currentSelection: number | null;
+}
 interface ComponentState {
   xIsNext: boolean;
-  squares: string[];
   isGameOver: boolean;
   winner: string;
   winningTiles: number[] | null;
-  currentSelection: number | null;
   isFreshGame: boolean;
+  history: History[];
+  stepNumber: number;
 }
 
 const stateObject: ComponentState = {
   xIsNext: true,
-  squares: Array(9).fill(''),
+  history: [
+    {
+      squares: Array(9).fill(''),
+      currentSelection: null,
+    },
+  ],
   isGameOver: false,
   winner: '',
   winningTiles: null,
-  currentSelection: null,
   isFreshGame: true,
+  stepNumber: 0,
 };
 
 interface ComponentProps {}
@@ -36,25 +45,41 @@ class TicTacToe extends Component<ComponentProps, ComponentState> {
   };
 
   tapSquare = (index: number) => {
-    const squares = [...this.state.squares];
-    if (this.state.isGameOver) {
+    const history = this.state.history.slice(0, this.state.stepNumber + 1);
+    const current = history[history.length - 1];
+    const squares = current.squares.slice();
+    if (squares[index] || this.state.isGameOver) {
       return;
     }
 
     squares[index] = this.state.xIsNext ? 'X' : 'O';
+
     this.setState(
       {
         xIsNext: !this.state.xIsNext,
-        squares,
-        currentSelection: index,
+        history: history.concat([
+          {
+            squares,
+            currentSelection: index,
+          },
+        ]),
         isFreshGame: false,
+        stepNumber: history.length,
       },
       this.checkFilledSquares,
     );
   };
 
+  jumpTo = (step: number) => {
+    this.setState({
+      stepNumber: step,
+      xIsNext: step % 2 === 0,
+    });
+  };
+
   checkFilledSquares = () => {
-    const { squares } = this.state;
+    const current = this.state.history[this.state.stepNumber];
+    const squares = current.squares;
     const allFilled = squares.every(square => !!square);
     if (allFilled) {
       this.setState({
@@ -66,7 +91,8 @@ class TicTacToe extends Component<ComponentProps, ComponentState> {
   };
 
   handleCalculateWinner = () => {
-    const { squares } = this.state;
+    const current = this.state.history[this.state.stepNumber];
+    const squares = current.squares;
     const winner = calculateWinner(squares);
     if (winner) {
       this.setState({
@@ -78,17 +104,18 @@ class TicTacToe extends Component<ComponentProps, ComponentState> {
   };
 
   render() {
+    const current = this.state.history[this.state.stepNumber];
     return (
       <View style={styles.container}>
         <Board
           tapSquare={this.tapSquare}
-          squares={this.state.squares}
+          squares={current.squares}
           xIsNext={this.state.xIsNext}
           isGameOver={this.state.isGameOver}
           winner={this.state.winner}
           resetState={this.resetState}
           winningTiles={this.state.winningTiles}
-          currentSelection={this.state.currentSelection}
+          currentSelection={current.currentSelection}
           isFreshgame={this.state.isFreshGame}
         />
       </View>
@@ -101,7 +128,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#2c3e50',
+    backgroundColor: '#333',
   },
 });
 
