@@ -47,7 +47,6 @@ Please note that the setup instruction assumes that you have setup your developm
 - [ ] segmented control views
 - [ ] mapview and find geolocation
 - [ ] pan gesture (move objects around, specify background, specify object, and toggle spring back (with animation))
-- [ ] swipeable sidemenu
 - [ ] pattern unlock (with gesture)
 - [ ] fuzzy search
 - [ ] sortable blocks
@@ -70,4 +69,3 @@ Please note that the setup instruction assumes that you have setup your developm
 - [ ] shopping cart/e-commerce
 - [ ] run tracker
 - [ ] currency converter
-- [ ] tick tack toe
