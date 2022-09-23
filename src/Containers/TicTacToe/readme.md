@@ -1,5 +1,4 @@
 ## TicTacToe
 
 ### Demo
-https://user-images.githubusercontent.com/27894311/191933909-6ca28edb-6325-4bb3-87cd-7e57e2191799.mov
-
+https://user-images.githubusercontent.com/27894311/192053452-aca47014-9c30-44fc-9107-0985219637ae.mov
