@@ -25,6 +25,8 @@ Please note that the setup instruction assumes that you have setup your developm
 
 #### Video is unfinished
 
+#### [TicTacToe](https://github.com/Nnanyielugo/50-days-of-react-native/blob/master/src/Containers/TicTacToe/readme.md)
+
 
 ### TODO
 
@@ -41,7 +43,7 @@ Please note that the setup instruction assumes that you have setup your developm
 - [x] video player
 - [ ] pdf reader
 - [ ] core animation and masks (twitter entrance animation)
-- [ ] tic-tac-toe
+- [x] tic-tac-toe
 - [ ] app menu
 - [ ] custom swipe transitions
 - [ ] segmented control views
