@@ -12,8 +12,10 @@ Please note that the setup instruction assumes that you have setup your developm
 - run `npm run set-env && npm run android` to run the app. Please note that ios support is in progress.
 
 ### Demos
+
 #### Menu
-<img src="assets/demos/Menu.jpeg" width="270" height="500">
+
+<img src="assets/demos/Menu.png" width="270" height="500">
 
 #### [Music Player](https://github.com/Nnanyielugo/50-days-of-react-native/blob/master/src/Containers/MusicPlayer/readme.md)
 
@@ -26,7 +28,6 @@ Please note that the setup instruction assumes that you have setup your developm
 #### Video is unfinished
 
 #### [TicTacToe](https://github.com/Nnanyielugo/50-days-of-react-native/blob/master/src/Containers/TicTacToe/readme.md)
-
 
 ### TODO
 
