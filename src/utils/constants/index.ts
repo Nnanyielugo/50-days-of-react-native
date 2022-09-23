@@ -26,4 +26,9 @@ export const PAGES: Page[] = [
     componentName: 'VideoPlayer',
     icon: 'video-vintage',
   },
+  {
+    name: 'Tic Tac Toe',
+    componentName: 'TicTacToe',
+    icon: 'gamepad-circle-left',
+  },
 ];

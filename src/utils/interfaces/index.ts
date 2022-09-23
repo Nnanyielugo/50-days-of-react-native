@@ -7,6 +7,7 @@ export type RootStackParamList = {
   MusicPlayer: undefined;
   TinderSwipe: undefined;
   VideoPlayer: undefined;
+  TicTacToe: undefined;
 };
 
 export interface Page {

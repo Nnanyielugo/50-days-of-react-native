@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, ScrollView, SafeAreaView } from 'react-native';
+import { StyleSheet, ScrollView, SafeAreaView } from 'react-native';
 import Video from 'react-native-video';
 import VideoComp from './components/video';
 import Preview from './components/preview';

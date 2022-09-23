@@ -39,7 +39,11 @@ export const Button: FunctionComponent<ButtonProps> = (props): JSX.Element => {
   );
 
   if (props.disabled) return button;
-  return <TouchableOpacity onPress={props.onPress}>{button}</TouchableOpacity>;
+  return (
+    <TouchableOpacity onPress={props.onPress} activeOpacity={0.8}>
+      {button}
+    </TouchableOpacity>
+  );
 };
 
 const styles = StyleSheet.create({
