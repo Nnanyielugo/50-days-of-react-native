@@ -4,7 +4,7 @@ import { View, StyleSheet } from 'react-native';
 import Board from './components/Board';
 import { calculateWinner, returnWinningTiles } from './utils';
 
-interface History {
+export interface History {
   squares: string[];
   currentSelection: number | null;
 }
@@ -117,6 +117,8 @@ class TicTacToe extends Component<ComponentProps, ComponentState> {
           winningTiles={this.state.winningTiles}
           currentSelection={current.currentSelection}
           isFreshgame={this.state.isFreshGame}
+          history={this.state.history}
+          jumpTo={this.jumpTo}
         />
       </View>
     );

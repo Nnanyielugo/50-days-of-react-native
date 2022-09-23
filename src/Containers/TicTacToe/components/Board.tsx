@@ -3,8 +3,10 @@ import { View, StyleSheet, Animated } from 'react-native';
 
 import Square from './Square';
 import { Button } from '../../../components';
+import HistoryContainer from './history/Container';
 
 import type { FunctionComponent } from 'react';
+import type { History } from '../index';
 
 interface BoardProps {
   tapSquare: (index: number) => void;
@@ -16,6 +18,8 @@ interface BoardProps {
   winningTiles: number[] | null;
   currentSelection: number | null;
   isFreshgame: boolean;
+  history: History[];
+  jumpTo: (step: number) => void;
 }
 
 const Board: FunctionComponent<BoardProps> = ({
@@ -28,6 +32,8 @@ const Board: FunctionComponent<BoardProps> = ({
   winningTiles,
   currentSelection,
   isFreshgame,
+  history,
+  jumpTo,
 }) => {
   const fadeAnim = React.useRef(new Animated.Value(0)).current;
   const sizeAnim = React.useRef(new Animated.Value(0)).current;
@@ -39,17 +45,17 @@ const Board: FunctionComponent<BoardProps> = ({
     Animated.parallel([
       Animated.timing(sizeAnim, {
         toValue: 18,
-        duration: 1500,
+        duration: 500,
         useNativeDriver: false,
       }),
       Animated.timing(marginAnim, {
         toValue: 50,
-        duration: 1500,
+        duration: 500,
         useNativeDriver: false,
       }),
       Animated.timing(fadeAnim, {
         toValue: 1,
-        duration: 1500,
+        duration: 500,
         useNativeDriver: false,
       }),
     ]).start();
@@ -151,17 +157,24 @@ const Board: FunctionComponent<BoardProps> = ({
         </Animated.Text>
       </Animated.View>
       {renderRows()}
-      <Animated.View
-        style={{ opacity: buttonFadeAnim, marginTop: buttonMarginAnim }}>
-        <Button
-          onPress={resetState}
+      {isGameOver && (
+        <Animated.View
           style={{
-            container: styles.buttonContainer,
-            text: styles.buttonText,
+            opacity: buttonFadeAnim,
+            marginTop: buttonMarginAnim,
           }}>
-          Reset
-        </Button>
-      </Animated.View>
+          <Button
+            onPress={resetState}
+            style={{
+              container: styles.buttonContainer,
+              text: styles.buttonText,
+            }}>
+            Reset
+          </Button>
+        </Animated.View>
+      )}
+      {!isGameOver && <View style={{ marginBottom: 20 }} />}
+      <HistoryContainer history={history} jumpTo={jumpTo} />
     </View>
   );
 };
@@ -169,17 +182,20 @@ const Board: FunctionComponent<BoardProps> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
     backgroundColor: '#333',
     paddingTop: 50,
+    marginBottom: 20,
   },
   row: {
     flexDirection: 'row',
   },
   rowsContainer: {
     marginTop: 30,
+    alignItems: 'center',
   },
-  instructionsContainer: {},
+  instructionsContainer: {
+    alignItems: 'center',
+  },
   instructions: {
     color: 'white',
     fontSize: 16,

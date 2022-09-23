@@ -25,19 +25,19 @@ const Square: FunctionComponent<SquareProps> = ({
   const textSizeAnim = React.useRef(new Animated.Value(20)).current;
   const isWinningTile =
     winningTiles && winningTiles.some(tile => tile === index);
-  const fadeIn = () => {
-    Animated.timing(fadeAnim, {
-      toValue: 1,
-      duration: 1500,
-      useNativeDriver: false,
-    }).start();
-  };
-  const growOut = () => {
-    Animated.timing(sizeAnim, {
-      toValue: 100,
-      duration: 1500,
-      useNativeDriver: false,
-    }).start(fadeIn);
+  const entrance = () => {
+    Animated.parallel([
+      Animated.timing(sizeAnim, {
+        toValue: 100,
+        duration: 500,
+        useNativeDriver: false,
+      }),
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 500,
+        useNativeDriver: false,
+      }),
+    ]).start();
   };
 
   const growOutText = () => {
@@ -62,7 +62,7 @@ const Square: FunctionComponent<SquareProps> = ({
   };
 
   React.useEffect(() => {
-    growOut();
+    entrance();
   }, []); //eslint-disable-line react-hooks/exhaustive-deps
 
   React.useEffect(() => {
