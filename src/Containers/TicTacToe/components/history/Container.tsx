@@ -30,7 +30,7 @@ const HistoryContainer: FunctionComponent<ComponentProps> = ({
       contentContainerStyle={styles.container}
       showsVerticalScrollIndicator={false}>
       <Text style={styles.header}>Moves:</Text>
-      {history.slice(0, history.length - 1).map((item, index) => (
+      {history.map((item, index) => (
         <HistoryItem
           iconOpen={iconOpen}
           iconIndex={iconIndex}

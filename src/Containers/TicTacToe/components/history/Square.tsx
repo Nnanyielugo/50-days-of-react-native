@@ -25,17 +25,17 @@ const HistorySquare: FunctionComponent<ComponentProps> = ({
     Animated.parallel([
       Animated.timing(fadeAnim, {
         toValue: 1,
-        duration: 50,
+        duration: 200,
         useNativeDriver: false,
       }),
       Animated.timing(textSizeAnim, {
         toValue: 12,
-        duration: 50,
+        duration: 200,
         useNativeDriver: false,
       }),
       Animated.timing(sizeAnim, {
         toValue: 20,
-        duration: 50,
+        duration: 200,
         useNativeDriver: false,
       }),
     ]).start();
