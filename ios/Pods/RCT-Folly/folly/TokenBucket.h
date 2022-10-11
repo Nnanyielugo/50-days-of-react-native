@@ -21,11 +21,211 @@
 #include <chrono>
 #include <thread>
 
+#include <folly/ConstexprMath.h>
 #include <folly/Likely.h>
 #include <folly/Optional.h>
 #include <folly/concurrency/CacheLocality.h>
 
 namespace folly {
+
+struct TokenBucketPolicyDefault {
+  using align =
+      std::integral_constant<size_t, hardware_destructive_interference_size>;
+
+  template <typename T>
+  using atom = std::atomic<T>;
+
+  using clock = std::chrono::steady_clock;
+
+  using concurrent = std::true_type;
+};
+
+/**
+ * Thread-safe (atomic) token bucket primitive.
+ *
+ * This primitive can be used to implement a token bucket
+ * (http://en.wikipedia.org/wiki/Token_bucket).  It handles
+ * the storage of the state in an atomic way, and presents
+ * an interface dealing with tokens, rate, burstSize and time.
+ *
+ * This primitive records the last time it was updated. This allows the
+ * token bucket to add tokens "just in time" when tokens are requested.
+ *
+ * @tparam Policy A policy.
+ */
+template <typename Policy = TokenBucketPolicyDefault>
+class TokenBucketStorage {
+  template <typename T>
+  using Atom = typename Policy::template atom<T>;
+  using Align = typename Policy::align;
+  using Clock = typename Policy::clock; // do we need clock here?
+  using Concurrent = typename Policy::concurrent;
+
+  static_assert(Clock::is_steady, "clock must be steady"); // do we need clock?
+
+ public:
+  /**
+   * Constructor.
+   *
+   * @param zeroTime Initial time at which to consider the token bucket
+   *                 starting to fill. Defaults to 0, so by default token
+   *                 buckets are "full" after construction.
+   */
+  explicit TokenBucketStorage(double zeroTime = 0) noexcept
+      : zeroTime_(zeroTime) {}
+
+  /**
+   * Copy constructor.
+   *
+   * Thread-safe. (Copy constructors of derived classes may not be thread-safe
+   * however.)
+   */
+  TokenBucketStorage(const TokenBucketStorage& other) noexcept
+      : zeroTime_(other.zeroTime_.load(std::memory_order_relaxed)) {}
+
+  /**
+   * Copy-assignment operator.
+   *
+   * Warning: not thread safe for the object being assigned to (including
+   * self-assignment). Thread-safe for the other object.
+   */
+  TokenBucketStorage& operator=(const TokenBucketStorage& other) noexcept {
+    zeroTime_.store(other.zeroTime(), std::memory_order_relaxed);
+    return *this;
+  }
+
+  /**
+   * Re-initialize token bucket.
+   *
+   * Thread-safe.
+   *
+   * @param zeroTime Initial time at which to consider the token bucket
+   *                 starting to fill. Defaults to 0, so by default token
+   *                 bucket is reset to "full".
+   */
+  void reset(double zeroTime = 0) noexcept {
+    zeroTime_.store(zeroTime, std::memory_order_relaxed);
+  }
+
+  /**
+   * Returns the number of tokens currently available.  This could be negative
+   * (if in debt); will be a most burstSize.
+   *
+   *
+   * Thread-safe (but returned values may immediately be outdated).
+   */
+  double available(
+      double rate, double burstSize, double nowInSeconds) const noexcept {
+    assert(rate > 0);
+    assert(burstSize > 0);
+
+    double zt = this->zeroTime_.load(std::memory_order_relaxed);
+    return std::min((nowInSeconds - zt) * rate, burstSize);
+  }
+
+  /**
+   * Consume tokens at the given rate/burst/time.
+   *
+   * Consumption is actually done by the callback function: it's given a
+   * reference with the number of available tokens and returns the number
+   * consumed.  Typically the return value would be between 0.0 and available,
+   * but there are no restrictions.
+   *
+   * Note: the callback may be called multiple times, so please no side-effects
+   */
+  template <typename Callback>
+  double consume(
+      double rate,
+      double burstSize,
+      double nowInSeconds,
+      const Callback& callback) {
+    assert(rate > 0);
+    assert(burstSize > 0);
+
+    double zeroTimeOld;
+    double zeroTimeNew;
+    double consumed;
+    do {
+      zeroTimeOld = zeroTime();
+      double tokens = std::min((nowInSeconds - zeroTimeOld) * rate, burstSize);
+      consumed = callback(tokens);
+      double tokensNew = tokens - consumed;
+      if (consumed == 0.0) {
+        return consumed;
+      }
+
+      zeroTimeNew = nowInSeconds - tokensNew / rate;
+    } while (UNLIKELY(
+        !compare_exchange_weak_relaxed(zeroTime_, zeroTimeOld, zeroTimeNew)));
+
+    return consumed;
+  }
+
+  /**
+   * returns the time at which the bucket will have `target` tokens available.
+   *
+   * Caution: it doesn't make sense to ask about target > burstSize
+   *
+   * Eg.
+   *     // time debt repaid
+   *     bucket.timeWhenBucket(rate, 0);
+   *
+   *     // time bucket is full
+   *     bucket.timeWhenBucket(rate, burstSize);
+   */
+
+  double timeWhenBucket(double rate, double target) {
+    return zeroTime() + target / rate;
+  }
+
+  /**
+   * Return extra tokens back to the bucket.
+   *
+   * Thread-safe.
+   */
+  void returnTokens(double tokensToReturn, double rate) {
+    assert(rate > 0);
+
+    returnTokensImpl(tokensToReturn, rate);
+  }
+
+ private:
+  /**
+   * Adjust zeroTime based on rate and tokenCount and return the new value of
+   * zeroTime_. Note: Token count can be negative to move the zeroTime_
+   * into the future.
+   */
+  double returnTokensImpl(double tokenCount, double rate) {
+    auto zeroTimeOld = zeroTime_.load(std::memory_order_relaxed);
+
+    double zeroTimeNew;
+    do {
+      zeroTimeNew = zeroTimeOld - tokenCount / rate;
+
+    } while (UNLIKELY(
+        !compare_exchange_weak_relaxed(zeroTime_, zeroTimeOld, zeroTimeNew)));
+    return zeroTimeNew;
+  }
+
+  static bool compare_exchange_weak_relaxed(
+
+      Atom<double>& atom, double& expected, double zeroTime) {
+    if (Concurrent::value) {
+      return atom.compare_exchange_weak(
+          expected, zeroTime, std::memory_order_relaxed);
+    } else {
+      return atom.store(zeroTime, std::memory_order_relaxed), true;
+    }
+  }
+
+  double zeroTime() const {
+    return this->zeroTime_.load(std::memory_order_relaxed);
+  }
+
+  static constexpr size_t AlignZeroTime =
+      constexpr_max(Align::value, alignof(Atom<double>));
+  alignas(AlignZeroTime) Atom<double> zeroTime_;
+};
 
 /**
  * Thread-safe (atomic) token bucket implementation.
@@ -51,10 +251,16 @@ namespace folly {
  * The "dynamic" base variant allows the token generation rate and maximum
  * burst size to change with every token consumption.
  *
- * @tparam Clock Clock type, must be steady i.e. monotonic.
+ * @tparam Policy A policy.
  */
-template <typename Clock = std::chrono::steady_clock>
+template <typename Policy = TokenBucketPolicyDefault>
 class BasicDynamicTokenBucket {
+  template <typename T>
+  using Atom = typename Policy::template atom<T>;
+  using Align = typename Policy::align;
+  using Clock = typename Policy::clock;
+  using Concurrent = typename Policy::concurrent;
+
   static_assert(Clock::is_steady, "clock must be steady");
 
  public:
@@ -66,7 +272,7 @@ class BasicDynamicTokenBucket {
    *                 buckets are "full" after construction.
    */
   explicit BasicDynamicTokenBucket(double zeroTime = 0) noexcept
-      : zeroTime_(zeroTime) {}
+      : bucket_(zeroTime) {}
 
   /**
    * Copy constructor.
@@ -75,19 +281,7 @@ class BasicDynamicTokenBucket {
    * however.)
    */
   BasicDynamicTokenBucket(const BasicDynamicTokenBucket& other) noexcept
-      : zeroTime_(other.zeroTime_.load()) {}
-
-  /**
-   * Copy-assignment operator.
-   *
-   * Warning: not thread safe for the object being assigned to (including
-   * self-assignment). Thread-safe for the other object.
-   */
-  BasicDynamicTokenBucket& operator=(
-      const BasicDynamicTokenBucket& other) noexcept {
-    zeroTime_ = other.zeroTime_.load();
-    return *this;
-  }
+      : bucket_(other.bucket_) {}
 
   /**
    * Re-initialize token bucket.
@@ -98,9 +292,7 @@ class BasicDynamicTokenBucket {
    *                 starting to fill. Defaults to 0, so by default token
    *                 bucket is reset to "full".
    */
-  void reset(double zeroTime = 0) noexcept {
-    zeroTime_ = zeroTime;
-  }
+  void reset(double zeroTime = 0) noexcept { bucket_.reset(zeroTime); }
 
   /**
    * Returns the current time in seconds since Epoch.
@@ -134,18 +326,17 @@ class BasicDynamicTokenBucket {
     assert(rate > 0);
     assert(burstSize > 0);
 
-    if (nowInSeconds <= zeroTime_.load()) {
+    if (bucket_.available(rate, burstSize, nowInSeconds) < 0.0) {
       return 0;
     }
 
-    return consumeImpl(
-        rate, burstSize, nowInSeconds, [toConsume](double& tokens) {
-          if (tokens < toConsume) {
-            return false;
-          }
-          tokens -= toConsume;
-          return true;
+    double consumed = bucket_.consume(
+        rate, burstSize, nowInSeconds, [toConsume](double available) {
+          return available < toConsume ? 0.0 : toConsume;
         });
+
+    assert(consumed == toConsume || consumed == 0.0);
+    return consumed == toConsume;
   }
 
   /**
@@ -171,28 +362,19 @@ class BasicDynamicTokenBucket {
     assert(rate > 0);
     assert(burstSize > 0);
 
-    if (nowInSeconds <= zeroTime_.load()) {
+    if (bucket_.available(rate, burstSize, nowInSeconds) <= 0.0) {
       return 0;
     }
 
-    double consumed;
-    consumeImpl(
-        rate, burstSize, nowInSeconds, [&consumed, toConsume](double& tokens) {
-          if (tokens < toConsume) {
-            consumed = tokens;
-            tokens = 0.0;
-          } else {
-            consumed = toConsume;
-            tokens -= toConsume;
-          }
-          return true;
+    double consumed = bucket_.consume(
+        rate, burstSize, nowInSeconds, [toConsume](double available) {
+          return constexpr_min(available, toConsume);
         });
     return consumed;
   }
 
   /**
-   * Return extra tokens back to the bucket. This will move the zeroTime_
-   * value back based on the rate.
+   * Return extra tokens back to the bucket.
    *
    * Thread-safe.
    */
@@ -200,13 +382,13 @@ class BasicDynamicTokenBucket {
     assert(rate > 0);
     assert(tokensToReturn > 0);
 
-    returnTokensImpl(tokensToReturn, rate);
+    bucket_.returnTokens(tokensToReturn, rate);
   }
 
   /**
    * Like consumeOrDrain but the call will always satisfy the asked for count.
-   * It does so by borrowing tokens from the future (zeroTime_ will move
-   * forward) if the currently available count isn't sufficient.
+   * It does so by borrowing tokens from the future if the currently available
+   * count isn't sufficient.
    *
    * Returns a folly::Optional<double>. The optional wont be set if the request
    * cannot be satisfied: only case is when it is larger than burstSize. The
@@ -241,8 +423,9 @@ class BasicDynamicTokenBucket {
       if (consumed > 0) {
         toConsume -= consumed;
       } else {
-        double zeroTimeNew = returnTokensImpl(-toConsume, rate);
-        double napTime = std::max(0.0, zeroTimeNew - nowInSeconds);
+        bucket_.returnTokens(-toConsume, rate);
+        double debtPaid = bucket_.timeWhenBucket(rate, 0);
+        double napTime = std::max(0.0, debtPaid - nowInSeconds);
         return napTime;
       }
     }
@@ -261,7 +444,7 @@ class BasicDynamicTokenBucket {
     auto res =
         consumeWithBorrowNonBlocking(toConsume, rate, burstSize, nowInSeconds);
     if (res.value_or(0) > 0) {
-      int64_t napUSec = res.value() * 1000000;
+      const auto napUSec = static_cast<int64_t>(res.value() * 1000000);
       std::this_thread::sleep_for(std::chrono::microseconds(napUSec));
     }
     return res.has_value();
@@ -278,63 +461,21 @@ class BasicDynamicTokenBucket {
       double nowInSeconds = defaultClockNow()) const noexcept {
     assert(rate > 0);
     assert(burstSize > 0);
-
-    double zt = this->zeroTime_.load();
-    if (nowInSeconds <= zt) {
-      return 0;
-    }
-    return std::min((nowInSeconds - zt) * rate, burstSize);
+    return std::max(0.0, bucket_.available(rate, burstSize, nowInSeconds));
   }
 
  private:
-  template <typename TCallback>
-  bool consumeImpl(
-      double rate,
-      double burstSize,
-      double nowInSeconds,
-      const TCallback& callback) {
-    auto zeroTimeOld = zeroTime_.load();
-    double zeroTimeNew;
-    do {
-      auto tokens = std::min((nowInSeconds - zeroTimeOld) * rate, burstSize);
-      if (!callback(tokens)) {
-        return false;
-      }
-      zeroTimeNew = nowInSeconds - tokens / rate;
-    } while (
-        UNLIKELY(!zeroTime_.compare_exchange_weak(zeroTimeOld, zeroTimeNew)));
-
-    return true;
-  }
-
-  /**
-   * Adjust zeroTime based on rate and tokenCount and return the new value of
-   * zeroTime_. Note: Token count can be negative to move the zeroTime_ value
-   * into the future.
-   */
-  double returnTokensImpl(double tokenCount, double rate) {
-    auto zeroTimeOld = zeroTime_.load();
-    double zeroTimeNew;
-    do {
-      zeroTimeNew = zeroTimeOld - tokenCount / rate;
-    } while (
-        UNLIKELY(!zeroTime_.compare_exchange_weak(zeroTimeOld, zeroTimeNew)));
-    return zeroTimeNew;
-  }
-
-  alignas(hardware_destructive_interference_size) std::atomic<double> zeroTime_;
+  TokenBucketStorage<Policy> bucket_;
 };
 
 /**
  * Specialization of BasicDynamicTokenBucket with a fixed token
  * generation rate and a fixed maximum burst size.
  */
-template <typename Clock = std::chrono::steady_clock>
+template <typename Policy = TokenBucketPolicyDefault>
 class BasicTokenBucket {
-  static_assert(Clock::is_steady, "clock must be steady");
-
  private:
-  using Impl = BasicDynamicTokenBucket<Clock>;
+  using Impl = BasicDynamicTokenBucket<Policy>;
 
  public:
   /**
@@ -347,9 +488,7 @@ class BasicTokenBucket {
    *                 bucket is "full" after construction.
    */
   BasicTokenBucket(
-      double genRate,
-      double burstSize,
-      double zeroTime = 0) noexcept
+      double genRate, double burstSize, double zeroTime = 0) noexcept
       : tokenBucket_(zeroTime), rate_(genRate), burstSize_(burstSize) {
     assert(rate_ > 0);
     assert(burstSize_ > 0);
@@ -445,14 +584,13 @@ class BasicTokenBucket {
    * @return number of tokens that were consumed.
    */
   double consumeOrDrain(
-      double toConsume,
-      double nowInSeconds = defaultClockNow()) {
+      double toConsume, double nowInSeconds = defaultClockNow()) {
     return tokenBucket_.consumeOrDrain(
         toConsume, rate_, burstSize_, nowInSeconds);
   }
 
   /**
-   * Returns extra token back to the bucket.
+   * Returns extra token back to the bucket.  Could be negative--it's all good.
    */
   void returnTokens(double tokensToReturn) {
     return tokenBucket_.returnTokens(tokensToReturn, rate_);
@@ -463,8 +601,7 @@ class BasicTokenBucket {
    * be compatible with the bucket configuration.
    */
   Optional<double> consumeWithBorrowNonBlocking(
-      double toConsume,
-      double nowInSeconds = defaultClockNow()) {
+      double toConsume, double nowInSeconds = defaultClockNow()) {
     return tokenBucket_.consumeWithBorrowNonBlocking(
         toConsume, rate_, burstSize_, nowInSeconds);
   }
@@ -473,8 +610,7 @@ class BasicTokenBucket {
    * Reserve tokens. Blocks if need be until reservation is satisfied.
    */
   bool consumeWithBorrowAndWait(
-      double toConsume,
-      double nowInSeconds = defaultClockNow()) {
+      double toConsume, double nowInSeconds = defaultClockNow()) {
     return tokenBucket_.consumeWithBorrowAndWait(
         toConsume, rate_, burstSize_, nowInSeconds);
   }
@@ -493,18 +629,14 @@ class BasicTokenBucket {
    *
    * Thread-safe (but returned value may immediately be outdated).
    */
-  double rate() const noexcept {
-    return rate_;
-  }
+  double rate() const noexcept { return rate_; }
 
   /**
    * Returns the maximum burst size.
    *
    * Thread-safe (but returned value may immediately be outdated).
    */
-  double burst() const noexcept {
-    return burstSize_;
-  }
+  double burst() const noexcept { return burstSize_; }
 
  private:
   Impl tokenBucket_;

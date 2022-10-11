@@ -16,10 +16,10 @@
 
 #pragma once
 
-#include <folly/portability/GFlags.h>
-
 #include <atomic>
 #include <memory>
+
+#include <folly/portability/GFlags.h>
 
 ///
 /// Forward declatations and implicit documentation of all hazptr
@@ -47,7 +47,7 @@ template <template <typename> class Atom = std::atomic>
 class hazptr_rec;
 
 ///
-/// Classes related to objects protected by hazard pointers.
+/// Classes related to objects protectable by hazard pointers.
 /// Defined in HazptrObj.h
 ///
 

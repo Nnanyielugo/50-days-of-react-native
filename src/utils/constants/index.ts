@@ -31,4 +31,9 @@ export const PAGES: Page[] = [
     componentName: 'TicTacToe',
     icon: 'gamepad-circle-left',
   },
+  {
+    name: 'Image Carousel',
+    componentName: 'ImageCarousel',
+    icon: 'panorama-variant-outline',
+  },
 ];

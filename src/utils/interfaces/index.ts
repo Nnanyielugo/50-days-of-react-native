@@ -8,11 +8,14 @@ export type RootStackParamList = {
   TinderSwipe: undefined;
   VideoPlayer: undefined;
   TicTacToe: undefined;
+  ImageCarousel: undefined;
 };
+
+type AllowedMenuPages = Omit<RootStackParamList, 'Home'>;
 
 export interface Page {
   name: string;
-  componentName: keyof RootStackParamList;
+  componentName: keyof AllowedMenuPages;
   icon: string;
 }
 

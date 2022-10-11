@@ -30,6 +30,17 @@ namespace detail {
 
 namespace {
 
+struct SkipAtForkHandlers {
+  static thread_local bool value;
+
+  struct Guard {
+    bool saved = value;
+    Guard() { value = true; }
+    ~Guard() { value = saved; }
+  };
+};
+thread_local bool SkipAtForkHandlers::value;
+
 struct AtForkTask {
   void const* handle;
   folly::Function<bool()> prepare;
@@ -45,6 +56,9 @@ class AtForkList {
   }
 
   static void prepare() noexcept {
+    if (SkipAtForkHandlers::value) {
+      return;
+    }
     instance().tasksLock.lock();
     while (true) {
       auto& tasks = instance().tasks;
@@ -64,6 +78,9 @@ class AtForkList {
   }
 
   static void parent() noexcept {
+    if (SkipAtForkHandlers::value) {
+      return;
+    }
     auto& tasks = instance().tasks;
     for (auto& task : tasks) {
       task.parent();
@@ -72,6 +89,9 @@ class AtForkList {
   }
 
   static void child() noexcept {
+    if (SkipAtForkHandlers::value) {
+      return;
+    }
     // if we fork a multithreaded process
     // some of the TSAN mutexes might be locked
     // so we just enable ignores for everything
@@ -138,5 +158,18 @@ void AtFork::unregisterHandler(void const* handle) {
   }
 }
 
+pid_t AtFork::forkInstrumented(fork_t forkFn) {
+  AtForkList::prepare();
+  auto ret = [&] {
+    SkipAtForkHandlers::Guard guard;
+    return forkFn();
+  }();
+  if (ret) {
+    AtForkList::parent();
+  } else {
+    AtForkList::child();
+  }
+  return ret;
+}
 } // namespace detail
 } // namespace folly
