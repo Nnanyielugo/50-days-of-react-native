@@ -69,6 +69,5 @@ Please note that the setup instruction assumes that you have setup your developm
 - [ ] mapview with directions
 - [ ] animated chat heads
 - [ ] google calendar
-- [ ] shopping cart/e-commerce
 - [ ] run tracker
 - [ ] currency converter
