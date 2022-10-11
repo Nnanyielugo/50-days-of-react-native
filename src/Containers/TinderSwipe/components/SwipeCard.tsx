@@ -25,9 +25,7 @@ const SwipeCard: FunctionComponent<ComponentProps> = ({ active, profile }) => {
       <ImageBackground
         imageStyle={styles.imageBackground}
         style={styles.image}
-        source={{
-          uri: profile.image,
-        }}
+        source={profile.image}
       />
       <View style={styles.textContainer}>
         <Text style={styles.text}>{profile.name}</Text>
