@@ -155,8 +155,7 @@ class IteratorAdaptor : public IteratorFacade<D, V, Tag> {
   using pointer = typename Super::pointer;
   using difference_type = typename Super::difference_type;
 
-  IteratorAdaptor() = default;
-  explicit IteratorAdaptor(I base) : base_(std::move(base)) {}
+  explicit IteratorAdaptor(I base) : base_(base) {}
 
   void increment() { ++base_; }
 

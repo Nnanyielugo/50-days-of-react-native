@@ -31,6 +31,9 @@
 #include <folly/ScopeGuard.h>
 
 namespace folly {
+namespace {
+constexpr folly::StringPiece executorName = "EDFThreadPoolExecutor";
+}
 
 class EDFThreadPoolExecutor::Task {
  public:
@@ -333,8 +336,7 @@ folly::Executor::KeepAlive<> EDFThreadPoolExecutor::deadlineExecutor(
 
 void EDFThreadPoolExecutor::threadRun(ThreadPtr thread) {
   this->threadPoolHook_.registerThread();
-  ExecutorBlockingGuard guard{
-      ExecutorBlockingGuard::TrackTag{}, this, namePrefix_};
+  ExecutorBlockingGuard guard{ExecutorBlockingGuard::TrackTag{}, executorName};
 
   thread->startupBaton.post();
   for (;;) {

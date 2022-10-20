@@ -305,13 +305,12 @@ inline uint64_t fnva64(
 
 #define get16bits(d) folly::loadUnaligned<uint16_t>(d)
 
-inline constexpr uint32_t hsieh_hash32_buf_constexpr(
-    const unsigned char* buf, size_t len) noexcept {
+inline uint32_t hsieh_hash32_buf(const void* buf, size_t len) noexcept {
   // forcing signed char, since other platforms can use unsigned
-  const unsigned char* s = buf;
+  const unsigned char* s = reinterpret_cast<const unsigned char*>(buf);
   uint32_t hash = static_cast<uint32_t>(len);
-  uint32_t tmp = 0;
-  size_t rem = 0;
+  uint32_t tmp;
+  size_t rem;
 
   if (len <= 0 || buf == nullptr) {
     return 0;
@@ -360,11 +359,6 @@ inline constexpr uint32_t hsieh_hash32_buf_constexpr(
 }
 
 #undef get16bits
-
-inline uint32_t hsieh_hash32_buf(const void* buf, size_t len) noexcept {
-  return hsieh_hash32_buf_constexpr(
-      reinterpret_cast<const unsigned char*>(buf), len);
-}
 
 inline uint32_t hsieh_hash32(const char* s) noexcept {
   return hsieh_hash32_buf(s, std::strlen(s));

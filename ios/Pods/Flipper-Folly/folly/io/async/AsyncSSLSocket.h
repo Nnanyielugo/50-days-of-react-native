@@ -252,17 +252,13 @@ class AsyncSSLSocket : public AsyncSocket {
    * @param server Is socket in server mode?
    * @param deferSecurityNegotiation
    *          unencrypted data can be sent before sslConn/Accept
-   * @param peerAddress optional peer address (eg: returned from accept).  If
-   *          nullptr, AsyncSocket will lazily attempt to determine it from fd
-   *          via a system call
    */
   AsyncSSLSocket(
       std::shared_ptr<folly::SSLContext> ctx,
       EventBase* evb,
       NetworkSocket fd,
       bool server = true,
-      bool deferSecurityNegotiation = false,
-      const SocketAddress* peerAddress = nullptr);
+      bool deferSecurityNegotiation = false);
 
   /**
    * Create a server/client AsyncSSLSocket from an already connected
@@ -292,10 +288,9 @@ class AsyncSSLSocket : public AsyncSocket {
       EventBase* evb,
       NetworkSocket fd,
       bool server = true,
-      bool deferSecurityNegotiation = false,
-      const folly::SocketAddress* peerAddress = nullptr) {
-    return AsyncSSLSocket::UniquePtr(new AsyncSSLSocket(
-        ctx, evb, fd, server, deferSecurityNegotiation, peerAddress));
+      bool deferSecurityNegotiation = false) {
+    return AsyncSSLSocket::UniquePtr(
+        new AsyncSSLSocket(ctx, evb, fd, server, deferSecurityNegotiation));
   }
 
   /**
@@ -334,19 +329,13 @@ class AsyncSSLSocket : public AsyncSocket {
    * @param evb  EventBase that will manage this socket.
    * @param fd   File descriptor to take over (should be a connected socket).
    * @param serverName tlsext_hostname that will be sent in ClientHello.
-   * @param deferSecurityNegotiation
-   *          unencrypted data can be sent before sslConn/Accept
-   * @param peerAddress optional peer address (eg: returned from accept).  If
-   *          nullptr, AsyncSocket will lazily attempt to determine it from fd
-   *          via a system call
    */
   AsyncSSLSocket(
       const std::shared_ptr<folly::SSLContext>& ctx,
       EventBase* evb,
       NetworkSocket fd,
       const std::string& serverName,
-      bool deferSecurityNegotiation = false,
-      const SocketAddress* peerAddr = nullptr);
+      bool deferSecurityNegotiation = false);
 
   static UniquePtr newSocket(
       const std::shared_ptr<folly::SSLContext>& ctx,

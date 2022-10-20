@@ -25,18 +25,10 @@
 
 #pragma mark - SonarConnection
 
-- (void)sendInternal:(NSString*)method withParams:(id)params {
+- (void)send:(NSString*)method withParams:(NSDictionary*)params {
   conn_->send(
       [method UTF8String],
       facebook::cxxutils::convertIdToFollyDynamic(params, true));
-}
-
-- (void)send:(NSString*)method withParams:(NSDictionary*)params {
-  [self sendInternal:method withParams:params];
-}
-
-- (void)send:(NSString*)method withArrayParams:(NSArray*)params {
-  [self sendInternal:method withParams:params];
 }
 
 - (void)receive:(NSString*)method withBlock:(SonarReceiver)receiver {

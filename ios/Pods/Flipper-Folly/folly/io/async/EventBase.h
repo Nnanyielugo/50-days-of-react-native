@@ -722,7 +722,7 @@ class EventBase : public TimeoutManager,
   event_base* getLibeventBase() const;
 
   static const char* getLibeventVersion();
-  const char* getLibeventMethod();
+  static const char* getLibeventMethod();
 
   /**
    * only EventHandler/AsyncTimeout subclasses and ourselves should

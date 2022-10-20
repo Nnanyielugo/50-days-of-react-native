@@ -170,10 +170,9 @@ class AsyncUDPSocket : public EventHandler {
    * Contains options to pass to bind.
    */
   struct BindOptions {
-    BindOptions() noexcept {}
+    constexpr BindOptions() noexcept {}
     // Whether IPV6_ONLY should be set on the socket.
     bool bindV6Only{true};
-    std::string ifName;
   };
 
   /**

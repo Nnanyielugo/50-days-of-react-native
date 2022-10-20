@@ -23,7 +23,6 @@
 #include <exception>
 #include <memory>
 #include <vector>
-#include <boost/variant.hpp>
 
 #include <folly/ExceptionWrapper.h>
 #include <folly/SocketAddress.h>
@@ -776,31 +775,21 @@ class AsyncServerSocket : public DelayedDestruction, public AsyncSocketBase {
   ~AsyncServerSocket() override;
 
  private:
-  class RemoteAcceptor;
+  enum class MessageType { MSG_NEW_CONN = 0, MSG_ERROR = 1 };
 
-  struct NewConnMessage {
+  struct QueueMessage {
+    MessageType type;
     NetworkSocket fd;
-    SocketAddress clientAddr;
+    int err;
+    SocketAddress address;
+    std::string msg;
     std::chrono::steady_clock::time_point deadline;
 
     bool isExpired() const {
       return deadline.time_since_epoch().count() != 0 &&
           std::chrono::steady_clock::now() > deadline;
     }
-
-    AtomicNotificationQueueTaskStatus operator()(
-        RemoteAcceptor& acceptor) noexcept;
   };
-
-  struct ErrorMessage {
-    int err;
-    std::string msg;
-
-    AtomicNotificationQueueTaskStatus operator()(
-        RemoteAcceptor& acceptor) noexcept;
-  };
-
-  using QueueMessage = boost::variant<NewConnMessage, ErrorMessage>;
 
   /**
    * A class to receive notifications to invoke AcceptCallback objects
@@ -813,18 +802,11 @@ class AsyncServerSocket : public DelayedDestruction, public AsyncSocketBase {
    */
   class RemoteAcceptor {
     struct Consumer {
-      AtomicNotificationQueueTaskStatus operator()(
-          QueueMessage&& msg) noexcept {
-        return boost::apply_visitor(
-            [this](auto&& visitMsg) { return visitMsg(acceptor_); }, msg);
-      }
+      AtomicNotificationQueueTaskStatus operator()(QueueMessage&& msg) noexcept;
 
       explicit Consumer(RemoteAcceptor& acceptor) : acceptor_(acceptor) {}
       RemoteAcceptor& acceptor_;
     };
-
-    friend NewConnMessage;
-    friend ErrorMessage;
 
    public:
     using Queue = EventBaseAtomicNotificationQueue<QueueMessage, Consumer>;

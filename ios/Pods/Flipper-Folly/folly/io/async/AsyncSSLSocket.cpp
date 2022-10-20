@@ -271,9 +271,8 @@ AsyncSSLSocket::AsyncSSLSocket(
     EventBase* evb,
     NetworkSocket fd,
     bool server,
-    bool deferSecurityNegotiation,
-    const SocketAddress* peerAddress)
-    : AsyncSocket(evb, fd, 0, peerAddress),
+    bool deferSecurityNegotiation)
+    : AsyncSocket(evb, fd),
       server_(server),
       ctx_(std::move(ctx)),
       handshakeTimeout_(this, evb),
@@ -341,10 +340,8 @@ AsyncSSLSocket::AsyncSSLSocket(
     EventBase* evb,
     NetworkSocket fd,
     const std::string& serverName,
-    bool deferSecurityNegotiation,
-    const SocketAddress* peerAddress)
-    : AsyncSSLSocket(
-          ctx, evb, fd, false, deferSecurityNegotiation, peerAddress) {
+    bool deferSecurityNegotiation)
+    : AsyncSSLSocket(ctx, evb, fd, false, deferSecurityNegotiation) {
   tlsextHostname_ = serverName;
 }
 #endif // FOLLY_OPENSSL_HAS_SNI

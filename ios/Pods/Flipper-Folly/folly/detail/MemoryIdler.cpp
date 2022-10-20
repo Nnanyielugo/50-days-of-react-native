@@ -104,8 +104,7 @@ static void fetchStackLimits() {
   pthread_attr_t attr;
   if ((err = pthread_getattr_np(pthread_self(), &attr))) {
     // some restricted environments can't access /proc
-    FB_LOG_EVERY_MS(WARNING, 60000)
-        << "pthread_getaddr_np failed errno=" << err;
+    LOG_FIRST_N(WARNING, 1) << "pthread_getaddr_np failed errno=" << err;
     tls_stackSize = 1;
     return;
   }

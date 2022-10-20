@@ -563,10 +563,7 @@ AsyncSocket::AsyncSocket(
 }
 
 AsyncSocket::AsyncSocket(
-    EventBase* evb,
-    NetworkSocket fd,
-    uint32_t zeroCopyBufId,
-    const SocketAddress* peerAddress)
+    EventBase* evb, NetworkSocket fd, uint32_t zeroCopyBufId)
     : zeroCopyBufId_(zeroCopyBufId),
       eventBase_(evb),
       writeTimeout_(this, evb),
@@ -579,17 +576,13 @@ AsyncSocket::AsyncSocket(
   disableTransparentFunctions(fd_, noTransparentTls_, noTSocks_);
   setCloseOnExec();
   state_ = StateEnum::ESTABLISHED;
-  if (peerAddress) {
-    addr_ = *peerAddress;
-  }
 }
 
 AsyncSocket::AsyncSocket(AsyncSocket* oldAsyncSocket)
     : AsyncSocket(
           oldAsyncSocket->getEventBase(),
           oldAsyncSocket->detachNetworkSocket(),
-          oldAsyncSocket->getZeroCopyBufId(),
-          &oldAsyncSocket->addr_) {
+          oldAsyncSocket->getZeroCopyBufId()) {
   appBytesWritten_ = oldAsyncSocket->appBytesWritten_;
   rawBytesWritten_ = oldAsyncSocket->rawBytesWritten_;
   byteEventHelper_ = std::move(oldAsyncSocket->byteEventHelper_);
@@ -2531,14 +2524,7 @@ void AsyncSocket::addLifecycleObserver(
   if (eventBase_) {
     eventBase_->dcheckIsInEventBaseThread();
   }
-
-  // adding the same observer multiple times is not allowed
-  auto& observers = lifecycleObservers_;
-  CHECK(
-      std::find(observers.begin(), observers.end(), observer) ==
-      observers.end());
-
-  observers.push_back(observer);
+  lifecycleObservers_.push_back(observer);
   observer->observerAttach(this);
   if (observer->getConfig().byteEvents) {
     if (byteEventHelper_ && byteEventHelper_->maybeEx.has_value()) {
@@ -2554,13 +2540,16 @@ void AsyncSocket::addLifecycleObserver(
 
 bool AsyncSocket::removeLifecycleObserver(
     AsyncTransport::LifecycleObserver* observer) {
-  auto& observers = lifecycleObservers_;
-  auto it = std::find(observers.begin(), observers.end(), observer);
-  if (it == observers.end()) {
+  const auto eraseIt = std::remove(
+      lifecycleObservers_.begin(), lifecycleObservers_.end(), observer);
+  if (eraseIt == lifecycleObservers_.end()) {
     return false;
   }
-  observer->observerDetach(this);
-  observers.erase(it);
+
+  for (auto it = eraseIt; it != lifecycleObservers_.end(); it++) {
+    (*it)->observerDetach(this);
+  }
+  lifecycleObservers_.erase(eraseIt, lifecycleObservers_.end());
   return true;
 }
 

@@ -145,7 +145,7 @@ IOThreadPoolExecutor::pickThread() {
   // task is added by the clean up operations on thread destruction, thisThread_
   // is not an available thread anymore, thus, always check whether or not
   // thisThread_ is an available thread before choosing it.
-  if (me && threadList_.contains(me)) {
+  if (me && std::find(ths.cbegin(), ths.cend(), me) != ths.cend()) {
     return me;
   }
   auto n = ths.size();
@@ -203,23 +203,19 @@ void IOThreadPoolExecutor::threadRun(ThreadPtr thread) {
 
   ioThread->eventBase->runInEventBaseThread(
       [thread] { thread->startupBaton.post(); });
-  {
-    ExecutorBlockingGuard guard{
-        ExecutorBlockingGuard::TrackTag{}, this, namePrefix_};
-    while (ioThread->shouldRun) {
-      ioThread->eventBase->loopForever();
+  while (ioThread->shouldRun) {
+    ioThread->eventBase->loopForever();
+  }
+  if (isJoin_) {
+    while (ioThread->pendingTasks > 0) {
+      ioThread->eventBase->loopOnce();
     }
-    if (isJoin_) {
-      while (ioThread->pendingTasks > 0) {
-        ioThread->eventBase->loopOnce();
-      }
-    }
-    idler.reset();
-    if (isWaitForAll_) {
-      // some tasks, like thrift asynchronous calls, create additional
-      // event base hookups, let's wait till all of them complete.
-      ioThread->eventBase->loop();
-    }
+  }
+  idler.reset();
+  if (isWaitForAll_) {
+    // some tasks, like thrift asynchronous calls, create additional
+    // event base hookups, let's wait till all of them complete.
+    ioThread->eventBase->loop();
   }
 
   std::lock_guard<std::mutex> guard(ioThread->eventBaseShutdownMutex_);

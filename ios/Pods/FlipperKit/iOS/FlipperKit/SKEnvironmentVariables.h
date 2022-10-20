@@ -14,8 +14,6 @@
 @interface SKEnvironmentVariables : NSObject
 + (int)getInsecurePort;
 + (int)getSecurePort;
-+ (int)getAltInsecurePort;
-+ (int)getAltSecurePort;
 @end
 
 #endif
