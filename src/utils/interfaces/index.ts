@@ -1,4 +1,6 @@
 import type { ViewStyle, TextStyle, ImageStyle } from 'react-native';
+import { FC } from 'react';
+import { SvgProps } from 'react-native-svg';
 
 export type RootStackParamList = {
   Home: undefined;
@@ -16,7 +18,7 @@ type AllowedMenuPages = Omit<RootStackParamList, 'Home'>;
 export interface Page {
   name: string;
   componentName: keyof AllowedMenuPages;
-  icon: string;
+  Icon: FC<SvgProps>;
 }
 
 export type NamedStyles = ViewStyle | TextStyle | ImageStyle;

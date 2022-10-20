@@ -8,7 +8,6 @@ import {
   SafeAreaView,
   Dimensions,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import { PAGES } from '../utils/constants';
 
@@ -33,7 +32,7 @@ export default function Home(props: HomeProps) {
         key={page.componentName}
         onPress={() => props.navigation.navigate(page.componentName)}>
         <View style={styles.component}>
-          <Icon name={page.icon} size={50} color="black" />
+          <page.Icon width={45} height={45} fill="black" />
           <Text>{page.name}</Text>
         </View>
       </TouchableOpacity>
