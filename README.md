@@ -42,6 +42,7 @@ Please note that the setup instruction assumes that you have setup your developm
 - [x] weather app
 - [x] music player
 - [x] video player
+- [ ] reels
 - [ ] pdf reader
 - [ ] core animation and masks (twitter entrance animation)
 - [x] tic-tac-toe
