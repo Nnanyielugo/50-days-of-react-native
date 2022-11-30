@@ -18,7 +18,7 @@ const ControlsContainer = () => {
         <ReelsModal isVisible={modalState} closeModal={closeModal} />
       )}
 
-      <Button onPress={openModal}>Open Modal</Button>
+      <Button onPress={openModal}>View Reels</Button>
     </View>
   );
 };
