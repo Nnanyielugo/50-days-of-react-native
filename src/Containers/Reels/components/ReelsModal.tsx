@@ -1,3 +1,16 @@
+/**
+ * Docu for the tricky part ie: pausing and restarting progresses
+ * 1. in the touch start handler, save press in time.
+ * 2. on long press, clear all timers
+ * 3. in the touch end handler, differentiate b/w taps release and long press release
+ *  by getting checking the difference from when the touch started.
+ *  if long press release;
+ *  b. resume indicator timer.
+ *  c. create a remainder duration as the diff b/w timerDuration and timeout value
+ *  d. continue upper (scrollView) timer but set duration to remainder duration
+ *  e. if on last item, resume (more like restart) closing timer and set duration to remainder duration
+ */
+
 import React from 'react';
 import {
   View,
@@ -8,12 +21,17 @@ import {
   Dimensions,
   SafeAreaView,
   Image,
+  Pressable,
 } from 'react-native';
 
 import { data } from '../utils';
 
 import type { FunctionComponent } from 'react';
-import type { NativeSyntheticEvent, NativeScrollEvent } from 'react-native';
+import type {
+  NativeSyntheticEvent,
+  NativeScrollEvent,
+  GestureResponderEvent,
+} from 'react-native';
 import Indicator from './indicator';
 
 interface ReelsModalProps {
@@ -31,24 +49,28 @@ const ReelsModal: FunctionComponent<ReelsModalProps> = ({
     React.useRef(500).current,
   );
   const timeout = 4000; // in ms
+
   let upperTimer = React.useRef<NodeJS.Timer | number>(0);
+  let closingTimer = React.useRef<NodeJS.Timeout | number>(0);
+  let indicatorTimer = React.useRef<NodeJS.Timeout | number>(0);
+
+  const [clickInTime, setClickInTime] = React.useState(0);
 
   React.useEffect(() => {
-    const totaling = setInterval(() => {
+    indicatorTimer.current = setInterval(() => {
       setTimerDuration((timerDuration += 100)); // eslint-disable-line react-hooks/exhaustive-deps
     }, 100);
 
     return () => {
-      clearInterval(totaling);
+      clearInterval(indicatorTimer.current as NodeJS.Timer);
     };
   });
 
   React.useEffect(() => {
-    setTimerDuration(300);
-    let timer = upperTimer.current;
-    timer = setInterval(scrollToNext, timeout);
+    setTimerDuration(500);
+    upperTimer.current = setInterval(scrollToNext, timeout);
     return () => {
-      clearInterval(timer as NodeJS.Timer);
+      clearInterval(upperTimer.current as NodeJS.Timer);
     };
   }, [layoutIndex]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -60,8 +82,16 @@ const ReelsModal: FunctionComponent<ReelsModalProps> = ({
     });
   };
 
+  const scrollToPrev = () => {
+    const width = Dimensions.get('window').width;
+    scrollViewRef.current?.scrollTo({
+      x: width * (layoutIndex - 2), // *layout to next, -1 to same page, -2 to prev
+      animated: true,
+    });
+  };
+
   const beginModalClosing = () => {
-    setTimeout(() => {
+    closingTimer.current = setTimeout(() => {
       closeModal();
     }, timeout);
   };
@@ -80,6 +110,68 @@ const ReelsModal: FunctionComponent<ReelsModalProps> = ({
 
     if (contentOffset.x >= layoutMeasurement.width * (data.length - 1)) {
       beginModalClosing();
+    }
+  };
+
+  const handleTouchStart = ({ nativeEvent }: GestureResponderEvent) => {
+    setClickInTime(nativeEvent.timestamp);
+  };
+
+  const handleTouchEnd = ({ nativeEvent }: GestureResponderEvent) => {
+    const screenWidth = Dimensions.get('screen').width;
+    const xPoint = nativeEvent.pageX;
+    const errorMargin = 50;
+    if (nativeEvent.timestamp - clickInTime >= 1000) {
+      // long press release, continue timer
+      indicatorTimer.current = setInterval(() => {
+        setTimerDuration((timerDuration += 100));
+      }, 100);
+
+      const remainderDuration = timeout - timerDuration;
+
+      upperTimer.current = setInterval(scrollToNext, remainderDuration);
+
+      if (layoutIndex === data.length) {
+        closingTimer.current = setTimeout(() => {
+          closeModal();
+        }, remainderDuration);
+      }
+    } else {
+      // handle prev/next taps
+      if (xPoint <= screenWidth / 2 - errorMargin) {
+        // scroll back
+        if (layoutIndex <= 1) {
+          // if on first item
+          // do nothing
+        } else {
+          if (layoutIndex === data.length) {
+            clearTimeout(closingTimer.current as NodeJS.Timeout);
+          }
+          scrollToPrev();
+        }
+      }
+
+      if (xPoint >= screenWidth / 2 + errorMargin) {
+        if (layoutIndex === data.length) {
+          closeModal();
+          setLayoutIndex(1);
+          // clear modal closing timer that triggers
+          // when the last item is reached
+          clearTimeout(closingTimer.current as NodeJS.Timeout);
+        } else {
+          scrollToNext();
+        }
+      }
+    }
+  };
+
+  const handleLongPress = () => {
+    clearInterval(upperTimer.current as NodeJS.Timer);
+    clearInterval(indicatorTimer.current as NodeJS.Timer);
+    if (layoutIndex === data.length) {
+      // clear modal closing timer that triggers
+      // when the last item is reached
+      clearTimeout(closingTimer.current as NodeJS.Timeout);
     }
   };
 
@@ -111,13 +203,21 @@ const ReelsModal: FunctionComponent<ReelsModalProps> = ({
           pagingEnabled>
           {data.map((item, index) => {
             return (
-              <View key={index} style={styles.item}>
-                {item.type === 'text' ? (
-                  <Text style={styles.text}>{item.text}</Text>
-                ) : (
-                  <Image source={item.source} style={styles.image} />
-                )}
-              </View>
+              <Pressable
+                key={index}
+                onTouchStart={handleTouchStart}
+                onTouchEnd={handleTouchEnd}
+                onLongPress={handleLongPress}
+                // delayLongPress={2000}
+              >
+                <View style={styles.item}>
+                  {item.type === 'text' ? (
+                    <Text style={styles.text}>{item.text}</Text>
+                  ) : (
+                    <Image source={item.source} style={styles.image} />
+                  )}
+                </View>
+              </Pressable>
             );
           })}
         </ScrollView>
@@ -135,6 +235,7 @@ const styles = StyleSheet.create({
   },
   item: {
     width: Dimensions.get('window').width,
+    height: Dimensions.get('window').height * 0.9,
     paddingHorizontal: 20,
     justifyContent: 'center',
     alignItems: 'center',
@@ -153,10 +254,12 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   text: {
+    height: Dimensions.get('window').height * 0.85,
     width: Dimensions.get('window').width * 0.95,
     fontSize: 24,
     fontWeight: '500',
     lineHeight: 35,
+    marginTop: Dimensions.get('window').height * 0.5,
   },
 });
 
