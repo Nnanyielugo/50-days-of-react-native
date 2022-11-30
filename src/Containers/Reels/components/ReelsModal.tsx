@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import {
   View,
   Text,
@@ -7,62 +7,19 @@ import {
   ScrollView,
   Dimensions,
   SafeAreaView,
-  Animated,
   Image,
 } from 'react-native';
 
-import Image1 from '../assets/image1.jpg';
-import Image2 from '../assets/image2.jpg';
+import { data } from '../utils';
 
 import type { FunctionComponent } from 'react';
-import type {
-  NativeSyntheticEvent,
-  NativeScrollEvent,
-  ImageSourcePropType,
-} from 'react-native';
+import type { NativeSyntheticEvent, NativeScrollEvent } from 'react-native';
+import Indicator from './indicator';
 
 interface ReelsModalProps {
   isVisible: boolean;
   closeModal: () => void;
 }
-
-type Item =
-  | {
-      type: 'image';
-      source: ImageSourcePropType;
-    }
-  | {
-      type: 'text';
-      text: string;
-    };
-
-const data: Item[] = [
-  {
-    type: 'text',
-    text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam mauris tellus, tristique nec ornare et, aliquet vitae ex.',
-  },
-  {
-    type: 'image',
-    source: Image1,
-  },
-  {
-    type: 'text',
-    text: 'Interdum et malesuada fames ac ante ipsum primis in faucibus. Maecenas semper justo metus, eu condimentum lectus lacinia vel. Vivamus dapibus aliquet nisl, quis semper enim laoreet nec.',
-  },
-  {
-    type: 'image',
-    source: Image2,
-  },
-  {
-    type: 'text',
-    text: 'Interdum et malesuada fames ac ante ipsum primis in faucibus. Maecenas semper justo metus, eu condimentum lectus lacinia vel. Vivamus dapibus aliquet nisl, quis semper enim laoreet nec.',
-  },
-];
-
-const INDICATOR_WIDTH =
-  (Dimensions.get('window').width -
-    (data.length * 1.5 + 12)) /** additional 2 pixels at the right end */ /
-  data.length;
 
 const ReelsModal: FunctionComponent<ReelsModalProps> = ({
   isVisible,
@@ -71,26 +28,12 @@ const ReelsModal: FunctionComponent<ReelsModalProps> = ({
   let scrollViewRef = React.useRef<ScrollView | null>(null);
   let [layoutIndex, setLayoutIndex] = React.useState<number>(1);
   let [timerDuration, setTimerDuration] = React.useState(
-    React.useRef(300).current,
+    React.useRef(500).current,
   );
-  let timerAnim = React.useRef(new Animated.Value(10)).current;
   const timeout = 4000; // in ms
   let upperTimer = React.useRef<NodeJS.Timer | number>(0);
 
-  const calculateProgress = () => {
-    return (timerDuration / timeout) * INDICATOR_WIDTH;
-  };
-
-  const fillDuration = () => {
-    Animated.timing(timerAnim, {
-      toValue: calculateProgress(),
-      duration: 100,
-      useNativeDriver: false,
-    }).start();
-  };
-
   React.useEffect(() => {
-    fillDuration();
     const totaling = setInterval(() => {
       setTimerDuration((timerDuration += 100)); // eslint-disable-line react-hooks/exhaustive-deps
     }, 100);
@@ -150,22 +93,13 @@ const ReelsModal: FunctionComponent<ReelsModalProps> = ({
         <ScrollView contentContainerStyle={styles.indicator}>
           {data.map((_, index) => {
             return (
-              <Fragment key={index}>
-                {index === layoutIndex - 1 && (
-                  <Animated.View
-                    style={[
-                      styles.progress,
-                      {
-                        width: timerAnim,
-                        left:
-                          index === 0 ? 0 : index * INDICATOR_WIDTH + index * 3, // take horizontal margins into account
-                      },
-                    ]}
-                  />
-                )}
-
-                <View style={styles.indicatorItem} />
-              </Fragment>
+              <Indicator
+                key={index}
+                timeout={timeout}
+                timerDuration={timerDuration}
+                itemIndex={index}
+                layoutIndex={layoutIndex}
+              />
             );
           })}
         </ScrollView>
@@ -211,21 +145,6 @@ const styles = StyleSheet.create({
     marginTop: 50,
     flexDirection: 'row',
     marginHorizontal: 5,
-  },
-  indicatorItem: {
-    height: 3,
-    backgroundColor: 'grey',
-    width: INDICATOR_WIDTH,
-    marginHorizontal: 1.5,
-    borderRadius: 2,
-  },
-  progress: {
-    height: 3,
-    backgroundColor: 'whitesmoke',
-    marginHorizontal: 1.5,
-    borderRadius: 2,
-    zIndex: 999,
-    position: 'absolute',
   },
   image: {
     height: Dimensions.get('window').height * 0.85,
