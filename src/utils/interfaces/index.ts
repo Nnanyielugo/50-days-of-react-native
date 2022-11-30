@@ -11,6 +11,7 @@ export type RootStackParamList = {
   VideoPlayer: undefined;
   TicTacToe: undefined;
   ImageCarousel: undefined;
+  Reels: undefined;
 };
 
 type AllowedMenuPages = Omit<RootStackParamList, 'Home'>;

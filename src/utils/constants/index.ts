@@ -6,6 +6,7 @@ import ImageCarousel from '_assets/icons/panorama-variant-outline.svg';
 import Weather from '_assets/icons/weather-partly-rainy.svg';
 import Video from '_assets/icons/video-vintage.svg';
 import TicTacToe from '_assets/icons/gamepad-circle-left.svg';
+import Reels from '_assets/icons/multimedia.svg';
 
 export const PAGES: Page[] = [
   {
@@ -42,5 +43,10 @@ export const PAGES: Page[] = [
     name: 'Image Carousel',
     componentName: 'ImageCarousel',
     Icon: ImageCarousel,
+  },
+  {
+    name: 'Reels',
+    componentName: 'Reels',
+    Icon: Reels,
   },
 ];

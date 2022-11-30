@@ -32,8 +32,8 @@ export default function Home(props: HomeProps) {
         key={page.componentName}
         onPress={() => props.navigation.navigate(page.componentName)}>
         <View style={styles.component}>
-          <page.Icon width={45} height={45} fill="black" />
-          <Text>{page.name}</Text>
+          <page.Icon width={40} height={40} fill="black" />
+          <Text style={styles.text}>{page.name}</Text>
         </View>
       </TouchableOpacity>
     );
@@ -71,6 +71,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginHorizontal: WIDTH * 0.025,
     marginTop: 20,
+    paddingTop: 10,
   },
-  text: {},
+  text: {
+    marginTop: 5,
+    fontSize: 14,
+  },
 });
