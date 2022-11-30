@@ -113,7 +113,7 @@ const ReelsModal: FunctionComponent<ReelsModalProps> = ({
             return (
               <View key={index} style={styles.item}>
                 {item.type === 'text' ? (
-                  <Text>{item.text}</Text>
+                  <Text style={styles.text}>{item.text}</Text>
                 ) : (
                   <Image source={item.source} style={styles.image} />
                 )}
@@ -151,6 +151,12 @@ const styles = StyleSheet.create({
     width: Dimensions.get('window').width * 0.95,
     borderRadius: 10,
     alignSelf: 'center',
+  },
+  text: {
+    width: Dimensions.get('window').width * 0.95,
+    fontSize: 24,
+    fontWeight: '500',
+    lineHeight: 35,
   },
 });
 
