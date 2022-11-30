@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { Button } from '../../../components';
 import ReelsModal from './ReelsModal';
 
@@ -17,7 +17,6 @@ const ControlsContainer = () => {
       {modalState && (
         <ReelsModal isVisible={modalState} closeModal={closeModal} />
       )}
-      <Text>ControlsContainer</Text>
 
       <Button onPress={openModal}>Open Modal</Button>
     </View>
@@ -26,8 +25,9 @@ const ControlsContainer = () => {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 300,
+    justifyContent: 'center',
     alignItems: 'center',
+    flex: 1,
   },
 });
 
