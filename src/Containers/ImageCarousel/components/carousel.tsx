@@ -30,10 +30,8 @@ const CarouselComp = () => {
         ref={scrollViewRef}
         onScroll={handleScroll}
         horizontal
-        // disableIntervalMomentum
         decelerationRate={'fast'}
         snapToInterval={Dimensions.get('window').width * 0.85}
-        // snapToOffsets={[]}
         snapToAlignment="center"
         pagingEnabled
         showsHorizontalScrollIndicator={false}>
