@@ -12,7 +12,11 @@
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "skipLibCheck": false,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "baseUrl": "./",
+    "paths": {
+      "_assets/*": ["assets/*"]
+    }
   },
   "exclude": [
     "node_modules",
