@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
+import ControlsContainer from './components/container';
 
 class Reels extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text>Reels</Text>
+        <ControlsContainer />
       </View>
     );
   }
@@ -14,9 +15,9 @@ class Reels extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#2c3e50',
+    // justifyContent: 'center',
+    // alignItems: 'center',
+    backgroundColor: '#fff',
   },
 });
 
