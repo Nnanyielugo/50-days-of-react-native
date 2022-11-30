@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import CarouselComp from './components/carousel';
 
 class ImageCarousel extends Component {
@@ -14,10 +14,8 @@ class ImageCarousel extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    // flex: 1,
-    // justifyContent: 'center',
-    // alignItems: 'center',
-    backgroundColor: '#EFF6F9',
+    flex: 1,
+    backgroundColor: '#FFF',
   },
 });
 
