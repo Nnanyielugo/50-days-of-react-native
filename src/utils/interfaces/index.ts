@@ -12,6 +12,7 @@ export type RootStackParamList = {
   TicTacToe: undefined;
   ImageCarousel: undefined;
   Reels: undefined;
+  Calculator: undefined;
 };
 
 type AllowedMenuPages = Omit<RootStackParamList, 'Home'>;

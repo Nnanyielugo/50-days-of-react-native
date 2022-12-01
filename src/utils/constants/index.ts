@@ -7,6 +7,7 @@ import Weather from '_assets/icons/weather-partly-rainy.svg';
 import Video from '_assets/icons/video-vintage.svg';
 import TicTacToe from '_assets/icons/gamepad-circle-left.svg';
 import Reels from '_assets/icons/multimedia.svg';
+import Calculator from '_assets/icons/calculator.svg';
 
 export const PAGES: Page[] = [
   {
@@ -48,5 +49,10 @@ export const PAGES: Page[] = [
     name: 'Reels',
     componentName: 'Reels',
     Icon: Reels,
+  },
+  {
+    name: 'Calculator',
+    componentName: 'Calculator',
+    Icon: Calculator,
   },
 ];
