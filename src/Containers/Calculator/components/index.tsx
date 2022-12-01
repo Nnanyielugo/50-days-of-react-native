@@ -3,12 +3,16 @@ import { View, StyleSheet } from 'react-native';
 import Results from './results';
 import WorkArea from './workarea';
 
-import { CalculatorButtonType, Operands } from '../utils';
+import { CalculatorButtonType, Operands, Operation } from '../utils';
 
 const Container = () => {
   const [input, setInput] = React.useState<string | null>(null);
   const [freezeDel, setfreezeDel] = React.useState(false);
-  const [operand, setOperand] = React.useState<Operands>();
+  const [operand, setOperand] = React.useState<Operands | null>();
+  const [operant, setOperant] = React.useState<string | null>(null);
+  const [total, setTotal] = React.useState<string | null>(null);
+
+  console.log('state', input, operand, operant, total);
 
   const handleItemPress = (item: CalculatorButtonType) => {
     switch (true) {
@@ -18,26 +22,51 @@ const Container = () => {
         break;
       case input && item.mode === 'numeric':
         // case: input in state
-        let tempInput = (input as string)?.concat(
-          (item.value as number).toString(),
-        );
-        // subcase: convert to int and back to string
-        // to get rid of leading zeroes
-        setInput(Number(tempInput).toString());
+        if (operand) {
+          // freeze deletion
+          setfreezeDel(true);
+
+          if (!operant) {
+            setOperant((item.value as number).toString());
+          } else {
+            let tempOperant = (operant as string).concat(
+              (item.value as number).toString(),
+            );
+
+            setOperant(tempOperant);
+          }
+        } else {
+          let tempInput = (input as string)?.concat(
+            (item.value as number).toString(),
+          );
+          // subcase: convert to int and back to string
+          // to get rid of leading zeroes
+          setInput(Number(tempInput).toString());
+        }
         break;
       case item.mode === 'misc' && item.function === 'clear':
         // case: clear
         setInput(null);
         // unfreeze deletion
         setfreezeDel(false);
+        // clear operands
+        setOperand(null);
+        setOperant(null);
+        setTotal(null);
         break;
       case item.mode === 'misc' && item.function === 'delete':
         // case; delete
-        if (freezeDel) {
-          // deleting is frozen, do nothing
-        } else {
+
+        if (!freezeDel) {
           let slicedStrInputForDel = input?.slice(0, input.length - 1);
+          if (!slicedStrInputForDel?.length) {
+            setOperand(null);
+          }
           setInput(slicedStrInputForDel as string);
+        } else if (operant) {
+          // if operant exist, it'll be what is shown on screen for deleting
+          let slicedOperantForDel = operant.slice(0, operant.length - 1);
+          setOperant(slicedOperantForDel);
         }
         break;
       case item.mode === 'misc' && item.function === 'decimal':
@@ -79,34 +108,85 @@ const Container = () => {
           setInput(Math.abs(numInputForUnary).toString());
         }
         break;
+
+      case item.mode === 'operand' && item.function !== 'equal':
+        if (!input) {
+          // do nothing
+        } else {
+          if (operant) {
+            if (operand === 'add') {
+              const result = Number(input) + Number(operant);
+              // clear operant
+              setOperant(null);
+              // set result as input
+              setInput(result.toString());
+              // set new operand
+              setOperand((item as Operation).function);
+            } else if (operand === 'subtract') {
+              const result = Number(input) - Number(operant);
+              setOperant(null);
+              // set result as input
+              setInput(result.toString());
+              // set new operand
+              setOperand((item as Operation).function);
+            } else if (operand === 'multiply') {
+              const result = Number(input) * Number(operant);
+              setOperant(null);
+              // set result as input
+              setInput(result.toString());
+              // set new operand
+              setOperand((item as Operation).function);
+            } else if (operand === 'divide') {
+              const result = Number(input) / Number(operant);
+              setOperant(null);
+              // set result as input
+              setInput(result.toString());
+              // set new operand
+              setOperand((item as Operation).function);
+            }
+          } else {
+            setOperand((item as Operation).function);
+          }
+        }
+        break;
+      case item.mode === 'operand' && item.function === 'equal':
+        if (input && operand && operant) {
+          if (operand === 'add') {
+            setTotal((Number(input) + Number(operant)).toString());
+          } else if (operand === 'subtract') {
+            setTotal((Number(input) - Number(operant)).toString());
+          } else if (operand === 'multiply') {
+            setTotal((Number(input) * Number(operant)).toString());
+          } else if (operand === 'divide') {
+            setTotal((Number(input) / Number(operant)).toString());
+          }
+          setInput(null);
+          setOperand(null);
+          setOperant(null);
+        } else {
+          // do nothing
+        }
+        break;
     }
-    // base func: type a number
-    // if (item.mode === 'numeric') {
-    //   if (!numericInput) {
-    //     setInput(item.value);
-    //   } else {
-    //   }
-    // }
-    // if (item.mode === 'misc' && item.function === 'decimal') {
-    //   // let strInput = item.value.concat(numericInput.toString());
-    //   // setInput(+strInput);
-    // }
   };
   return (
     <View style={styles.container}>
-      <Results value={input} />
+      <Results
+        value={
+          typeof total === 'string'
+            ? total
+            : operand && operant
+            ? operant
+            : input
+        }
+      />
       <WorkArea handleItemPress={handleItemPress} />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    // flex: 1,
-    // justifyContent: 'center',
-    // alignItems: 'center',
-    // backgroundColor: '#2c3e50',
-  },
+  container: {},
 });
 
 export default Container;

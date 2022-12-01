@@ -6,35 +6,30 @@ const dimension = deviceWidth * deviceHeight;
 export const size = dimension * 0.00025;
 
 export type Operands = 'divide' | 'multiply' | 'subtract' | 'add' | 'equal';
-export type CalculatorButtonType =
-  | {
-      mode: 'numeric';
-      value: number;
-      size: number;
-      color: string;
-      background: string;
-    }
-  | {
-      mode: 'operand';
-      value: '÷' | 'x' | '-' | '+' | '=';
-      function: Operands;
-      size: number;
-      color: string;
-      background: string;
-    }
-  | {
-      mode: 'misc';
-      value: string;
-      function:
-        | 'decimal'
-        | 'delete'
-        | 'clear'
-        | 'unary-plus-minus'
-        | 'percentage';
-      size: number;
-      color: string;
-      background: string;
-    };
+export type Numeric = {
+  mode: 'numeric';
+  value: number;
+  size: number;
+  color: string;
+  background: string;
+};
+export type Misc = {
+  mode: 'misc';
+  value: string;
+  function: 'decimal' | 'delete' | 'clear' | 'unary-plus-minus' | 'percentage';
+  size: number;
+  color: string;
+  background: string;
+};
+export type Operation = {
+  mode: 'operand';
+  value: '÷' | 'x' | '-' | '+' | '=';
+  function: Operands;
+  size: number;
+  color: string;
+  background: string;
+};
+export type CalculatorButtonType = Numeric | Misc | Operation;
 
 export const buttons: CalculatorButtonType[] = [
   {
