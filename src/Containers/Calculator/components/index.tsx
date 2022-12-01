@@ -8,7 +8,7 @@ import { CalculatorButtonType, Operands, Operation } from '../utils';
 const Container = () => {
   const [input, setInput] = React.useState<string | null>(null);
   const [freezeDel, setfreezeDel] = React.useState(false);
-  const [operand, setOperand] = React.useState<Operands | null>();
+  const [operand, setOperand] = React.useState<Operands | null>(null);
   const [operant, setOperant] = React.useState<string | null>(null);
   const [total, setTotal] = React.useState<string | null>(null);
 
@@ -71,8 +71,14 @@ const Container = () => {
         break;
       case item.mode === 'misc' && item.function === 'decimal':
         // case: decimal
-        // subcase: no input, concat zero to decimal
-        if (!input) {
+        if (operand) {
+          // subcase: handle when operand exists
+          if (!operant) {
+            let decimal = '0'?.concat(item.value as string);
+            setOperant(decimal);
+          }
+        } else if (!input) {
+          // subcase: no input, concat zero to decimal
           let decimal = '0'?.concat(item.value as string);
           setInput(decimal);
         } else {
@@ -169,6 +175,7 @@ const Container = () => {
         break;
     }
   };
+
   return (
     <View style={styles.container}>
       <Results
@@ -180,7 +187,14 @@ const Container = () => {
             : input
         }
       />
-      <WorkArea handleItemPress={handleItemPress} />
+      <WorkArea
+        handleItemPress={handleItemPress}
+        resultActive={Boolean(input && operand && operant)}
+        selectedOperand={operand}
+        input={input}
+        total={total}
+        invalidDel={Boolean(input && operand && !operant)}
+      />
     </View>
   );
 };

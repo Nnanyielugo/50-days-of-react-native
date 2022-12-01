@@ -164,19 +164,19 @@ export const buttons: CalculatorButtonType[] = [
   },
   {
     mode: 'misc',
-    value: 'del',
-    function: 'delete',
-    background: '#2B2B2B',
-    color: '#fff',
-    size: size / 3,
-  },
-  {
-    mode: 'misc',
     value: '.',
     function: 'decimal',
     background: '#2B2B2B',
     color: '#fff',
     size: size / 2,
+  },
+  {
+    mode: 'misc',
+    value: 'del',
+    function: 'delete',
+    background: '#2B2B2B',
+    color: '#fff',
+    size: size / 3,
   },
   {
     mode: 'operand',

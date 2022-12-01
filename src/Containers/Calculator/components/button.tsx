@@ -11,6 +11,8 @@ interface CalcultorButtonProps {
   textStyle?: TextStyle;
   item: CalculatorButtonType;
   onPressItem: (item: CalculatorButtonType) => void;
+  active: boolean;
+  invalid: boolean;
 }
 
 const CalcultorButton: FunctionComponent<CalcultorButtonProps> = ({
@@ -19,16 +21,33 @@ const CalcultorButton: FunctionComponent<CalcultorButtonProps> = ({
   children,
   item,
   onPressItem,
+  active,
+  invalid,
 }) => {
+  const content = (
+    <View
+      style={[
+        styles.container,
+        containerStyle,
+        active && { backgroundColor: item.color },
+        invalid && { opacity: 0.5 },
+      ]}>
+      <Text
+        style={[styles.text, textStyle, active && { color: item.background }]}>
+        {children}
+      </Text>
+    </View>
+  );
+
+  if (invalid) return content;
+
   return (
     <Pressable
       onPress={() => onPressItem(item)}
       style={state => ({
         opacity: state.pressed ? 0.6 : 1,
       })}>
-      <View style={[styles.container, containerStyle]}>
-        <Text style={[styles.text, textStyle]}>{children}</Text>
-      </View>
+      {content}
     </Pressable>
   );
 };
