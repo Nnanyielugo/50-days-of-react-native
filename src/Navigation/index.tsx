@@ -11,6 +11,7 @@ import TinderSwipe from '../Containers/TinderSwipe';
 import VideoPlayer from '../Containers/VideoPlayer';
 import TickTacToe from '../Containers/TicTacToe';
 import ImageCarousel from '../Containers/ImageCarousel';
+import Reels from '../Containers/Reels';
 
 import type { RootStackParamList } from '../utils/interfaces';
 
@@ -28,6 +29,7 @@ export default function Navigator() {
         <Stack.Screen name="VideoPlayer" component={VideoPlayer} />
         <Stack.Screen name="TicTacToe" component={TickTacToe} />
         <Stack.Screen name="ImageCarousel" component={ImageCarousel} />
+        <Stack.Screen name="Reels" component={Reels} />
       </Stack.Navigator>
     </NavigationContainer>
   );
