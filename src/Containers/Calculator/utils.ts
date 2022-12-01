@@ -24,7 +24,12 @@ export type CalculatorButtonType =
   | {
       mode: 'misc';
       value: string;
-      function: string;
+      function:
+        | 'decimal'
+        | 'delete'
+        | 'clear'
+        | 'unary-plus-minus'
+        | 'percentage';
       size: number;
       color: string;
       background: string;

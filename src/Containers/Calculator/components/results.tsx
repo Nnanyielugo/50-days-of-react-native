@@ -1,10 +1,15 @@
 import React from 'react';
 import { View, Text, StyleSheet, Dimensions } from 'react-native';
 
-const Results = () => {
+import type { FunctionComponent } from 'react';
+
+interface ResultProps {
+  value: string | null;
+}
+const Results: FunctionComponent<ResultProps> = ({ value }) => {
   return (
     <View style={styles.container}>
-      <Text style={styles.result}>0</Text>
+      <Text style={styles.result}>{value || 0}</Text>
     </View>
   );
 };

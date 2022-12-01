@@ -4,9 +4,16 @@ import CalculatorButton from './button';
 
 import { CalculatorButtonType, buttons } from '../utils';
 
-const WorkArea = () => {
+import type { FunctionComponent } from 'react';
+
+interface WorkAreaProps {
+  handleItemPress: (item: CalculatorButtonType) => void;
+}
+const WorkArea: FunctionComponent<WorkAreaProps> = ({ handleItemPress }) => {
   const renderItem = ({ item }: { item: CalculatorButtonType }) => (
     <CalculatorButton
+      onPressItem={handleItemPress}
+      item={item}
       textStyle={{
         fontSize: item.size,
         color: item.color,
