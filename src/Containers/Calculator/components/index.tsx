@@ -12,8 +12,6 @@ const Container = () => {
   const [operant, setOperant] = React.useState<string | null>(null);
   const [total, setTotal] = React.useState<string | null>(null);
 
-  console.log('state', input, operand, operant, total);
-
   const handleItemPress = (item: CalculatorButtonType) => {
     switch (true) {
       case !input && item.mode === 'numeric':
@@ -107,11 +105,31 @@ const Container = () => {
         break;
 
       case item.mode === 'misc' && item.function === 'unary-plus-minus':
-        const numInputForUnary = Number(input);
-        if (numInputForUnary > 0) {
-          setInput('-'.concat(numInputForUnary.toString()));
+        // case: unary +/-
+        // subcase: apply on operant
+        if (operand) {
+          const numOperantForUnary = Number(operant);
+          if (!operant) {
+            setOperant('-');
+          } else if (input === '-') {
+            setOperant(null);
+          } else if (numOperantForUnary > 0) {
+            setOperant('-'.concat(numOperantForUnary.toString()));
+          } else {
+            setOperant(Math.abs(numOperantForUnary).toString());
+          }
         } else {
-          setInput(Math.abs(numInputForUnary).toString());
+          // subcase: apply on input
+          const numInputForUnary = Number(input);
+          if (!input) {
+            setInput('-');
+          } else if (input === '-') {
+            setInput(null);
+          } else if (numInputForUnary > 0) {
+            setInput('-'.concat(numInputForUnary.toString()));
+          } else {
+            setInput(Math.abs(numInputForUnary).toString());
+          }
         }
         break;
 
