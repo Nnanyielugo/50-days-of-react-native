@@ -75,6 +75,11 @@ const ReelsModal: FunctionComponent<ReelsModalProps> = ({
   }, [layoutIndex]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const scrollToNext = () => {
+    if (data.length === 1) {
+      // since this method is called at the end of the timer duration
+      // close immediately if only one item in the list
+      closeModal();
+    }
     const width = Dimensions.get('window').width;
     scrollViewRef.current?.scrollTo({
       x: width * layoutIndex,
