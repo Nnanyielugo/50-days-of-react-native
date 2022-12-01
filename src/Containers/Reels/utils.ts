@@ -38,6 +38,6 @@ export const data: Item[] = [
 ];
 
 export const INDICATOR_WIDTH =
-  (Dimensions.get('screen').width -
+  (Dimensions.get('window').width -
     (data.length * 2 + 12)) /** additional 2 pixels at the right end */ /
   data.length;

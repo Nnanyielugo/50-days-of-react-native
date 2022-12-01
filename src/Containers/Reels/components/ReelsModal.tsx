@@ -59,7 +59,7 @@ const ReelsModal: FunctionComponent<ReelsModalProps> = ({
   React.useEffect(() => {
     indicatorTimer.current = setInterval(() => {
       setTimerDuration((timerDuration += 100)); // eslint-disable-line react-hooks/exhaustive-deps
-    }, 100);
+    }, 95); //hack: make interval duration a little less than 100 so that indicator line completes each time, accumulatively
 
     return () => {
       clearInterval(indicatorTimer.current as NodeJS.Timer);
