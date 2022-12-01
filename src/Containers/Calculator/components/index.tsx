@@ -3,11 +3,12 @@ import { View, StyleSheet } from 'react-native';
 import Results from './results';
 import WorkArea from './workarea';
 
-import { CalculatorButtonType } from '../utils';
+import { CalculatorButtonType, Operands } from '../utils';
 
 const Container = () => {
   const [input, setInput] = React.useState<string | null>(null);
   const [freezeDel, setfreezeDel] = React.useState(false);
+  const [operand, setOperand] = React.useState<Operands>();
 
   const handleItemPress = (item: CalculatorButtonType) => {
     switch (true) {
@@ -68,6 +69,15 @@ const Container = () => {
 
         // freeze deletion
         setfreezeDel(true);
+        break;
+
+      case item.mode === 'misc' && item.function === 'unary-plus-minus':
+        const numInputForUnary = Number(input);
+        if (numInputForUnary > 0) {
+          setInput('-'.concat(numInputForUnary.toString()));
+        } else {
+          setInput(Math.abs(numInputForUnary).toString());
+        }
         break;
     }
     // base func: type a number

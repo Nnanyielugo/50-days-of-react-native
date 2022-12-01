@@ -5,6 +5,7 @@ const deviceHeight = Dimensions.get('window').height;
 const dimension = deviceWidth * deviceHeight;
 export const size = dimension * 0.00025;
 
+export type Operands = 'divide' | 'multiply' | 'subtract' | 'add' | 'equal';
 export type CalculatorButtonType =
   | {
       mode: 'numeric';
@@ -16,7 +17,7 @@ export type CalculatorButtonType =
   | {
       mode: 'operand';
       value: '÷' | 'x' | '-' | '+' | '=';
-      function: 'divide' | 'multiply' | 'subtract' | 'add' | 'equal';
+      function: Operands;
       size: number;
       color: string;
       background: string;
