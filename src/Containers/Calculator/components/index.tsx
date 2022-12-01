@@ -176,13 +176,33 @@ const Container = () => {
       case item.mode === 'operand' && item.function === 'equal':
         if (input && operand && operant) {
           if (operand === 'add') {
-            setTotal((Number(input) + Number(operant)).toString());
+            const result = (Number(input) + Number(operant)).toString();
+            setTotal(
+              result.length <= 5
+                ? result
+                : Number(result).toFixed(4).toString(),
+            );
           } else if (operand === 'subtract') {
-            setTotal((Number(input) - Number(operant)).toString());
+            const result = (Number(input) - Number(operant)).toString();
+            setTotal(
+              result.length <= 5
+                ? result
+                : Number(result).toFixed(4).toString(),
+            );
           } else if (operand === 'multiply') {
-            setTotal((Number(input) * Number(operant)).toString());
+            const result = (Number(input) * Number(operant)).toString();
+            setTotal(
+              result.length <= 5
+                ? result
+                : Number(result).toFixed(4).toString(),
+            );
           } else if (operand === 'divide') {
-            setTotal((Number(input) / Number(operant)).toString());
+            const result = (Number(input) / Number(operant)).toString();
+            setTotal(
+              result.length <= 5
+                ? result
+                : Number(result).toFixed(4).toString(),
+            );
           }
           setInput(null);
           setOperand(null);
