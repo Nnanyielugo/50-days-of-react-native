@@ -13,6 +13,7 @@ export type RootStackParamList = {
   ImageCarousel: undefined;
   Reels: undefined;
   Calculator: undefined;
+  NearbyPlaces: undefined;
 };
 
 type AllowedMenuPages = Omit<RootStackParamList, 'Home'>;
