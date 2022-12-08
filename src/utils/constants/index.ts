@@ -8,6 +8,7 @@ import Video from '_assets/icons/video-vintage.svg';
 import TicTacToe from '_assets/icons/gamepad-circle-left.svg';
 import Reels from '_assets/icons/multimedia.svg';
 import Calculator from '_assets/icons/calculator.svg';
+import NearbyPlaces from '_assets/icons/map-marker-radius.svg';
 
 export const PAGES: Page[] = [
   {
@@ -54,5 +55,10 @@ export const PAGES: Page[] = [
     name: 'Calculator',
     componentName: 'Calculator',
     Icon: Calculator,
+  },
+  {
+    name: 'Nearby Places',
+    componentName: 'NearbyPlaces',
+    Icon: NearbyPlaces,
   },
 ];

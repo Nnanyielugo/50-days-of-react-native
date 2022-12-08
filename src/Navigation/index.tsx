@@ -13,6 +13,7 @@ import TickTacToe from '../Containers/TicTacToe';
 import ImageCarousel from '../Containers/ImageCarousel';
 import Reels from '../Containers/Reels';
 import Calculator from '../Containers/Calculator';
+import NearbyPlaces from '../Containers/NearbyPlaces';
 
 import type { RootStackParamList } from '../utils/interfaces';
 
@@ -32,6 +33,7 @@ export default function Navigator() {
         <Stack.Screen name="ImageCarousel" component={ImageCarousel} />
         <Stack.Screen name="Reels" component={Reels} />
         <Stack.Screen name="Calculator" component={Calculator} />
+        <Stack.Screen name="NearbyPlaces" component={NearbyPlaces} />
       </Stack.Navigator>
     </NavigationContainer>
   );
