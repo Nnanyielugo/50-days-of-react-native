@@ -17,7 +17,6 @@ class MusicPlayer extends Component<{}, ComponentState> {
     const { tracks } = this.state;
     await TrackPlayer.setupPlayer();
     await TrackPlayer.updateOptions({
-      stopWithApp: true,
       capabilities: [
         Capability.Play,
         Capability.Pause,
@@ -35,15 +34,14 @@ class MusicPlayer extends Component<{}, ComponentState> {
     await TrackPlayer.add(tracks);
   };
 
-  componentWillUnmount() {
-    TrackPlayer.destroy();
-  }
-
   componentDidMount() {
+    console.log('in did mount');
     try {
       const url = 'https:/api.deezer.com/chart/0?limit=50';
       fetch(url)
-        .then(res => res.json())
+        .then(res => {
+          return res.json();
+        })
         .then(response => {
           const tracks: Track[] = [];
           response.tracks.data.map((track: any) => {
@@ -61,6 +59,10 @@ class MusicPlayer extends Component<{}, ComponentState> {
             }),
             () => this.startPlayer(),
           );
+        })
+        .catch(err => {
+          console.log('err', err);
+          throw err;
         });
     } catch (err) {
       console.log('error', err);
