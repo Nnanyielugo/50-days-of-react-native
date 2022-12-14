@@ -22,7 +22,11 @@ export default function Navigator() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Home" headerMode="none">
+      <Stack.Navigator
+        initialRouteName="Home"
+        screenOptions={{
+          headerShown: false,
+        }}>
         <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="StopWatch" component={StopWatch} />
         <Stack.Screen name="Weather" component={Weather} />
