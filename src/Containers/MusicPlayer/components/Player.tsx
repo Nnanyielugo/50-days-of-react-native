@@ -6,6 +6,7 @@ import {
   Dimensions,
   Image,
   ActivityIndicator,
+  Pressable,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import MDIcon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -84,6 +85,23 @@ const Player: FunctionComponent<ComponentProps> = ({ tracks }) => {
           setNextDisabled(true);
         }
         break;
+    }
+  };
+
+  const skipToNext = async () => {
+    if (nextDisabled) {
+      return;
+    } else {
+      const currentTrackIndex = (await TrackPlayer.getCurrentTrack()) as number;
+      TrackPlayer.skipToNext(currentTrackIndex);
+    }
+  };
+  const skipToPrev = async () => {
+    if (prevDisabled) {
+      return;
+    } else {
+      const currentTrackIndex = (await TrackPlayer.getCurrentTrack()) as number;
+      TrackPlayer.skipToPrevious(currentTrackIndex);
     }
   };
 
@@ -206,19 +224,29 @@ const Player: FunctionComponent<ComponentProps> = ({ tracks }) => {
             color="black"
           />
 
-          <Icon
-            name="play-skip-back"
-            onPress={prevDisabled ? () => {} : TrackPlayer.skipToPrevious}
-            size={30}
-            color={prevDisabled ? 'grey' : 'black'}
-          />
+          <Pressable
+            onPress={skipToPrev}
+            style={state => ({
+              opacity: state.pressed ? 0.5 : 1,
+            })}>
+            <Icon
+              name="play-skip-back"
+              size={30}
+              color={prevDisabled ? 'grey' : 'black'}
+            />
+          </Pressable>
           {trackPlayerElem}
-          <Icon
-            name="play-skip-forward"
-            onPress={nextDisabled ? () => {} : TrackPlayer.skipToNext}
-            size={30}
-            color={nextDisabled ? 'grey' : 'black'}
-          />
+          <Pressable
+            onPress={skipToNext}
+            style={state => ({
+              opacity: state.pressed ? 0.5 : 1,
+            })}>
+            <Icon
+              name="play-skip-forward"
+              size={30}
+              color={nextDisabled ? 'grey' : 'black'}
+            />
+          </Pressable>
           <Icon name="shuffle" size={20} />
         </View>
       </View>
