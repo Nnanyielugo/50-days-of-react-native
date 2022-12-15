@@ -121,7 +121,9 @@ const Player: FunctionComponent<ComponentProps> = ({ tracks }) => {
         TrackPlayer.skipToPrevious();
       }
       if (event.type === Event.PlaybackTrackChanged) {
-        const currentTrackIndex = await TrackPlayer.getCurrentTrack();
+        const currentTrackIndex =
+          (await TrackPlayer.getCurrentTrack()) as number;
+
         setCurrentTrack(tracks[currentTrackIndex]);
         setBackgroundColor(setRandomBackgroundColor());
 
