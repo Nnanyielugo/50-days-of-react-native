@@ -34,8 +34,11 @@ class MusicPlayer extends Component<{}, ComponentState> {
     await TrackPlayer.add(tracks);
   };
 
+  componentWillUnmount() {
+    TrackPlayer.reset();
+  }
+
   componentDidMount() {
-    console.log('in did mount');
     try {
       const url = 'https:/api.deezer.com/chart/0?limit=50';
       fetch(url)
