@@ -22,6 +22,7 @@ import {
   SafeAreaView,
   Image,
   Pressable,
+  Platform,
 } from 'react-native';
 
 import { data } from '../utils';
@@ -247,8 +248,8 @@ const styles = StyleSheet.create({
     marginBottom: 50,
   },
   indicator: {
-    height: 4,
-    marginTop: 50,
+    height: 8,
+    marginTop: Platform.OS === 'ios' ? 50 : 20,
     flexDirection: 'row',
     marginHorizontal: 5,
   },
