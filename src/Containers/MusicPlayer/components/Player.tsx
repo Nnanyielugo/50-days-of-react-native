@@ -10,7 +10,6 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import MDIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import Slider from 'react-native-slider';
 import TrackPlayer, {
   useProgress,
   Event,
@@ -19,8 +18,10 @@ import TrackPlayer, {
   State,
   RepeatMode,
 } from 'react-native-track-player';
+
 import albumArt from '../assets/album-art-placeholder.jpeg';
 import Playlist from './Playlist';
+import CustomSlider from './Slider';
 
 import { formatTrackDuration, setRandomBackgroundColor } from '../utils';
 
@@ -188,12 +189,11 @@ const Player: FunctionComponent<ComponentProps> = ({ tracks }) => {
           </View>
         )}
         <View style={styles.progressContainer}>
-          <Slider
+          <CustomSlider
             minimumValue={0}
             value={position}
             maximumValue={duration}
-            style={styles.progress}
-            onValueChange={(value: number) => TrackPlayer.seekTo(value)}
+            onChangeValue={(value: number) => TrackPlayer.seekTo(value)}
           />
 
           <View style={styles.progressTextContainer}>
