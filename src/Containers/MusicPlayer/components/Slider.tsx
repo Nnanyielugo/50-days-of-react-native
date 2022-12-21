@@ -99,8 +99,6 @@ const MusicProgress: FunctionComponent<MusicProgressProps> = ({
       <View style={styles.duration} />
       <Animated.View style={[styles.progress, animatedStyle]} />
       <Animated.View
-        // onStartShouldSetResponder={() => true}
-        // onResponderMove={moveKnob}
         style={[styles.knob, animatedPosition]}
         {...panResponder.panHandlers}
       />
