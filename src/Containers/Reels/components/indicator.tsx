@@ -6,26 +6,26 @@ import { INDICATOR_WIDTH } from '../utils';
 import type { FunctionComponent } from 'react';
 
 interface IndicatorProps {
-  timeout: number;
-  timerDuration: number;
   itemIndex: number;
   layoutIndex: number;
+  timerAnim: React.MutableRefObject<Animated.Value>;
+  timerDuration: number;
+  timeout: number;
 }
 
 const Indicator: FunctionComponent<IndicatorProps> = ({
-  timerDuration,
-  timeout,
   itemIndex,
   layoutIndex,
+  timerAnim,
+  timerDuration,
+  timeout,
 }) => {
-  let timerAnim = React.useRef(new Animated.Value(10)).current;
-
   const calculateProgress = () => {
     return (timerDuration / timeout) * INDICATOR_WIDTH;
   };
 
   const fillDuration = () => {
-    Animated.timing(timerAnim, {
+    Animated.timing(timerAnim.current, {
       toValue: calculateProgress(),
       duration: 100,
       useNativeDriver: false,
@@ -43,7 +43,7 @@ const Indicator: FunctionComponent<IndicatorProps> = ({
           style={[
             styles.progress,
             {
-              width: timerAnim,
+              width: timerAnim.current,
               left:
                 itemIndex === 0
                   ? 0

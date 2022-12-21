@@ -4,7 +4,6 @@ PODS:
     - React
   - CocoaAsyncSocket (7.6.5)
   - DoubleConversion (1.1.6)
-  - DVAssetLoaderDelegate (0.3.3)
   - FBLazyVector (0.69.0)
   - FBReactNativeSpec (0.69.0):
     - RCT-Folly (= 2021.06.28.00-v2)
@@ -102,6 +101,9 @@ PODS:
     - GoogleMaps/Base
   - libevent (2.1.12)
   - OpenSSL-Universal (1.1.1100)
+  - PromisesObjC (2.1.1)
+  - PromisesSwift (2.1.1):
+    - PromisesObjC (= 2.1.1)
   - RCT-Folly (2021.06.28.00-v2):
     - boost
     - DoubleConversion
@@ -334,13 +336,12 @@ PODS:
   - react-native-track-player (3.2.0):
     - React-Core
     - SwiftAudioEx (= 0.15.3)
-  - react-native-video/Video (5.2.1):
+  - react-native-video (6.0.0-alpha.4):
     - React-Core
-  - react-native-video/VideoCaching (5.2.1):
-    - DVAssetLoaderDelegate (~> 0.3.1)
+    - react-native-video/Video (= 6.0.0-alpha.4)
+  - react-native-video/Video (6.0.0-alpha.4):
+    - PromisesSwift
     - React-Core
-    - react-native-video/Video
-    - SPTPersistentCache (~> 1.1.0)
   - React-perflogger (0.69.0)
   - React-RCTActionSheet (0.69.0):
     - React-Core/RCTActionSheetHeaders (= 0.69.0)
@@ -411,6 +412,8 @@ PODS:
     - React
   - RNGestureHandler (2.8.0):
     - React-Core
+  - RNPermissions (3.6.1):
+    - React-Core
   - RNReanimated (2.13.0):
     - DoubleConversion
     - FBLazyVector
@@ -443,10 +446,9 @@ PODS:
     - React-RCTImage
   - RNSVG (13.4.0):
     - React-Core
-  - RNVectorIcons (8.1.0):
+  - RNVectorIcons (9.2.0):
     - React-Core
   - SocketRocket (0.6.0)
-  - SPTPersistentCache (1.1.0)
   - SwiftAudioEx (0.15.3)
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
@@ -504,7 +506,7 @@ DEPENDENCIES:
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - "react-native-slider (from `../node_modules/@react-native-community/slider`)"
   - react-native-track-player (from `../node_modules/react-native-track-player`)
-  - react-native-video/VideoCaching (from `../node_modules/react-native-video/react-native-video.podspec`)
+  - react-native-video (from `../node_modules/react-native-video/react-native-video.podspec`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
   - React-RCTAnimation (from `../node_modules/react-native/Libraries/NativeAnimation`)
@@ -519,6 +521,7 @@ DEPENDENCIES:
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - "RNCMaskedView (from `../node_modules/@react-native-community/masked-view`)"
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
+  - RNPermissions (from `../node_modules/react-native-permissions`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNSVG (from `../node_modules/react-native-svg`)
@@ -528,7 +531,6 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - CocoaAsyncSocket
-    - DVAssetLoaderDelegate
     - Flipper
     - Flipper-Boost-iOSX
     - Flipper-DoubleConversion
@@ -543,8 +545,9 @@ SPEC REPOS:
     - GoogleMaps
     - libevent
     - OpenSSL-Universal
+    - PromisesObjC
+    - PromisesSwift
     - SocketRocket
-    - SPTPersistentCache
     - SwiftAudioEx
     - YogaKit
 
@@ -633,6 +636,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-community/masked-view"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
+  RNPermissions:
+    :path: "../node_modules/react-native-permissions"
   RNReanimated:
     :path: "../node_modules/react-native-reanimated"
   RNScreens:
@@ -649,7 +654,6 @@ SPEC CHECKSUMS:
   BVLinearGradient: e3aad03778a456d77928f594a649e96995f1c872
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
-  DVAssetLoaderDelegate: 0caec20e4e08b8560b691131539e9180024d4bce
   FBLazyVector: f98dec9f199b7b51db586fe0140f509fabd5cc54
   FBReactNativeSpec: 56c4cf7cce9f95fd386001dba21437b7d6b33993
   Flipper: 26fc4b7382499f1281eb8cb921e5c3ad6de91fe0
@@ -667,6 +671,8 @@ SPEC CHECKSUMS:
   GoogleMaps: 6e9c923ca035989709fcb5771544fda4cc5fa2a4
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   OpenSSL-Universal: ebc357f1e6bc71fa463ccb2fe676756aff50e88c
+  PromisesObjC: ab77feca74fa2823e7af4249b8326368e61014cb
+  PromisesSwift: 99fddfe4a0ec88a56486644c0da106694c92a604
   RCT-Folly: 4d8508a426467c48885f1151029bc15fa5d7b3b8
   RCTRequired: eff60a46da0f496a6c76c8f60108c20626860d27
   RCTTypeSafety: 8cc8a45d0e2f93f1b42b5b2bbf23c4143f19935a
@@ -688,7 +694,7 @@ SPEC CHECKSUMS:
   react-native-safe-area-context: 99b24a0c5acd0d5dcac2b1a7f18c49ea317be99a
   react-native-slider: 7d19220da2f2ae7cbb9aa80127cb73c597fa221f
   react-native-track-player: 86649137952f7beeed18b4be7974be1d431d967f
-  react-native-video: 79a186e378d327b6c08bc3982c17ef455c6bd75c
+  react-native-video: b2a6434fa0cc7a5381985ca2af8f8c570f110743
   React-perflogger: aa48956d87bae67fc847acc196fae97928b96cd3
   React-RCTActionSheet: 4eaab2b885130ce9a88c8fdac5f1992315da80f6
   React-RCTAnimation: 5e91e3ceb988838fa43615bb602181be30d2b26e
@@ -703,16 +709,16 @@ SPEC CHECKSUMS:
   ReactCommon: 74a3b8ee497c6d50ce86ef57e15c4c5bf654b83d
   RNCMaskedView: f127cd9652acfa31b91dcff613e07ba18b774db6
   RNGestureHandler: 62232ba8f562f7dea5ba1b3383494eb5bf97a4d3
+  RNPermissions: dcdb7b99796bbeda6975a6e79ad519c41b251b1c
   RNReanimated: f0d66bda3d074c43c72a18f4fd4f4c26687bc1fd
   RNScreens: 34cc502acf1b916c582c60003dc3089fa01dc66d
   RNSVG: 07dbd870b0dcdecc99b3a202fa37c8ca163caec2
-  RNVectorIcons: 31cebfcf94e8cf8686eb5303ae0357da64d7a5a4
+  RNVectorIcons: fcc2f6cb32f5735b586e66d14103a74ce6ad61f8
   SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608
-  SPTPersistentCache: df36ea46762d7cf026502bbb86a8b79d0080dff4
   SwiftAudioEx: 83eabba2940924fc1c0d5cb0896049921365229c
   Yoga: 4935173923cabaa830e195be3e8e4cac045a8f90
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: cae4bfc7c220d4812236c45e9598a9aa3b61af65
+PODFILE CHECKSUM: 5ecc9efe299a92b4093272c5cd1e6fa5c299ff8a
 
 COCOAPODS: 1.10.1

@@ -14,28 +14,52 @@ class MusicPlayer extends Component<{}, ComponentState> {
   };
 
   startPlayer = async () => {
+    const alreadyInitialised = await TrackPlayer.isServiceRunning();
     const { tracks } = this.state;
-    await TrackPlayer.setupPlayer();
-    await TrackPlayer.updateOptions({
-      capabilities: [
-        Capability.Play,
-        Capability.Pause,
-        Capability.SkipToNext,
-        Capability.SkipToPrevious,
-        Capability.SeekTo,
-      ],
-      compactCapabilities: [
-        Capability.Play,
-        Capability.Pause,
-        Capability.SkipToNext,
-        Capability.SkipToPrevious,
-      ],
-    });
-    await TrackPlayer.add(tracks);
+
+    if (alreadyInitialised) {
+      await TrackPlayer.updateOptions({
+        capabilities: [
+          Capability.Play,
+          Capability.Pause,
+          Capability.SkipToNext,
+          Capability.SkipToPrevious,
+          Capability.SeekTo,
+        ],
+        compactCapabilities: [
+          Capability.Play,
+          Capability.Pause,
+          Capability.SkipToNext,
+          Capability.SkipToPrevious,
+        ],
+      });
+      await TrackPlayer.add(tracks);
+    } else {
+      await TrackPlayer.setupPlayer();
+      await TrackPlayer.updateOptions({
+        capabilities: [
+          Capability.Play,
+          Capability.Pause,
+          Capability.SkipToNext,
+          Capability.SkipToPrevious,
+          Capability.SeekTo,
+        ],
+        compactCapabilities: [
+          Capability.Play,
+          Capability.Pause,
+          Capability.SkipToNext,
+          Capability.SkipToPrevious,
+        ],
+      });
+      await TrackPlayer.add(tracks);
+    }
   };
 
+  componentWillUnmount() {
+    TrackPlayer.reset();
+  }
+
   componentDidMount() {
-    console.log('in did mount');
     try {
       const url = 'https:/api.deezer.com/chart/0?limit=50';
       fetch(url)

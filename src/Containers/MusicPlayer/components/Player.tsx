@@ -6,10 +6,10 @@ import {
   Dimensions,
   Image,
   ActivityIndicator,
+  Pressable,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import MDIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import Slider from 'react-native-slider';
 import TrackPlayer, {
   useProgress,
   Event,
@@ -18,8 +18,10 @@ import TrackPlayer, {
   State,
   RepeatMode,
 } from 'react-native-track-player';
+
 import albumArt from '../assets/album-art-placeholder.jpeg';
 import Playlist from './Playlist';
+import CustomSlider from './Slider';
 
 import { formatTrackDuration, setRandomBackgroundColor } from '../utils';
 
@@ -87,6 +89,23 @@ const Player: FunctionComponent<ComponentProps> = ({ tracks }) => {
     }
   };
 
+  const skipToNext = async () => {
+    if (nextDisabled) {
+      return;
+    } else {
+      const currentTrackIndex = (await TrackPlayer.getCurrentTrack()) as number;
+      TrackPlayer.skipToNext(currentTrackIndex);
+    }
+  };
+  const skipToPrev = async () => {
+    if (prevDisabled) {
+      return;
+    } else {
+      const currentTrackIndex = (await TrackPlayer.getCurrentTrack()) as number;
+      TrackPlayer.skipToPrevious(currentTrackIndex);
+    }
+  };
+
   let trackPlayerElem = (
     <Icon onPress={TrackPlayer.play} name="play" size={30} />
   );
@@ -121,7 +140,9 @@ const Player: FunctionComponent<ComponentProps> = ({ tracks }) => {
         TrackPlayer.skipToPrevious();
       }
       if (event.type === Event.PlaybackTrackChanged) {
-        const currentTrackIndex = await TrackPlayer.getCurrentTrack();
+        const currentTrackIndex =
+          (await TrackPlayer.getCurrentTrack()) as number;
+
         setCurrentTrack(tracks[currentTrackIndex]);
         setBackgroundColor(setRandomBackgroundColor());
 
@@ -168,12 +189,11 @@ const Player: FunctionComponent<ComponentProps> = ({ tracks }) => {
           </View>
         )}
         <View style={styles.progressContainer}>
-          <Slider
+          <CustomSlider
             minimumValue={0}
             value={position}
             maximumValue={duration}
-            style={styles.progress}
-            onValueChange={(value: number) => TrackPlayer.seekTo(value)}
+            onChangeValue={(value: number) => TrackPlayer.seekTo(value)}
           />
 
           <View style={styles.progressTextContainer}>
@@ -204,19 +224,29 @@ const Player: FunctionComponent<ComponentProps> = ({ tracks }) => {
             color="black"
           />
 
-          <Icon
-            name="play-skip-back"
-            onPress={prevDisabled ? () => {} : TrackPlayer.skipToPrevious}
-            size={30}
-            color={prevDisabled ? 'grey' : 'black'}
-          />
+          <Pressable
+            onPress={skipToPrev}
+            style={state => ({
+              opacity: state.pressed ? 0.5 : 1,
+            })}>
+            <Icon
+              name="play-skip-back"
+              size={30}
+              color={prevDisabled ? 'grey' : 'black'}
+            />
+          </Pressable>
           {trackPlayerElem}
-          <Icon
-            name="play-skip-forward"
-            onPress={nextDisabled ? () => {} : TrackPlayer.skipToNext}
-            size={30}
-            color={nextDisabled ? 'grey' : 'black'}
-          />
+          <Pressable
+            onPress={skipToNext}
+            style={state => ({
+              opacity: state.pressed ? 0.5 : 1,
+            })}>
+            <Icon
+              name="play-skip-forward"
+              size={30}
+              color={nextDisabled ? 'grey' : 'black'}
+            />
+          </Pressable>
           <Icon name="shuffle" size={20} />
         </View>
       </View>

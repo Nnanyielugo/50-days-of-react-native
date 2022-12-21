@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 import Mapview from 'react-native-maps';
 
 import { Card } from '../../../components';
@@ -20,15 +20,25 @@ const Map: FunctionComponent<ComponentProps> = ({ coords }) => {
 
   return (
     <Card style={styles.container} raised={{ height: 5 }}>
-      <Mapview
-        provider="google"
-        style={styles.map}
-        region={region}
-        initialRegion={region}
-        scrollEnabled={false}
-        liteMode={true}
-        cacheEnabled={true}
-      />
+      {Platform.OS === 'android' ? (
+        <Mapview
+          provider="google"
+          style={styles.map}
+          region={region}
+          initialRegion={region}
+          scrollEnabled={false}
+          cacheEnabled={true}
+        />
+      ) : (
+        <Mapview
+          // provider="google"
+          style={styles.map}
+          region={region}
+          initialRegion={region}
+          scrollEnabled={false}
+          cacheEnabled={true}
+        />
+      )}
     </Card>
   );
 };
