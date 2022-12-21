@@ -10,6 +10,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import Geolocation from 'react-native-geolocation-service';
 import Config from 'react-native-config';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { request, check, PERMISSIONS, RESULTS } from 'react-native-permissions';
 
 import WeatherInformation from './components/WeatherInformation';
 import History from './components/History';
@@ -96,11 +97,6 @@ interface ComponentState {
 class Weather extends Component<ComponentProps, ComponentState> {
   constructor(props: ComponentProps) {
     super(props);
-    const options = {
-      enableHighAccuracy: true,
-      timeout: 15000,
-      maximumAge: 10000,
-    };
 
     const randomIndex = Math.floor(Math.random() * BackgroundImages.length);
 
@@ -109,19 +105,95 @@ class Weather extends Component<ComponentProps, ComponentState> {
       backgroundImage: BackgroundImages[randomIndex],
       modalIsVisible: false,
     };
+  }
 
-    Geolocation.getCurrentPosition(
-      pos => {
-        this.setState({
-          coords: {
-            latitude: pos.coords.latitude,
-            longitude: pos.coords.longitude,
+  handleCheckLocationPermissions = async () => {
+    const options = {
+      enableHighAccuracy: true,
+      timeout: 15000,
+      maximumAge: 10000,
+    };
+    if (Platform.OS === 'android') {
+      const result = await check(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
+
+      if (result === RESULTS.GRANTED) {
+        Geolocation.getCurrentPosition(
+          pos => {
+            this.setState({
+              coords: {
+                latitude: pos.coords.latitude,
+                longitude: pos.coords.longitude,
+              },
+            });
           },
-        });
-      },
-      () => {},
-      options,
-    );
+          err => {
+            console.log('err', err);
+          },
+          options,
+        );
+      } else {
+        const permission = await request(
+          PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
+        );
+        if (permission === RESULTS.GRANTED) {
+          Geolocation.getCurrentPosition(
+            pos => {
+              this.setState({
+                coords: {
+                  latitude: pos.coords.latitude,
+                  longitude: pos.coords.longitude,
+                },
+              });
+            },
+            err => {
+              console.log('err', err);
+            },
+            options,
+          );
+        }
+      }
+    } else {
+      const result = await check(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
+
+      if (result === RESULTS.GRANTED) {
+        Geolocation.getCurrentPosition(
+          pos => {
+            this.setState({
+              coords: {
+                latitude: pos.coords.latitude,
+                longitude: pos.coords.longitude,
+              },
+            });
+          },
+          err => {
+            console.log('err', err);
+          },
+          options,
+        );
+      } else {
+        const permission = await request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
+        if (permission === RESULTS.GRANTED) {
+          Geolocation.getCurrentPosition(
+            pos => {
+              this.setState({
+                coords: {
+                  latitude: pos.coords.latitude,
+                  longitude: pos.coords.longitude,
+                },
+              });
+            },
+            err => {
+              console.log('err', err);
+            },
+            options,
+          );
+        }
+      }
+    }
+  };
+
+  componentDidMount(): void {
+    this.handleCheckLocationPermissions();
   }
 
   toggleModal() {
@@ -144,6 +216,7 @@ class Weather extends Component<ComponentProps, ComponentState> {
       latitude: location.lat,
       longitude: location.lng,
     };
+
     this.setState(
       state => ({
         ...state,
@@ -163,23 +236,27 @@ class Weather extends Component<ComponentProps, ComponentState> {
       fetchWeatherData(coords),
       reverseGeocode(coords),
       getYesterday(coords),
-    ]).then(([weatherData, geoResults, yesterday]) => {
-      const formattedresults = composeWeatherResults(weatherData);
-      this.setState(state => ({
-        ...state,
-        address: {
-          ...state.address,
-          locality: geoResults.results[0].formatted_address,
-        },
-        current: formattedresults.current,
-        hourly: formattedresults.hours,
-        daily: formattedresults.days,
-        loaded: true,
-        yesterday: {
-          temp: yesterday.current.temp,
-        },
-      }));
-    });
+    ])
+      .then(([weatherData, geoResults, yesterday]) => {
+        const formattedresults = composeWeatherResults(weatherData);
+        this.setState(state => ({
+          ...state,
+          address: {
+            ...state.address,
+            locality: geoResults.results[0].formatted_address,
+          },
+          current: formattedresults.current,
+          hourly: formattedresults.hours,
+          daily: formattedresults.days,
+          loaded: true,
+          yesterday: {
+            temp: yesterday.current.temp,
+          },
+        }));
+      })
+      .catch(err => {
+        console.log('weather error', err);
+      });
   }
 
   render() {
