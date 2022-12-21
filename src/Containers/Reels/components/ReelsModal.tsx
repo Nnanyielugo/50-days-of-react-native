@@ -13,16 +13,13 @@
 
 import React from 'react';
 import {
-  View,
-  Text,
   StyleSheet,
   Modal,
   ScrollView,
   Dimensions,
   SafeAreaView,
-  Image,
-  Pressable,
   Platform,
+  Animated,
 } from 'react-native';
 
 import { data } from '../utils';
@@ -34,6 +31,7 @@ import type {
   GestureResponderEvent,
 } from 'react-native';
 import Indicator from './indicator';
+import Reel from './Reel';
 
 interface ReelsModalProps {
   isVisible: boolean;
@@ -47,8 +45,10 @@ const ReelsModal: FunctionComponent<ReelsModalProps> = ({
   let scrollViewRef = React.useRef<ScrollView | null>(null);
   let [layoutIndex, setLayoutIndex] = React.useState<number>(1);
   let [timerDuration, setTimerDuration] = React.useState(
-    React.useRef(500).current,
+    React.useRef(100).current,
   );
+  // animation that controls the indicator progress
+  let timerAnim = React.useRef(new Animated.Value(0));
   const timeout = 4000; // in ms
 
   let upperTimer = React.useRef<NodeJS.Timer | number>(0);
@@ -68,8 +68,10 @@ const ReelsModal: FunctionComponent<ReelsModalProps> = ({
   });
 
   React.useEffect(() => {
-    setTimerDuration(500);
+    setTimerDuration(100);
     upperTimer.current = setInterval(scrollToNext, timeout);
+    // reset timer indicator early and fix the flashing bug
+    timerAnim.current = new Animated.Value(0);
     return () => {
       clearInterval(upperTimer.current as NodeJS.Timer);
     };
@@ -193,10 +195,11 @@ const ReelsModal: FunctionComponent<ReelsModalProps> = ({
             return (
               <Indicator
                 key={index}
-                timeout={timeout}
-                timerDuration={timerDuration}
                 itemIndex={index}
                 layoutIndex={layoutIndex}
+                timerAnim={timerAnim}
+                timerDuration={timerDuration}
+                timeout={timeout}
               />
             );
           })}
@@ -209,21 +212,13 @@ const ReelsModal: FunctionComponent<ReelsModalProps> = ({
           pagingEnabled>
           {data.map((item, index) => {
             return (
-              <Pressable
+              <Reel
                 key={index}
                 onTouchStart={handleTouchStart}
                 onTouchEnd={handleTouchEnd}
                 onLongPress={handleLongPress}
-                // delayLongPress={2000}
-              >
-                <View style={styles.item}>
-                  {item.type === 'text' ? (
-                    <Text style={styles.text}>{item.text}</Text>
-                  ) : (
-                    <Image source={item.source} style={styles.image} />
-                  )}
-                </View>
-              </Pressable>
+                item={item}
+              />
             );
           })}
         </ScrollView>
@@ -239,33 +234,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'whitesmoke',
   },
-  item: {
-    width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height * 0.9,
-    paddingHorizontal: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 50,
-  },
   indicator: {
     height: 8,
     marginTop: Platform.OS === 'ios' ? 50 : 20,
     flexDirection: 'row',
     marginHorizontal: 5,
-  },
-  image: {
-    height: Dimensions.get('window').height * 0.85,
-    width: Dimensions.get('window').width * 0.95,
-    borderRadius: 10,
-    alignSelf: 'center',
-  },
-  text: {
-    height: Dimensions.get('window').height * 0.85,
-    width: Dimensions.get('window').width * 0.95,
-    fontSize: 24,
-    fontWeight: '500',
-    lineHeight: 35,
-    marginTop: Dimensions.get('window').height * 0.5,
   },
 });
 
