@@ -45,7 +45,7 @@ const ReelsModal: FunctionComponent<ReelsModalProps> = ({
   let scrollViewRef = React.useRef<ScrollView | null>(null);
   let [layoutIndex, setLayoutIndex] = React.useState<number>(1);
   let [timerDuration, setTimerDuration] = React.useState(
-    React.useRef(100).current,
+    React.useRef(520).current,
   );
   // animation that controls the indicator progress
   let timerAnim = React.useRef(new Animated.Value(0));
@@ -68,7 +68,7 @@ const ReelsModal: FunctionComponent<ReelsModalProps> = ({
   });
 
   React.useEffect(() => {
-    setTimerDuration(100);
+    setTimerDuration(520);
     upperTimer.current = setInterval(scrollToNext, timeout);
     // reset timer indicator early and fix the flashing bug
     timerAnim.current = new Animated.Value(0);

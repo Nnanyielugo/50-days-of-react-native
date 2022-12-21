@@ -35,6 +35,7 @@ const Indicator: FunctionComponent<IndicatorProps> = ({
   React.useEffect(() => {
     fillDuration();
   });
+
   return (
     <Fragment key={itemIndex}>
       {itemIndex === layoutIndex - 1 && (
