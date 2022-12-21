@@ -110,12 +110,12 @@ const VideoComp: FunctionComponent<ComponentProps> = ({
               ) : (
                 <Text>0:00/0:00</Text>
               )}
-              <Icon
+              {/* <Icon
                 name="tablet-landscape-outline"
                 size={20}
                 color="white"
                 onPress={() => onTogglefullScreen(true)}
-              />
+              /> */}
             </View>
             <Slider
               style={styles.slider}

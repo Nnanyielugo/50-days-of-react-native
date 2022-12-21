@@ -7,8 +7,10 @@ install! 'cocoapods', :deterministic_uuids => false
 target 'fiftyDays' do
   rn_maps_path = '../node_modules/react-native-maps'
   pod 'react-native-google-maps', :path => rn_maps_path
-  pod 'react-native-video/VideoCaching', :path => '../node_modules/react-native-video/react-native-video.podspec'
+  pod 'react-native-video', :path => '../node_modules/react-native-video/react-native-video.podspec', :modular_headers => true
 
+  # use_modular_headers!
+  
   config = use_native_modules!
   # Flags change depending on the env values.
   flags = get_default_flags()
