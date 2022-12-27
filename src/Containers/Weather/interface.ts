@@ -1,6 +1,8 @@
 export interface Coords {
   longitude: number;
   latitude: number;
+  latitudeDelta: number;
+  longitudeDelta: number;
 }
 
 export interface Address {

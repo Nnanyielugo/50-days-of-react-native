@@ -123,6 +123,8 @@ class Weather extends Component<ComponentProps, ComponentState> {
               coords: {
                 latitude: pos.coords.latitude,
                 longitude: pos.coords.longitude,
+                latitudeDelta: 0.0421,
+                longitudeDelta: 0.6922,
               },
             });
           },
@@ -142,6 +144,8 @@ class Weather extends Component<ComponentProps, ComponentState> {
                 coords: {
                   latitude: pos.coords.latitude,
                   longitude: pos.coords.longitude,
+                  latitudeDelta: 0.0421,
+                  longitudeDelta: 0.6922,
                 },
               });
             },
@@ -162,6 +166,8 @@ class Weather extends Component<ComponentProps, ComponentState> {
               coords: {
                 latitude: pos.coords.latitude,
                 longitude: pos.coords.longitude,
+                latitudeDelta: 0.0421,
+                longitudeDelta: 0.6922,
               },
             });
           },
@@ -179,6 +185,8 @@ class Weather extends Component<ComponentProps, ComponentState> {
                 coords: {
                   latitude: pos.coords.latitude,
                   longitude: pos.coords.longitude,
+                  latitudeDelta: 0.0421,
+                  longitudeDelta: 0.6922,
                 },
               });
             },
@@ -215,6 +223,8 @@ class Weather extends Component<ComponentProps, ComponentState> {
     const coords: Coords = {
       latitude: location.lat,
       longitude: location.lng,
+      latitudeDelta: 0.0421,
+      longitudeDelta: 0.6922,
     };
 
     this.setState(
@@ -296,10 +306,8 @@ class Weather extends Component<ComponentProps, ComponentState> {
             loaded={this.state.loaded}
             daily={this.state.daily}
           />
-          {this.state.coords && (
-            <>
-              <Map coords={this.state.coords} />
-            </>
+          {this.state.loaded && this.state.coords && (
+            <Map coords={this.state.coords} />
           )}
         </ScrollView>
       </ImageBackground>

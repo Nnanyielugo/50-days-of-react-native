@@ -12,20 +12,15 @@ interface ComponentProps {
 }
 
 const Map: FunctionComponent<ComponentProps> = ({ coords }) => {
-  const region = {
-    ...coords,
-    latitudeDelta: 0.0421,
-    longitudeDelta: 0.6922,
-  };
-
+  console.log('mapview coords', coords);
   return (
     <Card style={styles.container} raised={{ height: 5 }}>
       {Platform.OS === 'android' ? (
         <Mapview
           provider="google"
           style={styles.map}
-          region={region}
-          initialRegion={region}
+          region={coords}
+          initialRegion={coords}
           scrollEnabled={false}
           cacheEnabled={true}
         />
@@ -33,8 +28,8 @@ const Map: FunctionComponent<ComponentProps> = ({ coords }) => {
         <Mapview
           // provider="google"
           style={styles.map}
-          region={region}
-          initialRegion={region}
+          region={coords}
+          initialRegion={coords}
           scrollEnabled={false}
           cacheEnabled={true}
         />
