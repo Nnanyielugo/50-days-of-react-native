@@ -12,7 +12,6 @@ interface ComponentProps {
 }
 
 const Map: FunctionComponent<ComponentProps> = ({ coords }) => {
-  console.log('mapview coords', coords);
   return (
     <Card style={styles.container} raised={{ height: 5 }}>
       {Platform.OS === 'android' ? (
