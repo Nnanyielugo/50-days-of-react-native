@@ -6,7 +6,11 @@ import {
   Pressable,
   Platform,
 } from 'react-native';
-import MapView, { Marker, AnimatedRegion } from 'react-native-maps';
+import MapView, {
+  AnimatedRegion,
+  MapMarker,
+  MarkerAnimated,
+} from 'react-native-maps';
 import { request, check, PERMISSIONS, RESULTS } from 'react-native-permissions';
 import Geolocation from 'react-native-geolocation-service';
 import Config from 'react-native-config';
@@ -22,10 +26,25 @@ interface ContainerProps {
   goBack: () => void;
 }
 
+const DEFAULT_LATITUDE = 37.78825;
+const DEFAULT_LONGITUDE = -122.4324;
+
 const Container: FunctionComponent<ContainerProps> = ({ goBack }) => {
   const [coords, setCoords] = React.useState<Coords>();
   const [places, setPlaces] = React.useState<IPlace[]>([]);
   const [userLocationSet, setUserLocationStatus] = React.useState(false);
+
+  const markerCoords = React.useRef<AnimatedRegion>();
+
+  const mapRef = React.useRef<MapView>();
+  const markerRef = React.useRef<MapMarker>();
+
+  React.useEffect(() => {
+    markerCoords.current = new AnimatedRegion({
+      latitude: DEFAULT_LATITUDE,
+      longitude: DEFAULT_LONGITUDE,
+    });
+  }, []);
 
   React.useEffect(() => {
     handleCheckLocationPermissions();
@@ -57,6 +76,12 @@ const Container: FunctionComponent<ContainerProps> = ({ goBack }) => {
           },
           err => {
             console.log('err', err);
+            setCoords({
+              longitude: DEFAULT_LONGITUDE,
+              latitude: DEFAULT_LATITUDE,
+              latitudeDelta: 0.0421,
+              longitudeDelta: 0.0621,
+            });
           },
           options,
         );
@@ -76,6 +101,12 @@ const Container: FunctionComponent<ContainerProps> = ({ goBack }) => {
             },
             err => {
               console.log('err', err);
+              setCoords({
+                longitude: DEFAULT_LONGITUDE,
+                latitude: DEFAULT_LATITUDE,
+                latitudeDelta: 0.0421,
+                longitudeDelta: 0.0621,
+              });
             },
             options,
           );
@@ -96,6 +127,12 @@ const Container: FunctionComponent<ContainerProps> = ({ goBack }) => {
           },
           err => {
             console.log('err', err);
+            setCoords({
+              longitude: DEFAULT_LONGITUDE,
+              latitude: DEFAULT_LATITUDE,
+              latitudeDelta: 0.0421,
+              longitudeDelta: 0.0621,
+            });
           },
           options,
         );
@@ -113,11 +150,33 @@ const Container: FunctionComponent<ContainerProps> = ({ goBack }) => {
             },
             err => {
               console.log('err', err);
+              setCoords({
+                longitude: DEFAULT_LONGITUDE,
+                latitude: DEFAULT_LATITUDE,
+                latitudeDelta: 0.0421,
+                longitudeDelta: 0.0621,
+              });
             },
             options,
           );
         }
       }
+    }
+  };
+
+  const animateToRegion = (vals: Coords) => {
+    mapRef.current?.animateToRegion(vals, 500);
+    if (Platform.OS === 'android') {
+      markerRef.current?.animateMarkerToCoordinate(vals, 500);
+    } else {
+      markerCoords.current
+        ?.timing({
+          longitude: vals.longitude,
+          latitude: vals.latitude,
+          useNativeDriver: false,
+          duration: 500,
+        })
+        .start();
     }
   };
 
@@ -155,20 +214,26 @@ const Container: FunctionComponent<ContainerProps> = ({ goBack }) => {
         </Pressable>
       </View>
       <MapView.Animated
-        provider="google"
+        provider={Platform.OS === 'android' ? 'google' : undefined}
+        ref={el => (mapRef.current = el)}
         style={styles.map}
         initialRegion={new AnimatedRegion({ ...coords })}
         region={new AnimatedRegion({ ...coords })}
         scrollEnabled={false}
         loadingEnabled>
-        <Marker.Animated
-          coordinate={{
-            latitude: (coords as Coords).latitude,
-            longitude: (coords as Coords).longitude,
-          }}
+        <MarkerAnimated
+          ref={el => (markerRef.current = el)}
+          coordinate={
+            Platform.OS === 'android'
+              ? {
+                  latitude: coords.latitude,
+                  longitude: coords.longitude,
+                }
+              : markerCoords.current
+          }
         />
       </MapView.Animated>
-      <Places setCoords={setCoords} places={places} />
+      <Places setCoords={animateToRegion} places={places} />
     </>
   );
 };

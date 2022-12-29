@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, Dimensions } from 'react-native';
+import { StyleSheet, ScrollView, Dimensions } from 'react-native';
 
 import Place from './Place';
 
@@ -9,14 +9,13 @@ import type { IPlace, Coords } from '../types';
 
 interface PlaceProps {
   places: IPlace[];
-  setCoords: (value: React.SetStateAction<Coords | undefined>) => void;
+  setCoords: (value: Coords) => void;
 }
 
 const Places: FunctionComponent<PlaceProps> = ({ places, setCoords }) => {
   let [layoutIndex, setLayoutIndex] = React.useState<number>(0);
 
   React.useEffect(() => {
-    console.log('check', layoutIndex);
     if (places.length) {
       setCoords({
         longitude: places[layoutIndex]?.location.lng,
@@ -25,7 +24,7 @@ const Places: FunctionComponent<PlaceProps> = ({ places, setCoords }) => {
         longitudeDelta: 0.0621,
       });
     }
-  }, [layoutIndex]);
+  }, [layoutIndex]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleScroll = ({
     nativeEvent: { contentOffset, layoutMeasurement },
@@ -34,10 +33,6 @@ const Places: FunctionComponent<PlaceProps> = ({ places, setCoords }) => {
     let focusedIndex = contentOffset.x / (widthForFullSwipe * 0.85);
 
     setLayoutIndex(Math.ceil(focusedIndex));
-
-    // if (contentOffset.x >= layoutMeasurement.width * (data.length - 1)) {
-    //   setData(data.concat(defaultImages));
-    // }
   };
 
   return (
@@ -57,7 +52,6 @@ const Places: FunctionComponent<PlaceProps> = ({ places, setCoords }) => {
 };
 
 const DEVICE_HEIGHT = Dimensions.get('window').height;
-const DEVICE_WIDTH = Dimensions.get('window').width;
 
 const styles = StyleSheet.create({
   container: {
