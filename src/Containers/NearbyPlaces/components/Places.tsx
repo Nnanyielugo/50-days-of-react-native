@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, ScrollView, Dimensions } from 'react-native';
+import { StyleSheet, ScrollView, Dimensions, Platform } from 'react-native';
 
 import Place from './Place';
 
@@ -64,7 +64,8 @@ const DEVICE_HEIGHT = Dimensions.get('window').height;
 const styles = StyleSheet.create({
   container: {
     position: 'absolute',
-    top: DEVICE_HEIGHT * 0.65,
+    top:
+      Platform.OS === 'android' ? DEVICE_HEIGHT * 0.65 : DEVICE_HEIGHT * 0.72,
     width: '100%',
     height: 200,
     zIndex: 900,
