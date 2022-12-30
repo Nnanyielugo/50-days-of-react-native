@@ -43,6 +43,7 @@ const Places: FunctionComponent<PlaceProps> = ({ places, setCoords }) => {
       horizontal
       decelerationRate={'fast'}
       snapToInterval={Dimensions.get('window').width * 0.85}
+      showsHorizontalScrollIndicator={false}
       snapToAlignment="center">
       {places.map((place, index) => {
         return (
