@@ -15,7 +15,7 @@ Please note that the setup instruction assumes that you have setup your developm
 
 #### Menu
 
-<img src="assets/demos/Menu.png" width="270" height="570">
+<img src="assets/demos/Menu.jpeg" width="270" height="570">
 
 #### [Music Player](https://github.com/Nnanyielugo/50-days-of-react-native/blob/master/src/Containers/MusicPlayer/readme.md)
 
