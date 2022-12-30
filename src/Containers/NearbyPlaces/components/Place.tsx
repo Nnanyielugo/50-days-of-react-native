@@ -1,10 +1,18 @@
 import React from 'react';
-import { View, StyleSheet, Dimensions, Animated } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Dimensions,
+  Animated,
+  Pressable,
+  Linking,
+} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import type { FunctionComponent } from 'react';
 
 import type { IPlace } from '../types';
+import MapsModal from './maps-modal';
 
 type Place = {
   index: number;
@@ -32,6 +40,7 @@ const Place: FunctionComponent<Place> = ({ index, layoutIndex, place }) => {
   const nameFontAnim = React.useRef(new Animated.Value(15)).current;
   const addressFontAnim = React.useRef(new Animated.Value(10)).current;
   const ratingsSizeAnim = React.useRef(new Animated.Value(0.5)).current;
+  const [isModalVisible, handleToggleModal] = React.useState(false);
 
   const AnimatedIcon = Animated.createAnimatedComponent(Icon);
 
@@ -44,6 +53,13 @@ const Place: FunctionComponent<Place> = ({ index, layoutIndex, place }) => {
       fadeOut();
     };
   }, [layoutIndex]); //eslint-disable-line react-hooks/exhaustive-deps
+
+  const openModal = () => {
+    handleToggleModal(true);
+  };
+  const closeModal = () => {
+    handleToggleModal(false);
+  };
 
   const fadeIn = () => {
     Animated.parallel([
@@ -107,58 +123,73 @@ const Place: FunctionComponent<Place> = ({ index, layoutIndex, place }) => {
 
   const ratings = [1, 2, 3, 4, 5];
   return (
-    <Animated.View
-      style={[styles.container, { height: heightAnim, opacity: opacityAnim }]}>
-      <View style={styles.subContainer}>
-        <View style={styles.imageContainer}>
-          <Animated.Image
-            source={{ uri: place.image }}
-            style={[styles.image, { height: heightAnim }]}
-          />
-        </View>
+    <Pressable
+      onPress={openModal}
+      style={state => ({
+        opacity: state.pressed ? 0.6 : 1,
+      })}>
+      <MapsModal
+        coords={place.location}
+        isVisible={isModalVisible}
+        closeModal={closeModal}
+        placeName={place.name}
+      />
+      <Animated.View
+        style={[
+          styles.container,
+          { height: heightAnim, opacity: opacityAnim },
+        ]}>
+        <View style={styles.subContainer}>
+          <View style={styles.imageContainer}>
+            <Animated.Image
+              source={{ uri: place.image }}
+              style={[styles.image, { height: heightAnim }]}
+            />
+          </View>
 
-        <View style={styles.detailsContainer}>
-          <View style={styles.nameContainer}>
-            <Animated.Text style={[styles.name, { fontSize: nameFontAnim }]}>
-              {place.name}
-            </Animated.Text>
-          </View>
-          <View style={styles.ratingsContainer}>
-            <View style={styles.ratings}>
-              {ratings.map((item, index) => {
-                if (!place.rating) {
-                  return null;
-                }
-                return (
-                  <AnimatedIcon
-                    key={index}
-                    size={20}
-                    name={getRatingStar(place.rating, item)}
-                    style={{
-                      transform: [
-                        {
-                          scale: ratingsSizeAnim,
-                        },
-                      ],
-                    }}
-                    color="grey"
-                  />
-                );
-              })}
+          <View style={styles.detailsContainer}>
+            <View style={styles.nameContainer}>
+              <Animated.Text style={[styles.name, { fontSize: nameFontAnim }]}>
+                {place.name}
+              </Animated.Text>
             </View>
-            <Animated.Text style={{ fontSize: addressFontAnim }}>
-              {place.rating}
-            </Animated.Text>
-          </View>
-          <View style={styles.addressRatingContainer}>
-            <Animated.Text
-              style={[styles.address, { fontSize: addressFontAnim }]}>
-              {place.address}
-            </Animated.Text>
+            <View style={styles.ratingsContainer}>
+              <View style={styles.ratings}>
+                {ratings.map((item, index) => {
+                  if (!place.rating) {
+                    return null;
+                  }
+                  return (
+                    <AnimatedIcon
+                      key={index}
+                      size={20}
+                      name={getRatingStar(place.rating, item)}
+                      style={{
+                        transform: [
+                          {
+                            scale: ratingsSizeAnim,
+                          },
+                        ],
+                      }}
+                      color="grey"
+                    />
+                  );
+                })}
+              </View>
+              <Animated.Text style={{ fontSize: addressFontAnim }}>
+                {place.rating}
+              </Animated.Text>
+            </View>
+            <View style={styles.addressRatingContainer}>
+              <Animated.Text
+                style={[styles.address, { fontSize: addressFontAnim }]}>
+                {place.address}
+              </Animated.Text>
+            </View>
           </View>
         </View>
-      </View>
-    </Animated.View>
+      </Animated.View>
+    </Pressable>
   );
 };
 
