@@ -52,12 +52,14 @@ const Container: FunctionComponent<ContainerProps> = ({ goBack }) => {
   }, []);
 
   const fetchPhoto = async (reference: string) => {
-    const uri = `https://maps.googleapis.com/maps/api/place/photo?photo_reference=${reference}`;
-    return await fetch(uri).then(resp => resp.json());
+    const uri = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=${reference}&key=${Config.GOOGLE_MAPS_API_KEY}`;
+    return await fetch(uri).then(resp => {
+      return resp.url;
+    });
   };
 
-  const checkPlaces = async (coords: any) => {
-    const uri = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?type=restaurant&radius=3000&location=${coords.latitude}%2C${coords.longitude}&key=${Config.GOOGLE_MAPS_API_KEY}`;
+  const checkPlaces = async (inputCoords: any) => {
+    const uri = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?type=restaurant&radius=3000&location=${inputCoords.latitude}%2C${inputCoords.longitude}&key=${Config.GOOGLE_MAPS_API_KEY}`;
     return await fetch(uri).then(resp => resp.json());
   };
 
@@ -189,15 +191,31 @@ const Container: FunctionComponent<ContainerProps> = ({ goBack }) => {
   const fetchPlaces = async (coords: Coords) => {
     const results: IPlace[] = [];
     const resPlaces = await checkPlaces(coords);
-    resPlaces.results.forEach((item: any) => {
-      results.push({
-        name: item.name,
-        address: item.vicinity,
-        rating: item.rating,
-        location: item.geometry.location,
-        background: item.icon_background_color,
-        id: item.place_id,
-      });
+
+    console.log('res places', resPlaces);
+
+    const promises = await Promise.allSettled(
+      resPlaces.results.map((item: any) => {
+        if (item.photos) {
+          return fetchPhoto(item.photos[0].photo_reference).then(res => {
+            return {
+              name: item.name,
+              address: item.vicinity,
+              rating: item.rating,
+              location: item.geometry.location,
+              background: item.icon_background_color,
+              id: item.place_id,
+              image: res,
+            };
+          });
+        }
+      }),
+    );
+
+    promises.forEach((promise: any) => {
+      if (promise.value) {
+        results.push(promise.value);
+      }
     });
     setPlaces(results);
     setUserLocationStatus(true);
@@ -207,7 +225,7 @@ const Container: FunctionComponent<ContainerProps> = ({ goBack }) => {
     if (coords && !userLocationSet) {
       fetchPlaces(coords);
     }
-  }, [coords, userLocationSet]);
+  }, [coords, userLocationSet]); //eslint-disable-line react-hooks/exhaustive-deps
 
   if (!coords) return null;
 
@@ -224,14 +242,14 @@ const Container: FunctionComponent<ContainerProps> = ({ goBack }) => {
       </View>
       <MapView.Animated
         provider={Platform.OS === 'android' ? 'google' : undefined}
-        ref={el => (mapRef.current = el)}
+        ref={(el: any) => (mapRef.current = el)}
         style={styles.map}
         initialRegion={new AnimatedRegion({ ...coords })}
         region={new AnimatedRegion({ ...coords })}
         scrollEnabled={false}
         loadingEnabled>
         <MarkerAnimated
-          ref={el => (markerRef.current = el)}
+          ref={(el: any) => (markerRef.current = el)}
           coordinate={
             Platform.OS === 'android'
               ? {

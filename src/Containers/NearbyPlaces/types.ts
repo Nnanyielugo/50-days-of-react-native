@@ -15,4 +15,5 @@ export type IPlace = {
   rating: number;
   background: string;
   id: string;
+  image: string;
 };

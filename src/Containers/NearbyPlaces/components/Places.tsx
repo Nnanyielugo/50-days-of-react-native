@@ -45,7 +45,14 @@ const Places: FunctionComponent<PlaceProps> = ({ places, setCoords }) => {
       snapToInterval={Dimensions.get('window').width * 0.85}
       snapToAlignment="center">
       {places.map((place, index) => {
-        return <Place key={place.id} index={index} place={place} />;
+        return (
+          <Place
+            key={place.id}
+            index={index}
+            layoutIndex={layoutIndex}
+            place={place}
+          />
+        );
       })}
     </ScrollView>
   );
@@ -60,7 +67,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 200,
     zIndex: 900,
-    backgroundColor: 'rgba(245, 245, 245, 0.5)',
+    backgroundColor: 'rgba(245, 245, 245, 0)',
   },
 });
 
