@@ -57,7 +57,7 @@ export const PAGES: Page[] = [
     Icon: Calculator,
   },
   {
-    name: 'Nearby Food',
+    name: 'Nearby Places',
     componentName: 'NearbyPlaces',
     Icon: NearbyPlaces,
   },
