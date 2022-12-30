@@ -1,2 +1,7 @@
 ## Weather
-https://user-images.githubusercontent.com/27894311/152454872-393e6d48-f1df-4875-b605-d372ecb52173.mp4
+### Features
+- [] can view location on a lite map in the app
+- can switch location to another one by typing the location name in an autocomplete modal
+
+### Demo
+https://user-images.githubusercontent.com/27894311/210084568-dcd4caa5-e977-442d-b32e-90335dc21dbe.mp4
