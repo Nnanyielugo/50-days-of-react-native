@@ -111,8 +111,10 @@ const Playlist: FunctionComponent<ComponentProps> = ({
       onMoveShouldSetPanResponder: (_evt, gesture) => {
         // problem 2.solution
         const dragUpBand = gesture.moveY > upBand;
-        const dragDownBand = gesture.moveY > 50 && gesture.moveY < 78;
+        const dragDownBand = gesture.moveY > 50 && gesture.moveY < 90; // create a dragDown band that captures swipe down motion and interprets to signal movement of the playlist container (as opposed to scroll or drag up)
         const yExtremes = dragUpBand || dragDownBand;
+
+        console.log('bbool', yExtremes, dragDownBand, dragDownBand);
         return yExtremes;
       },
       onPanResponderGrant: () => {
