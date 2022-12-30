@@ -36,11 +36,11 @@
 		</dict>
 	</dict>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>YES</string>
+	<string>Fifty Days wants to use your Location to show location speific information like Weather and restaurants near you</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>YES</string>
+	<string>Fifty Days wants to use your Location to show location speific information like Weather and restaurants near you</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>YES</string>
+	<string>Fifty Days wants to use your Location to show location speific information like Weather and restaurants near you</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>AntDesign.ttf</string>
