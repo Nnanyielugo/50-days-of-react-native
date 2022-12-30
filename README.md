@@ -2,7 +2,9 @@
 
 ### Author's note (of some sort)
 While I think this somewhat undersells what I can do when motivated, it sort of fills in for some of them. They are a sort of challenge because they are built mostly for this demonstration, and very few (if at all) have been used for my professional work.
+
 It is still a work in progress (until I reach 50 seperate pared down applications, so. this might take a while), so I am open to suggestions on new things to add.
+
 This is a personal demonstration so while issues are very much encouraged, PRs are unfortunately not. I'm very sorry about this.
 
 
@@ -46,7 +48,8 @@ Please note that the setup instruction assumes that you have setup your developm
 
 ### TODO
 
-- [x] Upgrade to RN 0.64xx
+- [x] Upgrade to RN 0.64
+- [x] Upgrade to RN 0.69
 - [x] integrate TS
 - [x] refactor stopwatch
 - [x] add basic navigation
