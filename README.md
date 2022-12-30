@@ -25,9 +25,18 @@ Please note that the setup instruction assumes that you have setup your developm
 
 #### [Tinder Swipe](https://github.com/Nnanyielugo/50-days-of-react-native/blob/master/src/Containers/TinderSwipe/readme.md)
 
-#### Video is unfinished
+#### [Video](https://github.com/Nnanyielugo/50-days-of-react-native/blob/master/src/Containers/VideoPlayer/readme.md)
 
 #### [TicTacToe](https://github.com/Nnanyielugo/50-days-of-react-native/blob/master/src/Containers/TicTacToe/readme.md)
+
+#### [Image Carousel](https://github.com/Nnanyielugo/50-days-of-react-native/blob/master/src/Containers/ImageCarousel/readme.md)
+
+#### [Reels](https://github.com/Nnanyielugo/50-days-of-react-native/blob/master/src/Containers/Reels/readme.md)
+
+#### [Calculator](https://github.com/Nnanyielugo/50-days-of-react-native/blob/master/src/Containers/Calculator/readme.md)
+
+#### [Nearby Places](https://github.com/Nnanyielugo/50-days-of-react-native/blob/master/src/Containers/NearbyPlaces/readme.md)
+
 
 ### TODO
 
@@ -42,7 +51,7 @@ Please note that the setup instruction assumes that you have setup your developm
 - [x] weather app
 - [x] music player
 - [x] video player
-- [ ] reels
+- [x] reels
 - [ ] pdf reader
 - [ ] core animation and masks (twitter entrance animation)
 - [x] tic-tac-toe
@@ -59,11 +68,11 @@ Please note that the setup instruction assumes that you have setup your developm
 - [ ] scrollable tab (old youtube example?)
 - [ ] imessage gradient
 - [ ] push notification
-- [ ] image carousel
+- [x] image carousel
 - [ ] action sheet
 - [ ] jumpbar
 - [ ] pull to refresh
-- [ ] calculator
+- [x] calculator
 - [ ] basic charts
 - [ ] dynamic charts (with chart information)
 - [ ] basic run tracker (hint: geolocation.watchPosition)
