@@ -9,6 +9,7 @@ import {
 import MapView, {
   AnimatedRegion,
   MapMarker,
+  Marker,
   MarkerAnimated,
 } from 'react-native-maps';
 import { request, check, PERMISSIONS, RESULTS } from 'react-native-permissions';
@@ -50,8 +51,13 @@ const Container: FunctionComponent<ContainerProps> = ({ goBack }) => {
     handleCheckLocationPermissions();
   }, []);
 
+  const fetchPhoto = async (reference: string) => {
+    const uri = `https://maps.googleapis.com/maps/api/place/photo?photo_reference=${reference}`;
+    return await fetch(uri).then(resp => resp.json());
+  };
+
   const checkPlaces = async (coords: any) => {
-    const uri = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?type=restaurant&radius=1500&location=${coords.latitude}%2C${coords.longitude}&key=${Config.GOOGLE_MAPS_API_KEY}`;
+    const uri = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?type=restaurant&radius=3000&location=${coords.latitude}%2C${coords.longitude}&key=${Config.GOOGLE_MAPS_API_KEY}`;
     return await fetch(uri).then(resp => resp.json());
   };
 
@@ -180,23 +186,26 @@ const Container: FunctionComponent<ContainerProps> = ({ goBack }) => {
     }
   };
 
+  const fetchPlaces = async (coords: Coords) => {
+    const results: IPlace[] = [];
+    const resPlaces = await checkPlaces(coords);
+    resPlaces.results.forEach((item: any) => {
+      results.push({
+        name: item.name,
+        address: item.vicinity,
+        rating: item.rating,
+        location: item.geometry.location,
+        background: item.icon_background_color,
+        id: item.place_id,
+      });
+    });
+    setPlaces(results);
+    setUserLocationStatus(true);
+  };
+
   React.useEffect(() => {
     if (coords && !userLocationSet) {
-      checkPlaces(coords).then(res => {
-        const results: IPlace[] = [];
-        res.results.forEach((item: any) => {
-          results.push({
-            name: item.name,
-            address: item.vicinity,
-            rating: item.rating,
-            location: item.geometry.location,
-            background: item.icon_background_color,
-            id: item.place_id,
-          });
-        });
-        setPlaces(results);
-        setUserLocationStatus(true);
-      });
+      fetchPlaces(coords);
     }
   }, [coords, userLocationSet]);
 
@@ -232,6 +241,7 @@ const Container: FunctionComponent<ContainerProps> = ({ goBack }) => {
               : markerCoords.current
           }
         />
+        <Marker coordinate={coords} pinColor="green" />
       </MapView.Animated>
       <Places setCoords={animateToRegion} places={places} />
     </>
