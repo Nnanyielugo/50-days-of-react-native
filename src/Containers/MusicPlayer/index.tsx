@@ -14,10 +14,13 @@ class MusicPlayer extends Component<{}, ComponentState> {
   };
 
   startPlayer = async () => {
-    const alreadyInitialised = await TrackPlayer.isServiceRunning();
     const { tracks } = this.state;
 
-    if (alreadyInitialised) {
+    try {
+      // check trackplayer state
+      // will throw error if trackplayer is not initialized
+      await TrackPlayer.getState();
+
       await TrackPlayer.updateOptions({
         capabilities: [
           Capability.Play,
@@ -34,7 +37,8 @@ class MusicPlayer extends Component<{}, ComponentState> {
         ],
       });
       await TrackPlayer.add(tracks);
-    } else {
+    } catch (err) {
+      // catch initialized error, and initialize
       await TrackPlayer.setupPlayer();
       await TrackPlayer.updateOptions({
         capabilities: [
