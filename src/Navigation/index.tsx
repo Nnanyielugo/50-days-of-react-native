@@ -14,6 +14,7 @@ import ImageCarousel from '../Containers/ImageCarousel';
 import Reels from '../Containers/Reels';
 import Calculator from '../Containers/Calculator';
 import NearbyPlaces from '../Containers/NearbyPlaces';
+import Woodoku from '../Containers/Woodoku';
 
 import type { RootStackParamList } from '../utils/interfaces';
 
@@ -38,6 +39,7 @@ export default function Navigator() {
         <Stack.Screen name="Reels" component={Reels} />
         <Stack.Screen name="Calculator" component={Calculator} />
         <Stack.Screen name="NearbyPlaces" component={NearbyPlaces} />
+        <Stack.Screen name="Woodoku" component={Woodoku} />
       </Stack.Navigator>
     </NavigationContainer>
   );
