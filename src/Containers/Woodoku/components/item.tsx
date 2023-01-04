@@ -1,6 +1,7 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Image } from 'react-native';
 
+import Brick from '../assets/brick.jpeg';
 import type { FunctionComponent } from 'react';
 import type { BrickObj } from '../types';
 
@@ -9,15 +10,30 @@ interface ItemProps {
 }
 
 const Item: FunctionComponent<ItemProps> = ({ item }) => {
-  return <View style={[styles.container, { width: item.width }]} />;
+  if (item.transparent) {
+    return (
+      <View
+        style={[
+          styles.container,
+          {
+            width: item.width,
+          },
+        ]}
+      />
+    );
+  }
+  return <Image source={Brick} style={[styles.image, { width: item.width }]} />;
 };
 
 const styles = StyleSheet.create({
   container: {
     height: 40,
-    backgroundColor: '#966f33',
+    backgroundColor: 'transparent',
+  },
+  image: {
+    height: 50,
     borderWidth: StyleSheet.hairlineWidth,
-    borderColor: 'black',
+    borderColor: '#2c3e50',
   },
 });
 

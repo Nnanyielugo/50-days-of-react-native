@@ -18,25 +18,29 @@ function pickWidthForTwos() {
       row: [
         {
           id: uuidV4(),
-          width: BOARD_WIDTH * 0.25,
+          width: BOARD_WIDTH * 0.5,
+          transparent: true,
         },
-      ],
-    },
-    {
-      id: uuidV4(),
-      row: [
         {
           id: uuidV4(),
           width: BOARD_WIDTH * 0.5,
+          transparent: false,
         },
       ],
     },
+
     {
       id: uuidV4(),
       row: [
         {
           id: uuidV4(),
           width: BOARD_WIDTH * 0.75,
+          transparent: true,
+        },
+        {
+          id: uuidV4(),
+          width: BOARD_WIDTH * 0.25,
+          transparent: false,
         },
       ],
     },
@@ -46,6 +50,12 @@ function pickWidthForTwos() {
         {
           id: uuidV4(),
           width: BOARD_WIDTH * 0.7,
+          transparent: true,
+        },
+        {
+          id: uuidV4(),
+          width: BOARD_WIDTH * 0.3,
+          transparent: false,
         },
       ],
     },
@@ -54,16 +64,28 @@ function pickWidthForTwos() {
       row: [
         {
           id: uuidV4(),
-          width: BOARD_WIDTH * 0.2,
+          width: BOARD_WIDTH * 0.25,
+          transparent: true,
+        },
+        {
+          id: uuidV4(),
+          width: BOARD_WIDTH * 0.75,
+          transparent: false,
         },
       ],
     },
     {
       id: uuidV4(),
       row: [
+        {
+          id: uuidV4(),
+          width: BOARD_WIDTH * 0.3,
+          transparent: true,
+        },
         {
           id: uuidV4(),
           width: BOARD_WIDTH * 0.7,
+          transparent: false,
         },
       ],
     },
@@ -73,6 +95,42 @@ function pickWidthForTwos() {
         {
           id: uuidV4(),
           width: BOARD_WIDTH * 0.8,
+          transparent: false,
+        },
+        {
+          id: uuidV4(),
+          width: BOARD_WIDTH * 0.2,
+          transparent: true,
+        },
+      ],
+    },
+    {
+      id: uuidV4(),
+      row: [
+        {
+          id: uuidV4(),
+          width: BOARD_WIDTH * 0.5,
+          transparent: false,
+        },
+        {
+          id: uuidV4(),
+          width: BOARD_WIDTH * 0.5,
+          transparent: true,
+        },
+      ],
+    },
+    {
+      id: uuidV4(),
+      row: [
+        {
+          id: uuidV4(),
+          width: BOARD_WIDTH * 0.2,
+          transparent: false,
+        },
+        {
+          id: uuidV4(),
+          width: BOARD_WIDTH * 0.8,
+          transparent: true,
         },
       ],
     },
@@ -89,10 +147,17 @@ function pickWidthForThrees() {
         {
           id: uuidV4(),
           width: BOARD_WIDTH * 0.4,
+          transparent: false,
         },
         {
           id: uuidV4(),
           width: BOARD_WIDTH * 0.3,
+          transparent: false,
+        },
+        {
+          id: uuidV4(),
+          width: BOARD_WIDTH * 0.3,
+          transparent: true,
         },
       ],
     },
@@ -102,10 +167,17 @@ function pickWidthForThrees() {
         {
           id: uuidV4(),
           width: BOARD_WIDTH * 0.3,
+          transparent: false,
         },
         {
           id: uuidV4(),
           width: BOARD_WIDTH * 0.3,
+          transparent: false,
+        },
+        {
+          id: uuidV4(),
+          width: BOARD_WIDTH * 0.4,
+          transparent: true,
         },
       ],
     },
@@ -115,10 +187,17 @@ function pickWidthForThrees() {
         {
           id: uuidV4(),
           width: BOARD_WIDTH * 0.5,
+          transparent: false,
         },
         {
           id: uuidV4(),
           width: BOARD_WIDTH * 0.25,
+          transparent: false,
+        },
+        {
+          id: uuidV4(),
+          width: BOARD_WIDTH * 0.25,
+          transparent: true,
         },
       ],
     },
@@ -128,10 +207,177 @@ function pickWidthForThrees() {
         {
           id: uuidV4(),
           width: BOARD_WIDTH * 0.25,
+          transparent: false,
         },
         {
           id: uuidV4(),
           width: BOARD_WIDTH * 0.25,
+          transparent: false,
+        },
+        {
+          id: uuidV4(),
+          width: BOARD_WIDTH * 0.5,
+          transparent: true,
+        },
+      ],
+    },
+    {
+      id: uuidV4(),
+      row: [
+        {
+          id: uuidV4(),
+          width: BOARD_WIDTH * 0.4,
+          transparent: false,
+        },
+        {
+          id: uuidV4(),
+          width: BOARD_WIDTH * 0.3,
+          transparent: true,
+        },
+        {
+          id: uuidV4(),
+          width: BOARD_WIDTH * 0.3,
+          transparent: false,
+        },
+      ],
+    },
+    {
+      id: uuidV4(),
+      row: [
+        {
+          id: uuidV4(),
+          width: BOARD_WIDTH * 0.3,
+          transparent: false,
+        },
+        {
+          id: uuidV4(),
+          width: BOARD_WIDTH * 0.4,
+          transparent: true,
+        },
+        {
+          id: uuidV4(),
+          width: BOARD_WIDTH * 0.3,
+          transparent: false,
+        },
+      ],
+    },
+    {
+      id: uuidV4(),
+      row: [
+        {
+          id: uuidV4(),
+          width: BOARD_WIDTH * 0.5,
+          transparent: false,
+        },
+        {
+          id: uuidV4(),
+          width: BOARD_WIDTH * 0.25,
+          transparent: true,
+        },
+        {
+          id: uuidV4(),
+          width: BOARD_WIDTH * 0.25,
+          transparent: false,
+        },
+      ],
+    },
+    {
+      id: uuidV4(),
+      row: [
+        {
+          id: uuidV4(),
+          width: BOARD_WIDTH * 0.25,
+          transparent: false,
+        },
+        {
+          id: uuidV4(),
+          width: BOARD_WIDTH * 0.5,
+          transparent: true,
+        },
+        {
+          id: uuidV4(),
+          width: BOARD_WIDTH * 0.25,
+          transparent: false,
+        },
+      ],
+    },
+    {
+      id: uuidV4(),
+      row: [
+        {
+          id: uuidV4(),
+          width: BOARD_WIDTH * 0.3,
+          transparent: true,
+        },
+        {
+          id: uuidV4(),
+          width: BOARD_WIDTH * 0.4,
+          transparent: false,
+        },
+        {
+          id: uuidV4(),
+          width: BOARD_WIDTH * 0.3,
+          transparent: false,
+        },
+      ],
+    },
+    {
+      id: uuidV4(),
+      row: [
+        {
+          id: uuidV4(),
+          width: BOARD_WIDTH * 0.4,
+          transparent: true,
+        },
+        {
+          id: uuidV4(),
+          width: BOARD_WIDTH * 0.3,
+          transparent: false,
+        },
+        {
+          id: uuidV4(),
+          width: BOARD_WIDTH * 0.3,
+          transparent: false,
+        },
+      ],
+    },
+    {
+      id: uuidV4(),
+      row: [
+        {
+          id: uuidV4(),
+          width: BOARD_WIDTH * 0.25,
+          transparent: true,
+        },
+        {
+          id: uuidV4(),
+          width: BOARD_WIDTH * 0.5,
+          transparent: false,
+        },
+        {
+          id: uuidV4(),
+          width: BOARD_WIDTH * 0.25,
+          transparent: false,
+        },
+      ],
+    },
+    {
+      id: uuidV4(),
+      row: [
+        {
+          id: uuidV4(),
+          width: BOARD_WIDTH * 0.5,
+          transparent: true,
+        },
+        {
+          id: uuidV4(),
+          width: BOARD_WIDTH * 0.25,
+          transparent: false,
+        },
+        {
+          id: uuidV4(),
+          width: BOARD_WIDTH * 0.25,
+          transparent: false,
         },
       ],
     },
@@ -148,14 +394,22 @@ function pickWidthForFours() {
         {
           id: uuidV4(),
           width: BOARD_WIDTH * 0.25,
+          transparent: false,
         },
         {
           id: uuidV4(),
           width: BOARD_WIDTH * 0.25,
+          transparent: false,
         },
         {
           id: uuidV4(),
           width: BOARD_WIDTH * 0.25,
+          transparent: false,
+        },
+        {
+          id: uuidV4(),
+          width: BOARD_WIDTH * 0.25,
+          transparent: true,
         },
       ],
     },
@@ -165,14 +419,22 @@ function pickWidthForFours() {
         {
           id: uuidV4(),
           width: BOARD_WIDTH * 0.3,
+          transparent: false,
         },
         {
           id: uuidV4(),
           width: BOARD_WIDTH * 0.2,
+          transparent: false,
         },
         {
           id: uuidV4(),
           width: BOARD_WIDTH * 0.2,
+          transparent: false,
+        },
+        {
+          id: uuidV4(),
+          width: BOARD_WIDTH * 0.3,
+          transparent: true,
         },
       ],
     },
@@ -182,14 +444,22 @@ function pickWidthForFours() {
         {
           id: uuidV4(),
           width: BOARD_WIDTH * 0.2,
+          transparent: false,
         },
         {
           id: uuidV4(),
           width: BOARD_WIDTH * 0.3,
+          transparent: false,
         },
         {
           id: uuidV4(),
           width: BOARD_WIDTH * 0.3,
+          transparent: false,
+        },
+        {
+          id: uuidV4(),
+          width: BOARD_WIDTH * 0.2,
+          transparent: true,
         },
       ],
     },
@@ -199,14 +469,222 @@ function pickWidthForFours() {
         {
           id: uuidV4(),
           width: BOARD_WIDTH * 0.4,
+          transparent: false,
         },
         {
           id: uuidV4(),
           width: BOARD_WIDTH * 0.2,
+          transparent: false,
         },
         {
           id: uuidV4(),
           width: BOARD_WIDTH * 0.2,
+          transparent: false,
+        },
+        {
+          id: uuidV4(),
+          width: BOARD_WIDTH * 0.2,
+          transparent: true,
+        },
+      ],
+    },
+    {
+      id: uuidV4(),
+      row: [
+        {
+          id: uuidV4(),
+          width: BOARD_WIDTH * 0.25,
+          transparent: false,
+        },
+        {
+          id: uuidV4(),
+          width: BOARD_WIDTH * 0.25,
+          transparent: true,
+        },
+        {
+          id: uuidV4(),
+          width: BOARD_WIDTH * 0.25,
+          transparent: false,
+        },
+        {
+          id: uuidV4(),
+          width: BOARD_WIDTH * 0.25,
+          transparent: false,
+        },
+      ],
+    },
+    {
+      id: uuidV4(),
+      row: [
+        {
+          id: uuidV4(),
+          width: BOARD_WIDTH * 0.3,
+          transparent: false,
+        },
+        {
+          id: uuidV4(),
+          width: BOARD_WIDTH * 0.2,
+          transparent: false,
+        },
+        {
+          id: uuidV4(),
+          width: BOARD_WIDTH * 0.3,
+          transparent: true,
+        },
+        {
+          id: uuidV4(),
+          width: BOARD_WIDTH * 0.2,
+          transparent: false,
+        },
+      ],
+    },
+    {
+      id: uuidV4(),
+      row: [
+        {
+          id: uuidV4(),
+          width: BOARD_WIDTH * 0.2,
+          transparent: false,
+        },
+        {
+          id: uuidV4(),
+          width: BOARD_WIDTH * 0.3,
+          transparent: false,
+        },
+        {
+          id: uuidV4(),
+          width: BOARD_WIDTH * 0.2,
+          transparent: true,
+        },
+        {
+          id: uuidV4(),
+          width: BOARD_WIDTH * 0.3,
+          transparent: false,
+        },
+      ],
+    },
+    {
+      id: uuidV4(),
+      row: [
+        {
+          id: uuidV4(),
+          width: BOARD_WIDTH * 0.4,
+          transparent: false,
+        },
+        {
+          id: uuidV4(),
+          width: BOARD_WIDTH * 0.2,
+          transparent: true,
+        },
+        {
+          id: uuidV4(),
+          width: BOARD_WIDTH * 0.2,
+          transparent: false,
+        },
+        {
+          id: uuidV4(),
+          width: BOARD_WIDTH * 0.2,
+          transparent: false,
+        },
+      ],
+    },
+    {
+      id: uuidV4(),
+      row: [
+        {
+          id: uuidV4(),
+          width: BOARD_WIDTH * 0.25,
+          transparent: true,
+        },
+        {
+          id: uuidV4(),
+          width: BOARD_WIDTH * 0.25,
+          transparent: false,
+        },
+        {
+          id: uuidV4(),
+          width: BOARD_WIDTH * 0.25,
+          transparent: false,
+        },
+        {
+          id: uuidV4(),
+          width: BOARD_WIDTH * 0.25,
+          transparent: false,
+        },
+      ],
+    },
+    {
+      id: uuidV4(),
+      row: [
+        {
+          id: uuidV4(),
+          width: BOARD_WIDTH * 0.3,
+          transparent: true,
+        },
+        {
+          id: uuidV4(),
+          width: BOARD_WIDTH * 0.3,
+          transparent: false,
+        },
+        {
+          id: uuidV4(),
+          width: BOARD_WIDTH * 0.2,
+          transparent: false,
+        },
+        {
+          id: uuidV4(),
+          width: BOARD_WIDTH * 0.2,
+          transparent: false,
+        },
+      ],
+    },
+    {
+      id: uuidV4(),
+      row: [
+        {
+          id: uuidV4(),
+          width: BOARD_WIDTH * 0.2,
+          transparent: false,
+        },
+        {
+          id: uuidV4(),
+          width: BOARD_WIDTH * 0.3,
+          transparent: false,
+        },
+        {
+          id: uuidV4(),
+          width: BOARD_WIDTH * 0.2,
+          transparent: true,
+        },
+        {
+          id: uuidV4(),
+          width: BOARD_WIDTH * 0.3,
+          transparent: false,
+        },
+      ],
+    },
+    {
+      id: uuidV4(),
+      row: [
+        {
+          id: uuidV4(),
+          width: BOARD_WIDTH * 0.2,
+          transparent: true,
+        },
+        {
+          id: uuidV4(),
+          width: BOARD_WIDTH * 0.4,
+          transparent: false,
+        },
+        {
+          id: uuidV4(),
+          width: BOARD_WIDTH * 0.2,
+          transparent: false,
+        },
+        {
+          id: uuidV4(),
+          width: BOARD_WIDTH * 0.2,
+          transparent: false,
         },
       ],
     },
