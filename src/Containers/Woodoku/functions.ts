@@ -77,7 +77,9 @@ export function generateRows(rowNum: number): RowObj[] {
 
 function rearrangeRowSpacing(row: RowObj): RowObj {
   const emptyRow = row.row.find(
-    item => item.transparent && item.width >= BOARD_WIDTH / 2,
+    (item, index) =>
+      (item.transparent && item.width >= BOARD_WIDTH / 2) ||
+      (item.transparent && (index === 0 || index === row.row.length - 1)),
   );
 
   if (emptyRow) {
