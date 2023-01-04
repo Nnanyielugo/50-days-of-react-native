@@ -27,7 +27,7 @@ const Item: FunctionComponent<ItemProps> = ({ item }) => {
 
 const styles = StyleSheet.create({
   container: {
-    height: 40,
+    height: 50,
     backgroundColor: 'transparent',
   },
   image: {
