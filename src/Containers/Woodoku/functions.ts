@@ -9,57 +9,11 @@ export function generateId(): string {
   return id;
 }
 
-function generateBrickNum() {
-  let numBricks = Math.floor((Math.random() * 10) / 2);
-  while (numBricks < 2) {
-    numBricks = Math.floor((Math.random() * 10) / 2);
-  }
-
-  return numBricks;
-}
-
-// function pickWidthForTwos() {
-//   const widths = getWidthsForTwos();
-
-//   let brickNum = Math.floor(Math.random() * widths.length);
-//   return widths[brickNum];
-// }
-// function pickWidthForThrees() {
-//   const widths = getWidthsForThrees();
-
-//   let brickNum = Math.floor(Math.random() * widths.length);
-//   return widths[brickNum];
-// }
-// function pickWidthForFours() {
-//   const widths = getWidthsForFours();
-//   let brickNum = Math.floor(Math.random() * widths.length);
-//   return widths[brickNum];
-// }
-
-// export function generateRow(): RowObj {
-//   let output: RowObj;
-//   let numBricks = generateBrickNum();
-//   pickWidthForFours();
-
-//   if (numBricks === 2) {
-//     output = pickWidthForTwos();
-//   } else if (numBricks === 3) {
-//     output = pickWidthForThrees();
-//   } else {
-//     output = pickWidthForFours();
-//   }
-
-//   return output;
-// }
-
-export function generateRows(): RowObj[] {
-  // const boards = getBoards()
+export function generateBoard(): RowObj[] {
   let board = [];
   let boardNum = Math.floor(Math.random() * 8);
-  console.log('ranndo', boardNum);
 
   board = getBoards(boardNum);
-  // let board = boards[boardNum];
 
   for (let i = 0; i < board.length; i++) {
     const row = board[i];
@@ -71,6 +25,7 @@ export function generateRows(): RowObj[] {
     }
   }
 
+  // remove empty bricks
   for (let i = 0; i < board.length; i++) {
     let row = board[i];
     let visibleRow = row.row.filter(brick => !brick.transparent);
@@ -79,8 +34,6 @@ export function generateRows(): RowObj[] {
       row: visibleRow,
     });
   }
-
-  console.log('board', board, boardNum);
 
   return board;
 }
@@ -114,15 +67,6 @@ function rearrangeRowSpacing(row: RowObj): RowObj {
   }
 
   return row;
-}
-
-function handleDropDown(
-  brick: BrickObj,
-  row: RowObj,
-  rowIndex: number,
-  rows: RowObj[],
-) {
-  // if (rowIndex === rows)
 }
 
 // returns information about the space and item to drop into (the under item)
