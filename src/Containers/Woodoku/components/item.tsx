@@ -9,19 +9,22 @@ import {
 
 import Brick from '../assets/brick.jpeg';
 
-import type {
-  GestureResponderEvent,
-  PanResponderGestureState,
-} from 'react-native';
+import type { PanResponderGestureState } from 'react-native';
 import type { FunctionComponent } from 'react';
 import type { BrickObj, RowObj, BrickPos } from '../types';
-import { BOARD_HEIGHT, BOARD_WIDTH } from '../constants';
+import { BOARD_WIDTH } from '../constants';
 
 interface ItemProps {
   item: BrickObj;
   rowIndex: number;
   itemIndex: number;
   row: RowObj;
+  updateBrickPos: (
+    brick: BrickObj,
+    left: number,
+    rowIndex: number,
+    brickIndex: number,
+  ) => void;
 }
 
 const Item: FunctionComponent<ItemProps> = ({
@@ -29,24 +32,21 @@ const Item: FunctionComponent<ItemProps> = ({
   rowIndex,
   itemIndex,
   row,
+  updateBrickPos,
 }) => {
   const left = React.useRef(
     new Animated.Value(item.pos?.left as number),
   ).current;
-  const sidePad = Dimensions.get('window').width;
   const rowBottom = 50 * rowIndex + 1;
   const itemLeft = row.row[itemIndex - 1];
   const itemRight = row.row[itemIndex + 1];
-
-  console.log('left, right', itemLeft, itemRight);
 
   const panResponder = React.useRef(
     PanResponder.create({
       onMoveShouldSetPanResponder: (
         _evt,
-        gesture: PanResponderGestureState,
+        _gesture: PanResponderGestureState,
       ) => {
-        // console.log('grant', gesture);
         return true;
       },
       onPanResponderGrant: () => {
@@ -56,14 +56,12 @@ const Item: FunctionComponent<ItemProps> = ({
         // console.log('ggesture', gesture.x0);
         left.setValue(gesture.dx);
       },
-      onPanResponderRelease: (_evt, gesture: PanResponderGestureState) => {
+      onPanResponderRelease: (_evt, _gesture: PanResponderGestureState) => {
         left.flattenOffset();
         if ((left as any)._value < 60) {
           // if left is less than 60ps, flush left
           flushToLeft();
         }
-
-        console.log('board', BOARD_WIDTH - item.width, (left as any)._value);
 
         const right = (left as any)._value + item.width;
         // animate to right limit if right is over limit;
@@ -98,14 +96,18 @@ const Item: FunctionComponent<ItemProps> = ({
       toValue: 0,
       duration: 500,
       useNativeDriver: false,
-    }).start();
+    }).start(() => {
+      updateBrickPos(item, (left as any)._value, rowIndex, itemIndex);
+    });
   };
   const flushToRight = () => {
     Animated.timing(left, {
       toValue: BOARD_WIDTH - item.width,
       duration: 500,
       useNativeDriver: false,
-    }).start();
+    }).start(() => {
+      updateBrickPos(item, (left as any)._value, rowIndex, itemIndex);
+    });
   };
 
   const lapToLeftItem = () => {
@@ -113,14 +115,18 @@ const Item: FunctionComponent<ItemProps> = ({
       toValue: (itemLeft.pos as BrickPos).right,
       duration: 500,
       useNativeDriver: false,
-    }).start();
+    }).start(() => {
+      updateBrickPos(item, (left as any)._value, rowIndex, itemIndex);
+    });
   };
   const lapToRightItem = () => {
     Animated.timing(left, {
       toValue: (itemRight.pos as BrickPos).left - item.width,
       duration: 500,
       useNativeDriver: false,
-    }).start();
+    }).start(() => {
+      updateBrickPos(item, (left as any)._value, rowIndex, itemIndex);
+    });
   };
 
   return (

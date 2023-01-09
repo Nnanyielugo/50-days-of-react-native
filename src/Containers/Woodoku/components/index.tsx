@@ -6,15 +6,37 @@ import { generateRow, generateBoard } from '../functions';
 import type { BrickObj, RowObj } from '../types';
 
 const Woodoku = () => {
-  const [rows, setRows] = React.useState<RowObj[]>([]);
+  const [board, setBoard] = React.useState<RowObj[]>([]);
 
   React.useEffect(() => {
-    setRows(generateBoard());
+    setBoard(generateBoard());
   }, []);
+
+  React.useEffect(() => {
+    console.log('board', board);
+  }, [board]);
+
+  const updateBrickPos = (
+    brick: BrickObj,
+    left: number,
+    rowIndex: number,
+    brickIndex: number,
+  ) => {
+    let duplicateBoard: RowObj[] = JSON.parse(JSON.stringify(board));
+    // let brickInBoard = duplicateBoard[rowIndex].row[brickIndex];
+    duplicateBoard[rowIndex].row.splice(brickIndex, 1, {
+      ...brick,
+      pos: {
+        left,
+        right: left + brick.width,
+      },
+    });
+    setBoard(duplicateBoard);
+  };
 
   return (
     <View style={styles.container}>
-      <Board rows={rows} />
+      <Board board={board} updateBrickPos={updateBrickPos} />
     </View>
   );
 };
