@@ -1,5 +1,5 @@
 import { BOARD_WIDTH, getBoards } from './constants';
-import type { RowObj, BrickObj } from './types';
+import type { RowObj, BrickObj, BrickPos } from './types';
 
 export function generateId(): string {
   let id =
@@ -70,30 +70,30 @@ function rearrangeRowSpacing(row: RowObj): RowObj {
 }
 
 // returns information about the space and item to drop into (the under item)
-export function canDropDown(
-  target: BrickObj,
-  currentRow: RowObj,
-  rowUnder: RowObj,
-) {
-  const targetBrickPosition = getBrickPosition(target, currentRow);
+export function canDropDown(target: BrickObj, rowUnder: RowObj) {
+  let targetPos = target.pos as BrickPos;
   // console.log('target pos', targetBrickPosition, currentRow, rowUnder);
   for (let i = 0; i < rowUnder.row.length; i++) {
     let brick = rowUnder.row[i];
-    let brickPosition = getBrickPosition(brick, rowUnder);
-    const underLapping =
-      targetBrickPosition.left >= brickPosition.left &&
-      targetBrickPosition.right <= brickPosition.right;
+    let brickPos = brick.pos as BrickPos;
 
-    if (underLapping && brick.transparent) {
-      // console.log('------------UNDER_LAPPING------------');
-      // console.log(targetBrickPosition, target, brickPosition, brick);
-      // console.log();
-      return {
-        pos: brickPosition,
-        index: i,
-        brick: brick,
-      };
-    }
+    const isWithinRange =
+      brickPos.right > targetPos.left || brickPos.left < targetPos.right;
+    console.log('within range', isWithinRange);
+    // const underLapping =
+    //   (target.pos as BrickPos).left >= (brick.pos as BrickPos).left &&
+    //   (target.pos as BrickPos).right <= (brick.pos as BrickPos).right;
+
+    // if (underLapping && brick.transparent) {
+    // console.log('------------UNDER_LAPPING------------');
+    // console.log(targetBrickPosition, target, brickPosition, brick);
+    // console.log();
+    // return {
+    //   pos: brickPosition,
+    //   index: i,
+    //   brick: brick,
+    // };
+    // }
   }
 
   return;
@@ -105,7 +105,6 @@ export function getBrickPosition(target: BrickObj, currentRow: RowObj) {
   );
   let left: number = 0;
   let right: number = 0;
-  let accRight = 0;
   if (brickIndex === 0) {
     left = 0;
   } else {
@@ -121,14 +120,7 @@ export function getBrickPosition(target: BrickObj, currentRow: RowObj) {
   if (brickIndex === currentRow.row.length - 1) {
     right = BOARD_WIDTH;
   } else {
-    for (let i = currentRow.row.length - 1; i > 0; i--) {
-      if (i === brickIndex) {
-        break;
-      }
-
-      accRight += currentRow.row[i].width;
-      right = BOARD_WIDTH - accRight;
-    }
+    right = left + target.width;
   }
 
   return { left, right };
