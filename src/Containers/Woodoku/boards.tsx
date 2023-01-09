@@ -909,19 +909,3 @@ export function generateBoard8(): RowObj[] {
     },
   ];
 }
-
-// export const board1: RowObj[] =
-
-// export const board2: RowObj[] =
-
-// export const board3: RowObj[] =
-
-// export const board4: RowObj[] =
-
-// export const board5: RowObj[] =
-
-// export const board6: RowObj[] =
-
-// export const board7: RowObj[] =
-
-// export const board8: RowObj[] =

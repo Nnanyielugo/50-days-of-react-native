@@ -39,7 +39,6 @@ const Item: FunctionComponent<ItemProps> = ({
   ).current;
   const rowBottom = 50 * rowIndex + 1;
   const itemLeft = row.row[itemIndex - 1];
-  const itemRight = row.row[itemIndex + 1];
 
   const panResponder = React.useRef(
     PanResponder.create({
@@ -58,6 +57,7 @@ const Item: FunctionComponent<ItemProps> = ({
       },
       onPanResponderRelease: (_evt, _gesture: PanResponderGestureState) => {
         left.flattenOffset();
+
         if ((left as any)._value < 60) {
           // if left is less than 60ps, flush left
           flushToLeft();
@@ -67,25 +67,24 @@ const Item: FunctionComponent<ItemProps> = ({
         // animate to right limit if right is over limit;
         if (right > BOARD_WIDTH) {
           flushToRight();
-        }
-
-        // animate to right limit if difference between right and limit is less tha 60px
-        if (right > BOARD_WIDTH - 60) {
+        } else if (right > BOARD_WIDTH - 60) {
+          // animate to right limit if difference between right and limit is less tha 60px
           flushToRight();
-        }
-
-        if (itemLeft) {
+        } else if (row.row[itemIndex - 1]) {
           // lap to left brick if distance between brick and left brick is 60px and below
-          if ((itemLeft.pos as BrickPos).right + 60 >= (left as any)._value) {
+          if (
+            (row.row[itemIndex - 1].pos as BrickPos).right + 60 >=
+            (left as any)._value
+          ) {
             lapToLeftItem();
           }
-        }
-
-        if (itemRight) {
+        } else if (row.row[itemIndex + 1]) {
           // lap to right brick if distance between brick and right brick is 60px and below
-          if ((itemRight.pos as BrickPos).left - 60 <= right) {
+          if ((row.row[itemIndex + 1].pos as BrickPos).left - 60 <= right) {
             lapToRightItem();
           }
+        } else {
+          updateBrickPos(item, (left as any)._value, rowIndex, itemIndex);
         }
       },
     }),
@@ -112,7 +111,7 @@ const Item: FunctionComponent<ItemProps> = ({
 
   const lapToLeftItem = () => {
     Animated.timing(left, {
-      toValue: (itemLeft.pos as BrickPos).right,
+      toValue: (row.row[itemIndex - 1].pos as BrickPos).right,
       duration: 500,
       useNativeDriver: false,
     }).start(() => {
@@ -121,7 +120,7 @@ const Item: FunctionComponent<ItemProps> = ({
   };
   const lapToRightItem = () => {
     Animated.timing(left, {
-      toValue: (itemRight.pos as BrickPos).left - item.width,
+      toValue: (row.row[itemIndex + 1].pos as BrickPos).left - item.width,
       duration: 500,
       useNativeDriver: false,
     }).start(() => {

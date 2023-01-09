@@ -2,7 +2,7 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import Board from './board';
 
-import { generateRow, generateBoard } from '../functions';
+import { generateRow, generateBoard, canDropDown } from '../functions';
 import type { BrickObj, RowObj } from '../types';
 
 const Woodoku = () => {
@@ -14,7 +14,20 @@ const Woodoku = () => {
 
   React.useEffect(() => {
     console.log('board', board);
+    // checkForDroppable();
   }, [board]);
+
+  // const checkForDroppable = () => {
+  //   let duplicateBoard: RowObj[] = JSON.parse(JSON.stringify(board));
+
+  //   for (let i = 1; i < duplicateBoard.length; i++) {
+  //     let row = duplicateBoard[i];
+  //     for (let j = 0; j < row.row.length; j++) {
+  //       let brick = row.row[j];
+  //       canDropDown(brick, duplicateBoard[i - 1]);
+  //     }
+  //   }
+  // };
 
   const updateBrickPos = (
     brick: BrickObj,
@@ -22,8 +35,7 @@ const Woodoku = () => {
     rowIndex: number,
     brickIndex: number,
   ) => {
-    let duplicateBoard: RowObj[] = JSON.parse(JSON.stringify(board));
-    // let brickInBoard = duplicateBoard[rowIndex].row[brickIndex];
+    let duplicateBoard: RowObj[] = [...board];
     duplicateBoard[rowIndex].row.splice(brickIndex, 1, {
       ...brick,
       pos: {
@@ -32,6 +44,15 @@ const Woodoku = () => {
       },
     });
     setBoard(duplicateBoard);
+  };
+
+  const moveBrick = (
+    brick: BrickObj,
+    left: number,
+    rowIndex: number,
+    brickIndex: number,
+  ) => {
+    let duplicateBoard: RowObj[] = JSON.parse(JSON.stringify(board));
   };
 
   return (
