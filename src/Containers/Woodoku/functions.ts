@@ -69,34 +69,126 @@ function rearrangeRowSpacing(row: RowObj): RowObj {
   return row;
 }
 
-// returns information about the space and item to drop into (the under item)
-export function canDropDown(target: BrickObj, rowUnder: RowObj) {
+export function canDropDown(
+  target: BrickObj,
+  targetIndex: number,
+  rowUnder: RowObj,
+) {
   let targetPos = target.pos as BrickPos;
+  const leftClears: boolean[] = [];
+  const rightClears: boolean[] = [];
+  let isClear = false;
   // console.log('target pos', targetBrickPosition, currentRow, rowUnder);
   for (let i = 0; i < rowUnder.row.length; i++) {
-    let brick = rowUnder.row[i];
-    let brickPos = brick.pos as BrickPos;
+    const SAFE_MARGIN = 5;
 
-    const isWithinRange =
-      brickPos.right > targetPos.left || brickPos.left < targetPos.right;
-    console.log('within range', isWithinRange);
-    // const underLapping =
-    //   (target.pos as BrickPos).left >= (brick.pos as BrickPos).left &&
-    //   (target.pos as BrickPos).right <= (brick.pos as BrickPos).right;
+    let brickPos = rowUnder.row[i].pos as BrickPos;
+    let nextBrick = rowUnder.row[i + 1];
+    let prevBrick = rowUnder.row[i - 1];
 
-    // if (underLapping && brick.transparent) {
-    // console.log('------------UNDER_LAPPING------------');
-    // console.log(targetBrickPosition, target, brickPosition, brick);
-    // console.log();
-    // return {
-    //   pos: brickPosition,
-    //   index: i,
-    //   brick: brick,
-    // };
-    // }
+    if (targetPos.left === 0) {
+      if (targetPos.right <= brickPos.left) {
+        leftClears.push(true);
+      } else if (targetPos.right + SAFE_MARGIN <= brickPos.left) {
+        leftClears.push(true);
+      } else if (targetPos.right - SAFE_MARGIN <= brickPos.left) {
+        leftClears.push(true);
+      } else {
+        leftClears.push(false);
+      }
+      // leftClears.push(Boolean(targetPos.right <= brickPos.left));
+    } else if (targetPos.right === BOARD_WIDTH) {
+      if (targetPos.left >= brickPos.right) {
+        rightClears.push(true);
+      } else if (targetPos.left + SAFE_MARGIN >= brickPos.right) {
+        rightClears.push(true);
+      } else if (targetPos.left - SAFE_MARGIN >= brickPos.right) {
+        rightClears.push(true);
+      } else {
+        rightClears.push(false);
+      }
+      // rightClears.push(Boolean(targetPos.left >= brickPos.right));
+    } else {
+      if (prevBrick && nextBrick) {
+        // console.log('there is next brick', targetIndex);
+        // console.log(targetPos, brickPos, nextBrick.pos);
+        // give a margin of 5px
+        if (
+          targetPos.left >= brickPos.right &&
+          targetPos.right <= (rowUnder.row[i + 1].pos as BrickPos).left
+        ) {
+          // console.log('here');
+          isClear = true;
+        } else if (
+          targetPos.left + SAFE_MARGIN >= brickPos.right &&
+          targetPos.right - SAFE_MARGIN <=
+            (rowUnder.row[i + 1].pos as BrickPos).left
+        ) {
+          isClear = true;
+        } else if (
+          targetPos.left - SAFE_MARGIN >= brickPos.right &&
+          targetPos.right + SAFE_MARGIN <=
+            (rowUnder.row[i + 1].pos as BrickPos).left
+        ) {
+          isClear = true;
+        }
+      } else if (
+        !prevBrick &&
+        !nextBrick &&
+        targetPos.left !== 0 &&
+        targetPos.right !== BOARD_WIDTH
+      ) {
+        // console.log('edge 3');
+        // console.log(targetPos, brickPos);
+        if (targetPos.right <= brickPos.left) {
+          isClear = true;
+        } else if (
+          targetPos.right + SAFE_MARGIN <= brickPos.left ||
+          targetPos.right - SAFE_MARGIN <= brickPos.left
+        ) {
+          isClear = true;
+        } else if (targetPos.left >= brickPos.right) {
+          isClear = true;
+        } else if (targetPos.left + SAFE_MARGIN >= brickPos.right) {
+          isClear = true;
+        }
+      }
+      if (!prevBrick && nextBrick) {
+        // console.log('edge 2');
+        if (targetPos.right <= brickPos.left) {
+          isClear = true;
+        } else if (targetPos.right + SAFE_MARGIN <= brickPos.left) {
+          isClear = true;
+        }
+      } else if (prevBrick && !nextBrick) {
+        // console.log('edge 1');
+        // console.log(target, rowUnder.row[i]);
+        // handle case where current brick is last on underRow
+        // compare only left of target with right of current brick
+        if (
+          targetPos.left >= (prevBrick.pos as BrickPos).right &&
+          targetPos.right <= brickPos.left
+        ) {
+          isClear = true;
+        } else if (
+          targetPos.left + SAFE_MARGIN >= (prevBrick.pos as BrickPos).right &&
+          targetPos.right <= brickPos.left + SAFE_MARGIN
+        ) {
+          isClear = true;
+        }
+      }
+    }
   }
 
-  return;
+  if (targetPos.left === 0) {
+    isClear = !!leftClears.length && leftClears.every(clear => !!clear);
+  } else if (targetPos.right === BOARD_WIDTH) {
+    isClear = !!rightClears.length && rightClears.every(clear => !!clear);
+  }
+
+  console.log('is clear', isClear, targetIndex);
+
+  return isClear;
 }
 
 export function getBrickPosition(target: BrickObj, currentRow: RowObj) {

@@ -13,21 +13,21 @@ const Woodoku = () => {
   }, []);
 
   React.useEffect(() => {
-    console.log('board', board);
-    // checkForDroppable();
+    // console.log('board', board);
+    checkForDroppable();
   }, [board]);
 
-  // const checkForDroppable = () => {
-  //   let duplicateBoard: RowObj[] = JSON.parse(JSON.stringify(board));
+  const checkForDroppable = () => {
+    let duplicateBoard: RowObj[] = [...board];
 
-  //   for (let i = 1; i < duplicateBoard.length; i++) {
-  //     let row = duplicateBoard[i];
-  //     for (let j = 0; j < row.row.length; j++) {
-  //       let brick = row.row[j];
-  //       canDropDown(brick, duplicateBoard[i - 1]);
-  //     }
-  //   }
-  // };
+    for (let i = 1; i < duplicateBoard.length; i++) {
+      let row = duplicateBoard[i];
+      for (let j = 0; j < row.row.length; j++) {
+        let brick = row.row[j];
+        canDropDown(brick, j, duplicateBoard[i - 1]);
+      }
+    }
+  };
 
   const updateBrickPos = (
     brick: BrickObj,
