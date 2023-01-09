@@ -58,31 +58,37 @@ const Item: FunctionComponent<ItemProps> = ({
       onPanResponderRelease: (_evt, _gesture: PanResponderGestureState) => {
         left.flattenOffset();
 
-        if ((left as any)._value < 60) {
-          // if left is less than 60ps, flush left
-          flushToLeft();
-        }
+        updateBrickPos(item, (left as any)._value, rowIndex, itemIndex);
 
         const right = (left as any)._value + item.width;
-        // animate to right limit if right is over limit;
-        if (right > BOARD_WIDTH) {
+
+        if ((left as any)._value < 60 && !row.row[itemIndex - 1]) {
+          // if left is less than 60ps, flush left
+          flushToLeft();
+          return;
+        } else if (right > BOARD_WIDTH && !row.row[itemIndex + 1]) {
+          // animate to right limit if right is over limit;
           flushToRight();
-        } else if (right > BOARD_WIDTH - 60) {
+          return;
+        } else if (right > BOARD_WIDTH - 60 && !row.row[itemIndex + 1]) {
           // animate to right limit if difference between right and limit is less tha 60px
           flushToRight();
-        } else if (row.row[itemIndex - 1]) {
-          // lap to left brick if distance between brick and left brick is 60px and below
-          if (
-            (row.row[itemIndex - 1].pos as BrickPos).right + 60 >=
+          return;
+        }
+
+        if (
+          row.row[itemIndex - 1] &&
+          (row.row[itemIndex - 1].pos as BrickPos).right + 60 >=
             (left as any)._value
-          ) {
-            lapToLeftItem();
-          }
-        } else if (row.row[itemIndex + 1]) {
+        ) {
+          // lap to left brick if distance between brick and left brick is 60px and below
+          lapToLeftItem();
+        } else if (
+          row.row[itemIndex + 1] &&
+          (row.row[itemIndex + 1].pos as BrickPos).left - 60 <= right
+        ) {
           // lap to right brick if distance between brick and right brick is 60px and below
-          if ((row.row[itemIndex + 1].pos as BrickPos).left - 60 <= right) {
-            lapToRightItem();
-          }
+          lapToRightItem();
         } else {
           updateBrickPos(item, (left as any)._value, rowIndex, itemIndex);
         }
