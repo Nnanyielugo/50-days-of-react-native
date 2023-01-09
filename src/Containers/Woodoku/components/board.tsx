@@ -14,8 +14,8 @@ interface BoardProps {
 const Board: FunctionComponent<BoardProps> = ({ rows }) => {
   return (
     <View style={styles.container}>
-      {rows.map(row => (
-        <Row row={row.row} key={row.id} />
+      {rows.map((row, index) => (
+        <Row row={row} key={row.id} rowIndex={index} />
       ))}
     </View>
   );

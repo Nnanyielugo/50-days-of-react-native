@@ -4,17 +4,24 @@ import { View, Text, StyleSheet } from 'react-native';
 import type { FunctionComponent } from 'react';
 import Item from './item';
 
-import type { BrickObj } from '../types';
+import type { RowObj } from '../types';
 
 interface RowProps {
-  row: BrickObj[];
+  row: RowObj;
+  rowIndex: number;
 }
 
-const Row: FunctionComponent<RowProps> = ({ row }) => {
+const Row: FunctionComponent<RowProps> = ({ row, rowIndex }) => {
   return (
     <View style={styles.container}>
-      {row.map(item => (
-        <Item item={item} key={item.id} />
+      {row.row.map((item, index) => (
+        <Item
+          item={item}
+          key={item.id}
+          itemIndex={index}
+          rowIndex={rowIndex}
+          row={row}
+        />
       ))}
     </View>
   );
