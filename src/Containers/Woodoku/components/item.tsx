@@ -40,61 +40,56 @@ const Item: FunctionComponent<ItemProps> = ({
   const rowBottom = 50 * rowIndex + 1;
   const itemLeft = row.row[itemIndex - 1];
 
-  const panResponder = React.useRef(
-    PanResponder.create({
-      onMoveShouldSetPanResponder: (
-        _evt,
-        _gesture: PanResponderGestureState,
-      ) => {
-        return true;
-      },
-      onPanResponderGrant: () => {
-        left.setOffset((left as any)._value);
-      },
-      onPanResponderMove: (_evt, gesture: PanResponderGestureState) => {
-        // console.log('ggesture', gesture.x0);
-        left.setValue(gesture.dx);
-      },
-      onPanResponderRelease: (_evt, _gesture: PanResponderGestureState) => {
-        left.flattenOffset();
+  const panResponder = PanResponder.create({
+    onMoveShouldSetPanResponder: (_evt, _gesture: PanResponderGestureState) => {
+      return true;
+    },
+    onPanResponderGrant: () => {
+      left.setOffset((left as any)._value);
+    },
+    onPanResponderMove: (_evt, gesture: PanResponderGestureState) => {
+      // console.log('ggesture', gesture.x0);
+      left.setValue(gesture.dx);
+    },
+    onPanResponderRelease: (_evt, _gesture: PanResponderGestureState) => {
+      left.flattenOffset();
 
+      updateBrickPos(item, (left as any)._value, rowIndex, itemIndex);
+
+      const right = (left as any)._value + item.width;
+
+      if ((left as any)._value < 60 && !row.row[itemIndex - 1]) {
+        // if left is less than 60ps, flush left
+        flushToLeft();
+        return;
+      } else if (right > BOARD_WIDTH && !row.row[itemIndex + 1]) {
+        // animate to right limit if right is over limit;
+        flushToRight();
+        return;
+      } else if (right > BOARD_WIDTH - 60 && !row.row[itemIndex + 1]) {
+        // animate to right limit if difference between right and limit is less tha 60px
+        flushToRight();
+        return;
+      }
+
+      if (
+        row.row[itemIndex - 1] &&
+        (row.row[itemIndex - 1].pos as BrickPos).right + 60 >=
+          (left as any)._value
+      ) {
+        // lap to left brick if distance between brick and left brick is 60px and below
+        lapToLeftItem();
+      } else if (
+        row.row[itemIndex + 1] &&
+        (row.row[itemIndex + 1].pos as BrickPos).left - 60 <= right
+      ) {
+        // lap to right brick if distance between brick and right brick is 60px and below
+        lapToRightItem();
+      } else {
         updateBrickPos(item, (left as any)._value, rowIndex, itemIndex);
-
-        const right = (left as any)._value + item.width;
-
-        if ((left as any)._value < 60 && !row.row[itemIndex - 1]) {
-          // if left is less than 60ps, flush left
-          flushToLeft();
-          return;
-        } else if (right > BOARD_WIDTH && !row.row[itemIndex + 1]) {
-          // animate to right limit if right is over limit;
-          flushToRight();
-          return;
-        } else if (right > BOARD_WIDTH - 60 && !row.row[itemIndex + 1]) {
-          // animate to right limit if difference between right and limit is less tha 60px
-          flushToRight();
-          return;
-        }
-
-        if (
-          row.row[itemIndex - 1] &&
-          (row.row[itemIndex - 1].pos as BrickPos).right + 60 >=
-            (left as any)._value
-        ) {
-          // lap to left brick if distance between brick and left brick is 60px and below
-          lapToLeftItem();
-        } else if (
-          row.row[itemIndex + 1] &&
-          (row.row[itemIndex + 1].pos as BrickPos).left - 60 <= right
-        ) {
-          // lap to right brick if distance between brick and right brick is 60px and below
-          lapToRightItem();
-        } else {
-          updateBrickPos(item, (left as any)._value, rowIndex, itemIndex);
-        }
-      },
-    }),
-  ).current;
+      }
+    },
+  });
 
   const flushToLeft = () => {
     Animated.timing(left, {
