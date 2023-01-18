@@ -54,7 +54,7 @@ const Item: FunctionComponent<ItemProps> = ({
     onPanResponderRelease: (_evt, _gesture: PanResponderGestureState) => {
       left.flattenOffset();
 
-      updateBrickPos(item, (left as any)._value, rowIndex, itemIndex);
+      // updateBrickPos(item, (left as any)._value, rowIndex, itemIndex);
 
       const right = (left as any)._value + item.width;
 

@@ -5,7 +5,11 @@ export function generateId(): string {
   let id =
     (Math.random() * new Date().getTime()).toString() +
     '-' +
-    (Math.random() * 1e4).toString();
+    (Math.random() * 1e4).toString() +
+    '-' +
+    (Math.random() * new Date().getTime()).toString() +
+    '-' +
+    (Math.random() * 1e5).toString();
   return id;
 }
 
@@ -14,6 +18,7 @@ export function generateBoard(): RowObj[] {
   let boardNum = Math.floor(Math.random() * 8);
 
   board = getBoards(boardNum);
+  // console.log('boardNum', boardNum, board);
 
   for (let i = 0; i < board.length; i++) {
     const row = board[i];
@@ -38,36 +43,36 @@ export function generateBoard(): RowObj[] {
   return board;
 }
 
-function rearrangeRowSpacing(row: RowObj): RowObj {
-  const emptyRow = row.row.find(
-    (item, index) =>
-      (item.transparent && item.width >= BOARD_WIDTH / 2) ||
-      (item.transparent && (index === 0 || index === row.row.length - 1)),
-  );
+// function rearrangeRowSpacing(row: RowObj): RowObj {
+//   const emptyRow = row.row.find(
+//     (item, index) =>
+//       (item.transparent && item.width >= BOARD_WIDTH / 2) ||
+//       (item.transparent && (index === 0 || index === row.row.length - 1)),
+//   );
 
-  if (emptyRow) {
-    const duplicateRow: RowObj = {
-      id: row.id,
-      row: row.row.filter(item => !item.transparent),
-    };
+//   if (emptyRow) {
+//     const duplicateRow: RowObj = {
+//       id: row.id,
+//       row: row.row.filter(item => !item.transparent),
+//     };
 
-    duplicateRow.row.unshift({
-      id: generateId(),
-      width: emptyRow.width / 2,
-      transparent: true,
-    });
+//     duplicateRow.row.unshift({
+//       id: generateId(),
+//       width: emptyRow.width / 2,
+//       transparent: true,
+//     });
 
-    duplicateRow.row.push({
-      id: generateId(),
-      width: emptyRow.width / 2,
-      transparent: true,
-    });
+//     duplicateRow.row.push({
+//       id: generateId(),
+//       width: emptyRow.width / 2,
+//       transparent: true,
+//     });
 
-    return duplicateRow;
-  }
+//     return duplicateRow;
+//   }
 
-  return row;
-}
+//   return row;
+// }
 
 export function canDropDown(
   target: BrickObj,
@@ -186,12 +191,12 @@ export function canDropDown(
     isClear = !!rightClears.length && rightClears.every(clear => !!clear);
   }
 
-  console.log('is clear', isClear, targetIndex);
+  // console.log('is clear', isClear, targetIndex);
 
   return isClear;
 }
 
-export function getBrickPosition(target: BrickObj, currentRow: RowObj) {
+function getBrickPosition(target: BrickObj, currentRow: RowObj) {
   const brickIndex = currentRow.row.findIndex(
     rowItem => rowItem.id === target.id,
   );
@@ -217,3 +222,5 @@ export function getBrickPosition(target: BrickObj, currentRow: RowObj) {
 
   return { left, right };
 }
+
+export function updateMovedBrickPosition() {}

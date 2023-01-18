@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import Item from './item';
+import Row from './row';
 
 import { generateRow, generateBoard, canDropDown } from '../functions';
 import type { BrickObj, BrickPos, RowObj } from '../types';
@@ -14,12 +14,6 @@ type UpdatedBrickInfo = {
 
 const Woodoku = () => {
   const [board, setBoard] = React.useState<RowObj[]>(generateBoard());
-  const [updatedBrickInfo, updateBrickInfo] =
-    React.useState<UpdatedBrickInfo | null>();
-
-  // React.useEffect(() => {
-  //   setBoard(generateBoard());
-  // }, []);
 
   const handleAlignment = () => {
     let duplicateBoard = [...board];
@@ -59,6 +53,8 @@ const Woodoku = () => {
   // }, [board]);
 
   React.useEffect(() => {
+    handleAlignment();
+
     // filter all rows that are filled with bricks
     // set a delay so that there is a visual presentation
     // before the row gets removed
@@ -88,24 +84,6 @@ const Woodoku = () => {
         setBoard(output);
       }
     }, 500);
-    handleAlignment();
-    // const duplicateBoardFull = duplicateBoard.filter(row => {
-    //   const length = row.row.reduce((acc, curr) => {
-    //     return acc + curr.width;
-    //   }, 0);
-
-    //   if (length >= BOARD_WIDTH) {
-    //     console.log('here');
-    //   }
-
-    //   return length < BOARD_WIDTH;
-    // });
-    // if (duplicateBoardFull.length !== duplicateBoard.length) {
-    //   // setBoard(duplicateBoard);
-    //   setTimeout(() => {
-    //     setBoard(duplicateBoardFull);
-    //   }, 500);
-    // }
   }, [board]);
 
   const checkForDroppable = (
@@ -114,26 +92,8 @@ const Woodoku = () => {
     brickIndex: number,
   ) => {
     let duplicateBoard: RowObj[] = [...board];
-    // const brick = (updatedBrickInfo as UpdatedBrickInfo).brick;
-    // let rowIndex = (updatedBrickInfo as UpdatedBrickInfo).rowIndex;
-    // let brickIndex = (updatedBrickInfo as UpdatedBrickInfo).brickIndex;
-    // console.log('row index', rowIndex);
 
-    if (rowIndex === 0) {
-      // check row above
-      // const row = duplicateBoard[rowIndex + 1];
-      // row.row.forEach((dupBrick, dupBrickIndex) => {
-      //   const canDrop = canDropDown(
-      //     dupBrick,
-      //     dupBrickIndex,
-      //     duplicateBoard[rowIndex], // since target is last row, let row to search be same row instead of row below
-      //   );
-      //   if (canDrop) {
-      //     // since target is last row, let row to drop from be the row above
-      //     moveBrick(dupBrick, rowIndex + 1, dupBrickIndex);
-      //   }
-      // });
-    } else {
+    if (rowIndex !== 0) {
       const canDrop = canDropDown(
         brick,
         brickIndex,
@@ -142,30 +102,8 @@ const Woodoku = () => {
 
       if (canDrop) {
         moveBrick(brick, rowIndex, brickIndex);
-      } else {
-        // check row above
-        // let dupRowIndex = rowIndex + 1;
-        // while (dupRowIndex < duplicateBoard.length) {
-        //   console.log('dup detailing', dupRowIndex);
-        //   let row = duplicateBoard[dupRowIndex];
-        //   row.row.forEach((dupBrick, dupBrickIndex) => {
-        //     const dupCanDropDown = canDropDown(
-        //       dupBrick,
-        //       dupBrickIndex,
-        //       duplicateBoard[dupRowIndex - 1],
-        //     );
-        //     if (dupCanDropDown) {
-        //       setTimeout(() => {
-        //         moveBrick(dupBrick, dupRowIndex, dupBrickIndex);
-        //       }, 500);
-        //     }
-        //     console.log('dup drop', dupCanDropDown);
-        //   });
-        //   dupRowIndex += 1;
-        // }
       }
     }
-    updateBrickInfo(null);
   };
 
   const updateBrickPos = (
@@ -189,11 +127,7 @@ const Woodoku = () => {
         brickIndex,
       );
     }, 200);
-    updateBrickInfo({
-      brick: duplicateBoard[rowIndex].row[brickIndex],
-      rowIndex,
-      brickIndex,
-    });
+
     setBoard(duplicateBoard);
   };
 
@@ -291,18 +225,12 @@ const Woodoku = () => {
     <View style={styles.container}>
       <View style={styles.board}>
         {board.map((row, rowIndex) => (
-          <View style={styles.row} key={row.id}>
-            {row.row.map((item, itemIndex) => (
-              <Item
-                item={item}
-                key={item.id}
-                itemIndex={itemIndex}
-                rowIndex={rowIndex}
-                row={row}
-                updateBrickPos={updateBrickPos}
-              />
-            ))}
-          </View>
+          <Row
+            row={row}
+            key={row.id}
+            rowIndex={rowIndex}
+            updateBrickPos={updateBrickPos}
+          />
         ))}
       </View>
     </View>
