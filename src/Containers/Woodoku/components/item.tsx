@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-  StyleSheet,
-  Image,
-  PanResponder,
-  Animated,
-  Dimensions,
-} from 'react-native';
+import { StyleSheet, PanResponder, Animated } from 'react-native';
 
 import Brick from '../assets/brick.jpeg';
 
@@ -39,6 +33,7 @@ const Item: FunctionComponent<ItemProps> = ({
   ).current;
   const rowBottom = 50 * rowIndex + 1;
   const itemLeft = row.row[itemIndex - 1];
+  const itemRight = row.row[itemIndex + 1];
 
   const panResponder = PanResponder.create({
     onMoveShouldSetPanResponder: (_evt, _gesture: PanResponderGestureState) => {
@@ -58,31 +53,27 @@ const Item: FunctionComponent<ItemProps> = ({
 
       const right = (left as any)._value + item.width;
 
-      if ((left as any)._value < 60 && !row.row[itemIndex - 1]) {
+      if ((left as any)._value < 60 && !itemLeft) {
         // if left is less than 60ps, flush left
         flushToLeft();
         return;
-      } else if (right > BOARD_WIDTH && !row.row[itemIndex + 1]) {
+      } else if (right > BOARD_WIDTH && !itemRight) {
         // animate to right limit if right is over limit;
         flushToRight();
         return;
-      } else if (right > BOARD_WIDTH - 60 && !row.row[itemIndex + 1]) {
+      } else if (right > BOARD_WIDTH - 60 && !itemRight) {
         // animate to right limit if difference between right and limit is less tha 60px
         flushToRight();
         return;
       }
 
       if (
-        row.row[itemIndex - 1] &&
-        (row.row[itemIndex - 1].pos as BrickPos).right + 60 >=
-          (left as any)._value
+        itemLeft &&
+        (itemLeft.pos as BrickPos).right + 60 >= (left as any)._value
       ) {
         // lap to left brick if distance between brick and left brick is 60px and below
         lapToLeftItem();
-      } else if (
-        row.row[itemIndex + 1] &&
-        (row.row[itemIndex + 1].pos as BrickPos).left - 60 <= right
-      ) {
+      } else if (itemRight && (itemRight.pos as BrickPos).left - 60 <= right) {
         // lap to right brick if distance between brick and right brick is 60px and below
         lapToRightItem();
       } else {
@@ -112,7 +103,7 @@ const Item: FunctionComponent<ItemProps> = ({
 
   const lapToLeftItem = () => {
     Animated.timing(left, {
-      toValue: (row.row[itemIndex - 1].pos as BrickPos).right,
+      toValue: (itemLeft.pos as BrickPos).right,
       duration: 500,
       useNativeDriver: false,
     }).start(() => {

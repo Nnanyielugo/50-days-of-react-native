@@ -2,7 +2,7 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import Row from './row';
 
-import { generateRow, generateBoard, canDropDown } from '../functions';
+import { generateBoard, canDropDown } from '../functions';
 import type { BrickObj, BrickPos, RowObj } from '../types';
 import { BOARD_WIDTH, BOARD_HEIGHT } from '../constants';
 
@@ -14,11 +14,13 @@ type UpdatedBrickInfo = {
 
 const Woodoku = () => {
   const [board, setBoard] = React.useState<RowObj[]>(generateBoard());
+  // const [updatedBrickInfo, updateBrickInfo] =
+  //   React.useState<UpdatedBrickInfo | null>();
 
   const handleAlignment = () => {
     let duplicateBoard = [...board];
     // let unAligned = false;
-    board.forEach((row, rowIndex) => {
+    duplicateBoard.forEach((row, rowIndex) => {
       row.row.forEach((brick, brickIndex) => {
         if (rowIndex === 0) {
           const canDrop = canDropDown(
@@ -27,9 +29,7 @@ const Woodoku = () => {
             duplicateBoard[rowIndex],
           );
           if (canDrop) {
-            // setTimeout(() => {
             moveBrick(brick, rowIndex + 1, brickIndex);
-            // }, 500);
           }
         } else {
           const canDrop = canDropDown(
@@ -39,32 +39,28 @@ const Woodoku = () => {
           );
 
           if (canDrop) {
-            // setTimeout(() => {
             moveBrick(brick, rowIndex, brickIndex);
-            // }, 500);
           }
         }
       });
     });
   };
 
-  // React.useEffect(() => {
-  //   handleAlignment();
-  // }, [board]);
-
   React.useEffect(() => {
     handleAlignment();
+  }, [board]); // eslint-disable-line react-hooks/exhaustive-deps
 
-    // filter all rows that are filled with bricks
+  React.useEffect(() => {
+    // filter all rows that are filled with bricks and all rows that are empty
     // set a delay so that there is a visual presentation
     // before the row gets removed
-    // setTimeout(() => {
     const duplicateBoard = [...board];
     setTimeout(() => {
       let output: RowObj[] = [];
 
-      for (let i = 0; i < duplicateBoard.length; i++) {
-        let row = duplicateBoard[i];
+      for (let rowIndex = 0; rowIndex < duplicateBoard.length; rowIndex++) {
+        let row = duplicateBoard[rowIndex];
+
         if (!row.row.length) {
           continue;
         }
@@ -86,25 +82,27 @@ const Woodoku = () => {
     }, 500);
   }, [board]);
 
-  const checkForDroppable = (
-    brick: BrickObj,
-    rowIndex: number,
-    brickIndex: number,
-  ) => {
-    let duplicateBoard: RowObj[] = [...board];
+  // const checkForDroppable = (
+  //   brick: BrickObj,
+  //   rowIndex: number,
+  //   brickIndex: number,
+  // ) => {
+  //   let duplicateBoard: RowObj[] = [...board];
 
-    if (rowIndex !== 0) {
-      const canDrop = canDropDown(
-        brick,
-        brickIndex,
-        duplicateBoard[rowIndex - 1],
-      );
+  //   if (rowIndex !== 0) {
+  //     const canDrop = canDropDown(
+  //       brick,
+  //       brickIndex,
+  //       duplicateBoard[rowIndex - 1],
+  //     );
 
-      if (canDrop) {
-        moveBrick(brick, rowIndex, brickIndex);
-      }
-    }
-  };
+  //     if (canDrop) {
+  //       moveBrick(brick, rowIndex, brickIndex);
+  //     }
+  //   }
+
+  //   // updateBrickInfo(null);
+  // };
 
   const updateBrickPos = (
     brick: BrickObj,
@@ -120,21 +118,25 @@ const Woodoku = () => {
         right: left + brick.width,
       },
     });
-    setTimeout(() => {
-      checkForDroppable(
-        duplicateBoard[rowIndex].row[brickIndex],
-        rowIndex,
-        brickIndex,
-      );
-    }, 200);
-
+    // setTimeout(() => {
+    //   checkForDroppable(
+    //     duplicateBoard[rowIndex].row[brickIndex],
+    //     rowIndex,
+    //     brickIndex,
+    //   );
+    // }, 200);
+    // updateBrickInfo({
+    //   brick: duplicateBoard[rowIndex].row[brickIndex],
+    //   rowIndex,
+    //   brickIndex,
+    // });
     setBoard(duplicateBoard);
   };
 
   const moveBrick = (brick: BrickObj, rowIndex: number, brickIndex: number) => {
     let duplicateBoard: RowObj[] = JSON.parse(JSON.stringify(board));
     const dropRowIndex = rowIndex - 1;
-    let brickRow = duplicateBoard[rowIndex];
+    // let brickRow = duplicateBoard[rowIndex];
     let dropRow = duplicateBoard[dropRowIndex];
     if (brick.pos?.left === 0) {
       // case 1: lapping left border, simply drop at start..

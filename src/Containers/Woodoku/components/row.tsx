@@ -22,12 +22,12 @@ const Row: FunctionComponent<RowProps> = ({
   rowIndex,
   updateBrickPos,
 }) => {
-  const rowOpacity = React.useRef(new Animated.Value(0)).current;
+  const rowOpacity = React.useRef(new Animated.Value(1)).current;
 
   const show = () => {
     Animated.timing(rowOpacity, {
       toValue: 1,
-      duration: 1000,
+      duration: 2000,
       useNativeDriver: false,
     }).start();
   };
@@ -35,17 +35,17 @@ const Row: FunctionComponent<RowProps> = ({
   const hide = () => {
     Animated.timing(rowOpacity, {
       toValue: 0,
-      duration: 500,
+      duration: 1000,
       useNativeDriver: false,
     }).start();
   };
 
-  React.useEffect(() => {
-    show();
-    return () => {
-      hide();
-    };
-  });
+  // React.useEffect(() => {
+  //   show();
+  //   return () => {
+  //     hide();
+  //   };
+  // });
   return (
     <Animated.View style={[styles.container, { opacity: rowOpacity }]}>
       {row.row.map((item, index) => (
