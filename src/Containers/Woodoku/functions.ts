@@ -15,10 +15,9 @@ export function generateId(): string {
 
 export function generateBoard(): RowObj[] {
   let board = [];
-  let boardNum = Math.floor(Math.random() * 8);
+  let boardNum = Math.floor(Math.random() * 9);
 
   board = getBoards(boardNum);
-  // console.log('boardNum', boardNum, board);
 
   for (let i = 0; i < board.length; i++) {
     const row = board[i];
@@ -52,17 +51,13 @@ export function canDropDown(
   const leftClears: boolean[] = [];
   const rightClears: boolean[] = [];
   let isClear = false;
-  // console.log('target pos', targetBrickPosition, currentRow, rowUnder);
   for (let i = 0; i < rowUnder.row.length; i++) {
     const SAFE_MARGIN = 5;
 
     let brickPos = rowUnder.row[i].pos as BrickPos;
     let nextBrick = rowUnder.row[i + 1];
     let prevBrick = rowUnder.row[i - 1];
-    console.log(targetPos, brickPos);
-    // NOTE: adding safe margins for left and right extremes not really necessary
-    // because brickks will typically lap to the ends of the border
-    // just trying to keep the logic consistent
+
     if (targetPos.left === 0) {
       // target is at the left border of the board
       leftClears.push(
@@ -77,13 +72,7 @@ export function canDropDown(
       if (!prevBrick && nextBrick) {
         // as this means the first brick on the under row, we only need
         // target's right to be lower than current's left
-        if (
-          targetPos.right <= brickPos.left ||
-          targetPos.right + SAFE_MARGIN <= brickPos.left
-          // targetPos.right - SAFE_MARGIN <= brickPos.left
-        ) {
-          isClear = true;
-        }
+        isClear = targetPos.right + SAFE_MARGIN <= brickPos.left;
       } else if (prevBrick && !nextBrick) {
         // as this means the last brick on the under row, we only need
         // target's left to be lower than current's right
@@ -101,26 +90,15 @@ export function canDropDown(
         targetPos.left !== 0 &&
         targetPos.right !== BOARD_WIDTH
       ) {
-        if (
-          targetPos.right <= brickPos.left ||
+        // single brick on row but is neither at the end nor at the begining of the row
+        isClear =
           targetPos.right + SAFE_MARGIN <= brickPos.left ||
-          targetPos.right - SAFE_MARGIN <= brickPos.left
-        ) {
-          isClear = true;
-        } else if (
-          targetPos.left >= brickPos.right ||
-          targetPos.left + SAFE_MARGIN >= brickPos.right
-        ) {
-          isClear = true;
-        }
+          targetPos.left + SAFE_MARGIN >= brickPos.right;
       } else if (prevBrick && nextBrick) {
         // checking if enough space between previous brick and current brick to fit target in
-        if (
+        isClear =
           targetPos.left + SAFE_MARGIN >= (prevBrick.pos as BrickPos).right &&
-          targetPos.right - SAFE_MARGIN <= brickPos.left
-        ) {
-          isClear = true;
-        }
+          targetPos.right - SAFE_MARGIN <= brickPos.left;
       }
     }
   }
@@ -130,8 +108,6 @@ export function canDropDown(
   } else if (targetPos.right === BOARD_WIDTH) {
     isClear = !!rightClears.length && rightClears.every(clear => !!clear);
   }
-
-  console.log('is clear', isClear, targetIndex);
 
   return isClear;
 }
@@ -169,7 +145,6 @@ export function moveBrick(
   brickIndex: number,
   board: RowObj[],
 ) {
-  console.log('move brick called');
   const dropRowIndex = rowIndex - 1;
   let dropRow = board[dropRowIndex];
   let duplicateBoard: RowObj[] = JSON.parse(JSON.stringify(board));
@@ -250,11 +225,10 @@ export function moveBrick(
           // and we have ascertained that there is space between left and right
           // to drop our brick,
           // we drop our brick (with modified position values above) in the index after i,
-          // and move the brick after our dropped brick downward by one index
+          // and move all the bricks after our dropped brick downward by one index
 
           duplicateBoard[dropRowIndex].row[i + 1] = newBrick;
           let indexShifted = i + 2;
-          // console.log('index shifted', indexShifted, i, dropRow.row.length);
           while (indexShifted <= dropRow.row.length) {
             duplicateBoard[dropRowIndex].row[indexShifted] =
               dropRow.row[indexShifted - 1];
@@ -262,7 +236,6 @@ export function moveBrick(
             indexShifted += 1;
           }
 
-          // duplicateBoard[dropRowIndex].row[i + 2] = nextIterBrick; // move next drop brick after moved brick
           duplicateBoard[rowIndex].row.splice(brickIndex, 1);
           break;
         }
