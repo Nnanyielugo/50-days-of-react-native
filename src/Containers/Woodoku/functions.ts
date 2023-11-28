@@ -15,9 +15,10 @@ export function generateId(): string {
 
 export function generateBoard(): RowObj[] {
   let board = [];
-  let boardNum = Math.floor(Math.random() * 9);
+  let boardNum = Math.floor(Math.random() * 8);
 
   board = getBoards(boardNum);
+  // console.log('boardNum', boardNum, board);
 
   for (let i = 0; i < board.length; i++) {
     const row = board[i];
@@ -60,19 +61,37 @@ export function canDropDown(
 
     if (targetPos.left === 0) {
       // target is at the left border of the board
-      leftClears.push(
-        targetPos.right + SAFE_MARGIN <= brickPos.left + SAFE_MARGIN,
-      );
+      if (
+        targetPos.right <= brickPos.left ||
+        targetPos.right + SAFE_MARGIN <= brickPos.left ||
+        targetPos.right - SAFE_MARGIN <= brickPos.left
+      ) {
+        leftClears.push(true);
+      } else {
+        leftClears.push(false);
+      }
     } else if (targetPos.right === BOARD_WIDTH) {
       // target is at the right border of the board
-      rightClears.push(
-        targetPos.left - SAFE_MARGIN >= brickPos.right - SAFE_MARGIN,
-      );
+      if (
+        targetPos.left >= brickPos.right ||
+        targetPos.left + SAFE_MARGIN >= brickPos.right ||
+        targetPos.left - SAFE_MARGIN >= brickPos.right
+      ) {
+        rightClears.push(true);
+      } else {
+        rightClears.push(false);
+      }
     } else {
       if (!prevBrick && nextBrick) {
         // as this means the first brick on the under row, we only need
         // target's right to be lower than current's left
-        isClear = targetPos.right + SAFE_MARGIN <= brickPos.left;
+        if (
+          targetPos.right <= brickPos.left ||
+          targetPos.right + SAFE_MARGIN <= brickPos.left
+          // targetPos.right - SAFE_MARGIN <= brickPos.left
+        ) {
+          isClear = true;
+        }
       } else if (prevBrick && !nextBrick) {
         // as this means the last brick on the under row, we only need
         // target's left to be lower than current's right
@@ -90,15 +109,25 @@ export function canDropDown(
         targetPos.left !== 0 &&
         targetPos.right !== BOARD_WIDTH
       ) {
-        // single brick on row but is neither at the end nor at the begining of the row
-        isClear =
+        if (
+          targetPos.right <= brickPos.left ||
           targetPos.right + SAFE_MARGIN <= brickPos.left ||
-          targetPos.left + SAFE_MARGIN >= brickPos.right;
+          targetPos.right - SAFE_MARGIN <= brickPos.left
+        ) {
+          isClear = true;
+        } else if (
+          targetPos.left >= brickPos.right ||
+          targetPos.left + SAFE_MARGIN >= brickPos.right
+        ) {
+          isClear = true;
+        }
       } else if (prevBrick && nextBrick) {
-        // checking if enough space between previous brick and current brick to fit target in
-        isClear =
+        if (
           targetPos.left + SAFE_MARGIN >= (prevBrick.pos as BrickPos).right &&
-          targetPos.right - SAFE_MARGIN <= brickPos.left;
+          targetPos.right - SAFE_MARGIN <= brickPos.left
+        ) {
+          isClear = true;
+        }
       }
     }
   }
