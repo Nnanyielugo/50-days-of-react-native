@@ -14,14 +14,10 @@ type UpdatedBrickInfo = {
 
 const Woodoku = () => {
   const [board, setBoard] = React.useState<RowObj[]>(generateBoard());
-  // const [updatedBrickInfo, updateBrickInfo] =
-  //   React.useState<UpdatedBrickInfo | null>();
 
   const handleAlignment = () => {
     let duplicateBoard = [...board];
-    // let unAligned = false;
     duplicateBoard.forEach((row, rowIndex) => {
-      // console.log('row here', rowIndex, row);
       row.row.forEach((brick, brickIndex) => {
         if (rowIndex === 0) {
           const canDrop = canDropDown(
