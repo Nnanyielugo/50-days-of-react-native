@@ -43,37 +43,6 @@ export function generateBoard(): RowObj[] {
   return board;
 }
 
-// function rearrangeRowSpacing(row: RowObj): RowObj {
-//   const emptyRow = row.row.find(
-//     (item, index) =>
-//       (item.transparent && item.width >= BOARD_WIDTH / 2) ||
-//       (item.transparent && (index === 0 || index === row.row.length - 1)),
-//   );
-
-//   if (emptyRow) {
-//     const duplicateRow: RowObj = {
-//       id: row.id,
-//       row: row.row.filter(item => !item.transparent),
-//     };
-
-//     duplicateRow.row.unshift({
-//       id: generateId(),
-//       width: emptyRow.width / 2,
-//       transparent: true,
-//     });
-
-//     duplicateRow.row.push({
-//       id: generateId(),
-//       width: emptyRow.width / 2,
-//       transparent: true,
-//     });
-
-//     return duplicateRow;
-//   }
-
-//   return row;
-// }
-
 export function canDropDown(
   target: BrickObj,
   targetIndex: number,
@@ -90,29 +59,20 @@ export function canDropDown(
     let brickPos = rowUnder.row[i].pos as BrickPos;
     let nextBrick = rowUnder.row[i + 1];
     let prevBrick = rowUnder.row[i - 1];
-
+    console.log(targetPos, brickPos);
+    // NOTE: adding safe margins for left and right extremes not really necessary
+    // because brickks will typically lap to the ends of the border
+    // just trying to keep the logic consistent
     if (targetPos.left === 0) {
       // target is at the left border of the board
-      if (
-        targetPos.right <= brickPos.left ||
-        targetPos.right + SAFE_MARGIN <= brickPos.left ||
-        targetPos.right - SAFE_MARGIN <= brickPos.left
-      ) {
-        leftClears.push(true);
-      } else {
-        leftClears.push(false);
-      }
+      leftClears.push(
+        targetPos.right + SAFE_MARGIN <= brickPos.left + SAFE_MARGIN,
+      );
     } else if (targetPos.right === BOARD_WIDTH) {
       // target is at the right border of the board
-      if (
-        targetPos.left >= brickPos.right ||
-        targetPos.left + SAFE_MARGIN >= brickPos.right ||
-        targetPos.left - SAFE_MARGIN >= brickPos.right
-      ) {
-        rightClears.push(true);
-      } else {
-        rightClears.push(false);
-      }
+      rightClears.push(
+        targetPos.left - SAFE_MARGIN >= brickPos.right - SAFE_MARGIN,
+      );
     } else {
       if (!prevBrick && nextBrick) {
         // as this means the first brick on the under row, we only need
