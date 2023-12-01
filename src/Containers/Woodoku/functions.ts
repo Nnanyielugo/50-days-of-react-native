@@ -43,15 +43,12 @@ export function generateBoard(): RowObj[] {
   return board;
 }
 
-export function canDropDown(
-  target: BrickObj,
-  targetIndex: number,
-  rowUnder: RowObj,
-) {
+export function canDropDown(target: BrickObj, rowUnder: RowObj) {
   let targetPos = target.pos as BrickPos;
   const leftClears: boolean[] = [];
   const rightClears: boolean[] = [];
   let isClear = false;
+
   for (let i = 0; i < rowUnder.row.length; i++) {
     const SAFE_MARGIN = 5;
 
@@ -94,8 +91,12 @@ export function canDropDown(
         }
       } else if (prevBrick && !nextBrick) {
         // as this means the last brick on the under row, we only need
-        // target's left to be lower than current's right
-        if (
+        // target to find space between previous and current bricks
+        // or find enough space between current brick and right border
+
+        if (targetPos.left >= brickPos.right - SAFE_MARGIN) {
+          isClear = true;
+        } else if (
           (targetPos.left >= (prevBrick.pos as BrickPos).right &&
             targetPos.right <= brickPos.left) ||
           (targetPos.left + SAFE_MARGIN >= (prevBrick.pos as BrickPos).right &&
