@@ -1,8 +1,8 @@
 import 'react-native';
 import { describe, expect, test } from '@jest/globals';
 
-import { canDropDown } from '../src/Containers/Woodoku/functions';
-import { BrickObj, RowObj } from '../src/Containers/Woodoku/types';
+import { canDropDown } from '../functions';
+import { BrickObj, RowObj } from '../types';
 
 describe('woodoku tests', () => {
   describe('canDropDown', () => {
@@ -214,6 +214,65 @@ describe('woodoku tests', () => {
 
       test("can't drop down when there's not enough space between current brick and previous brick", () => {
         expect(canDropDown(target1, rowUnder2)).toBe(false);
+      });
+    });
+
+    describe('case 5: only one brick on the under row', () => {
+      let target1 = {
+        id: '1',
+        width: 175.5,
+        transparent: false,
+        pos: { left: 0, right: 175.5 },
+      };
+
+      let target2 = {
+        id: '2',
+        width: 175.5,
+        transparent: false,
+        pos: { left: 175.5, right: 351 },
+      };
+
+      let target3 = {
+        id: '3',
+        width: 175.5,
+        transparent: false,
+        pos: { left: 87.75, right: 263.25 },
+      };
+
+      let rowUnder1: RowObj = {
+        id: '5',
+        row: [
+          {
+            id: '4',
+            width: 175.5,
+            transparent: false,
+            pos: { left: 0, right: 175.5 },
+          },
+        ],
+      };
+
+      let rowUnder2: RowObj = {
+        id: '6',
+        row: [
+          {
+            id: '4',
+            width: 175.5,
+            transparent: false,
+            pos: { left: 175.5, right: 351 },
+          },
+        ],
+      };
+
+      it("can drop down when there's enough space", () => {
+        expect(canDropDown(target1, rowUnder2)).toBe(true);
+        expect(canDropDown(target2, rowUnder1)).toBe(true);
+      });
+
+      it("can't drop down when there's not enough space", () => {
+        expect(canDropDown(target1, rowUnder1)).toBe(false);
+        expect(canDropDown(target2, rowUnder2)).toBe(false);
+        expect(canDropDown(target3, rowUnder1)).toBe(false);
+        expect(canDropDown(target3, rowUnder2)).toBe(false);
       });
     });
   });

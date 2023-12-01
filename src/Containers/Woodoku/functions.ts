@@ -110,6 +110,7 @@ export function canDropDown(target: BrickObj, rowUnder: RowObj) {
         targetPos.left !== 0 &&
         targetPos.right !== BOARD_WIDTH
       ) {
+        // only one brick on the under row
         if (
           targetPos.right <= brickPos.left ||
           targetPos.right + SAFE_MARGIN <= brickPos.left ||
