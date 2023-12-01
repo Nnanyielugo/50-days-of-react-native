@@ -124,6 +124,7 @@ export function canDropDown(target: BrickObj, rowUnder: RowObj) {
           isClear = true;
         }
       } else if (prevBrick && nextBrick) {
+        // at least 3 bricks on under row
         if (
           targetPos.left + SAFE_MARGIN >= (prevBrick.pos as BrickPos).right &&
           targetPos.right - SAFE_MARGIN <= brickPos.left

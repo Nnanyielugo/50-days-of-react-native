@@ -275,5 +275,61 @@ describe('woodoku tests', () => {
         expect(canDropDown(target3, rowUnder2)).toBe(false);
       });
     });
+
+    describe('case 6: at least 3 bricks on under row', () => {
+      let target1 = {
+        id: '1',
+        width: 87.75,
+        transparent: false,
+        pos: { left: 175.5, right: 263.25 },
+      };
+
+      let target2 = {
+        id: '3',
+        width: 175.5,
+        transparent: false,
+        pos: { left: 87.75, right: 263.25 },
+      };
+
+      let target3 = {
+        id: '3',
+        width: 87.75,
+        transparent: false,
+        pos: { left: 87.75, right: 175.5 },
+      };
+
+      let rowUnder: RowObj = {
+        id: '5',
+        row: [
+          {
+            id: '7',
+            width: 87.75,
+            transparent: false,
+            pos: { left: 0, right: 87.75 },
+          },
+          {
+            id: '8',
+            width: 175.5,
+            transparent: false,
+            pos: { left: 87.75, right: 175.5 },
+          },
+          {
+            id: '9',
+            width: 175.5,
+            transparent: false,
+            pos: { left: 263.25, right: 351 },
+          },
+        ],
+      };
+
+      it("can drop when there's enough space to fit brick", () => {
+        expect(canDropDown(target1, rowUnder)).toBe(true);
+      });
+
+      it("can't drop when there's not enough space to fit brick", () => {
+        expect(canDropDown(target2, rowUnder)).toBe(false);
+        expect(canDropDown(target3, rowUnder)).toBe(false);
+      });
+    });
   });
 });
