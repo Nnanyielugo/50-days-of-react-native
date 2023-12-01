@@ -58,34 +58,26 @@ export function canDropDown(target: BrickObj, rowUnder: RowObj) {
 
     if (targetPos.left === 0) {
       // target is at the left border of the board
-      if (
+      leftClears.push(
         targetPos.right <= brickPos.left ||
-        targetPos.right + SAFE_MARGIN <= brickPos.left ||
-        targetPos.right - SAFE_MARGIN <= brickPos.left
-      ) {
-        leftClears.push(true);
-      } else {
-        leftClears.push(false);
-      }
+          targetPos.right - SAFE_MARGIN <= brickPos.left,
+      );
     } else if (targetPos.right === BOARD_WIDTH) {
       // target is at the right border of the board
-      if (
-        targetPos.left >= brickPos.right ||
-        targetPos.left + SAFE_MARGIN >= brickPos.right ||
-        targetPos.left - SAFE_MARGIN >= brickPos.right
-      ) {
-        rightClears.push(true);
-      } else {
-        rightClears.push(false);
-      }
+      rightClears.push(
+        Boolean(
+          targetPos.left >= brickPos.right ||
+            targetPos.left + SAFE_MARGIN >= brickPos.right,
+        ),
+      );
     } else {
       if (!prevBrick && nextBrick) {
         // as this means the first brick on the under row, we only need
         // target's right to be lower than current's left
         if (
           targetPos.right <= brickPos.left ||
-          targetPos.right + SAFE_MARGIN <= brickPos.left
-          // targetPos.right - SAFE_MARGIN <= brickPos.left
+          targetPos.right + SAFE_MARGIN <= brickPos.left ||
+          targetPos.right - SAFE_MARGIN <= brickPos.left
         ) {
           isClear = true;
         }
