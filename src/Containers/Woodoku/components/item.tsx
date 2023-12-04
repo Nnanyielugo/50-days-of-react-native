@@ -43,7 +43,6 @@ const Item: FunctionComponent<ItemProps> = ({
       left.setOffset((left as any)._value);
     },
     onPanResponderMove: (_evt, gesture: PanResponderGestureState) => {
-      // console.log('ggesture', gesture.x0);
       left.setValue(gesture.dx);
     },
     onPanResponderRelease: (_evt, _gesture: PanResponderGestureState) => {
