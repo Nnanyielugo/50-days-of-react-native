@@ -53,7 +53,7 @@ const Item: FunctionComponent<ItemProps> = ({
 
       const right = (left as any)._value + item.width;
 
-      if ((left as any)._value < 60 && !itemLeft) {
+      if ((left as any)._value < 30 && !itemLeft) {
         // if left is less than 60ps, flush left
         flushToLeft();
         return;
@@ -61,7 +61,7 @@ const Item: FunctionComponent<ItemProps> = ({
         // animate to right limit if right is over limit;
         flushToRight();
         return;
-      } else if (right > BOARD_WIDTH - 60 && !itemRight) {
+      } else if (right > BOARD_WIDTH - 30 && !itemRight) {
         // animate to right limit if difference between right and limit is less tha 60px
         flushToRight();
         return;
@@ -69,11 +69,11 @@ const Item: FunctionComponent<ItemProps> = ({
 
       if (
         itemLeft &&
-        (itemLeft.pos as BrickPos).right + 60 >= (left as any)._value
+        (itemLeft.pos as BrickPos).right + 20 >= (left as any)._value
       ) {
         // lap to left brick if distance between brick and left brick is 60px and below
         lapToLeftItem();
-      } else if (itemRight && (itemRight.pos as BrickPos).left - 60 <= right) {
+      } else if (itemRight && (itemRight.pos as BrickPos).left - 20 <= right) {
         // lap to right brick if distance between brick and right brick is 60px and below
         lapToRightItem();
       } else {
