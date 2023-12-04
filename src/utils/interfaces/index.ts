@@ -14,6 +14,7 @@ export type RootStackParamList = {
   Reels: undefined;
   Calculator: undefined;
   NearbyPlaces: undefined;
+  Woodoku: undefined;
 };
 
 type AllowedMenuPages = Omit<RootStackParamList, 'Home'>;

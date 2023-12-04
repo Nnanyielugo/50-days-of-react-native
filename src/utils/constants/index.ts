@@ -9,6 +9,7 @@ import TicTacToe from '_assets/icons/gamepad-circle-left.svg';
 import Reels from '_assets/icons/multimedia.svg';
 import Calculator from '_assets/icons/calculator.svg';
 import NearbyPlaces from '_assets/icons/map-marker-radius.svg';
+import Woodoku from '_assets/icons/woodoku.svg';
 
 export const PAGES: Page[] = [
   {
@@ -60,5 +61,10 @@ export const PAGES: Page[] = [
     name: 'Nearby Places',
     componentName: 'NearbyPlaces',
     Icon: NearbyPlaces,
+  },
+  {
+    name: 'Woodoku',
+    componentName: 'Woodoku',
+    Icon: Woodoku,
   },
 ];
