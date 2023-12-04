@@ -1,20 +1,13 @@
 import React, { useCallback, useRef } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import Row from './row';
 
 import { generateBoard, canDropDown, moveBrick } from '../functions';
 import type { BrickObj, RowObj } from '../types';
 import { BOARD_WIDTH, BOARD_HEIGHT } from '../constants';
 
-type UpdatedBrickInfo = {
-  brick: BrickObj;
-  rowIndex: number;
-  brickIndex: number;
-};
-
 const Woodoku = () => {
   const [board, setBoard] = React.useState<RowObj[]>(generateBoard());
-  // const [alternateBoard, setAlternateBoard] = React.useState<RowObj[]>(board);
   const boardRef = useRef(board);
   boardRef.current = board;
 
@@ -30,8 +23,8 @@ const Woodoku = () => {
       const stringifiedBoard = JSON.stringify(board);
       const stringifiedModBoard = JSON.stringify(modifiedBoard);
       const areBoardsEqual = stringifiedBoard === stringifiedModBoard;
-      console.log('modified board', modifiedBoard, areBoardsEqual);
 
+      // only update board if there was actual movement
       if (!areBoardsEqual) {
         setBoard(modifiedBoard);
       }
@@ -39,32 +32,33 @@ const Woodoku = () => {
     [board],
   );
 
+  const handleRefresh = () => {
+    setBoard(generateBoard());
+  };
+
   const handleAlignment = useCallback(() => {
     let duplicateBoard: RowObj[] = JSON.parse(JSON.stringify(board));
     duplicateBoard.forEach((row, rowIndex) => {
-      // console.log(rowIndex);
       row.row.forEach((brick, brickIndex) => {
         if (rowIndex === 0) {
           const canDrop = canDropDown(brick, duplicateBoard[rowIndex]);
-          // console.log('can drop', canDrop);
           if (canDrop) {
             handleMoveBrick(brick, rowIndex + 1, brickIndex);
           }
         } else {
           const canDrop = canDropDown(brick, duplicateBoard[rowIndex - 1]);
-          // console.log('can drop', canDrop);
-
           if (canDrop) {
             handleMoveBrick(brick, rowIndex, brickIndex);
           }
         }
       });
     });
-    // console.log('call here');
-    // filterOutFilledAndEmpty();
   }, [board, handleMoveBrick]);
 
   const filterOutFilledAndEmpty = useCallback(() => {
+    // use most recent version of board,
+    // rather than the version that existed at the beginning
+    // of setTimeout in the calling effect callback.
     const duplicateBoard = [...boardRef.current];
     let output: RowObj[] = [];
     for (let rowIndex = 0; rowIndex < duplicateBoard.length; rowIndex++) {
@@ -87,7 +81,6 @@ const Woodoku = () => {
 
   React.useEffect(() => {
     handleAlignment();
-    // filterOutFilledAndEmpty();
   }, [board, handleAlignment]);
 
   React.useEffect(() => {
@@ -115,6 +108,14 @@ const Woodoku = () => {
 
   return (
     <View style={styles.container}>
+      <View style={styles.refreshContainer}>
+        <TouchableOpacity onPress={handleRefresh}>
+          <View style={styles.refreshButton}>
+            <Text style={styles.refreshText}>Refresh</Text>
+          </View>
+        </TouchableOpacity>
+      </View>
+
       <View style={styles.board}>
         {board.map((row, rowIndex) => (
           <Row
@@ -145,6 +146,18 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: 'row',
+  },
+  refreshContainer: {
+    marginBottom: 20,
+  },
+  refreshText: {
+    color: 'white',
+  },
+  refreshButton: {
+    backgroundColor: '#476481',
+    paddingVertical: 7,
+    paddingHorizontal: 10,
+    borderRadius: 4,
   },
 });
 
