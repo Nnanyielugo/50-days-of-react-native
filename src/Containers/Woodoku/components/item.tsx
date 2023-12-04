@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { StyleSheet, PanResponder, Animated } from 'react-native';
 
 import Brick from '../assets/brick.jpeg';
