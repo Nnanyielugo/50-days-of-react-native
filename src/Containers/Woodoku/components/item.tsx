@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { StyleSheet, PanResponder, Animated } from 'react-native';
 
 import Brick from '../assets/brick.jpeg';
@@ -48,8 +48,6 @@ const Item: FunctionComponent<ItemProps> = ({
     },
     onPanResponderRelease: (_evt, _gesture: PanResponderGestureState) => {
       left.flattenOffset();
-
-      // updateBrickPos(item, (left as any)._value, rowIndex, itemIndex);
 
       const right = (left as any)._value + item.width;
 
