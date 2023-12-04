@@ -1,12 +1,12 @@
 # 50-days-of-react-native
 
 ### Author's note (of some sort)
+
 While I think this somewhat undersells what I can do when motivated, it sort of fills in for some of them. They are a sort of challenge because they are built mostly for this demonstration, and very few (if at all) have been used for my professional work.
 
 It is still a work in progress (until I reach 50 seperate pared down applications, so. this might take a while), so I am open to suggestions on new things to add.
 
 This is a personal demonstration so while issues are very much encouraged, PRs are unfortunately not. I'm very sorry about this.
-
 
 ### Installation:
 
@@ -45,6 +45,7 @@ Please note that the setup instruction assumes that you have setup your developm
 
 #### [Nearby Places](https://github.com/Nnanyielugo/50-days-of-react-native/blob/master/src/Containers/NearbyPlaces/readme.md)
 
+#### [Woodoku](https://github.com/Nnanyielugo/50-days-of-react-native/blob/master/src/Containers/Woodoku/readme.md)
 
 ### TODO
 
@@ -64,7 +65,7 @@ Please note that the setup instruction assumes that you have setup your developm
 - [ ] pdf reader
 - [ ] core animation and masks (twitter entrance animation)
 - [x] tic-tac-toe
-- [ ] app menu
+- [x] app menu
 - [ ] custom swipe transitions
 - [ ] segmented control views
 - [ ] mapview and find geolocation
@@ -77,11 +78,13 @@ Please note that the setup instruction assumes that you have setup your developm
 - [ ] scrollable tab (old youtube example?)
 - [ ] imessage gradient
 - [ ] push notification
+- [ ] drag and drop
 - [x] image carousel
 - [ ] action sheet
 - [ ] jumpbar
 - [ ] pull to refresh
 - [x] calculator
+- [x] woodoku
 - [ ] basic charts
 - [ ] dynamic charts (with chart information)
 - [ ] basic run tracker (hint: geolocation.watchPosition)
