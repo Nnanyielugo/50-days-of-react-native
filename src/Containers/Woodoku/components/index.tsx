@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#2c3e50',
   },
   board: {
-    width: BOARD_WIDTH,
+    width: BOARD_WIDTH + 1,
     height: BOARD_HEIGHT,
     borderWidth: StyleSheet.hairlineWidth,
     borderColor: 'whitesmoke',
