@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useRef } from 'react';
 import { View, StyleSheet } from 'react-native';
 import Row from './row';
 
@@ -14,6 +14,9 @@ type UpdatedBrickInfo = {
 
 const Woodoku = () => {
   const [board, setBoard] = React.useState<RowObj[]>(generateBoard());
+  // const [alternateBoard, setAlternateBoard] = React.useState<RowObj[]>(board);
+  const boardRef = useRef(board);
+  boardRef.current = board;
 
   const handleMoveBrick = useCallback(
     (brick: BrickObj, rowIndex: number, brickIndex: number) => {
@@ -57,35 +60,41 @@ const Woodoku = () => {
         }
       });
     });
+    // console.log('call here');
+    // filterOutFilledAndEmpty();
   }, [board, handleMoveBrick]);
 
   const filterOutFilledAndEmpty = useCallback(() => {
-    const duplicateBoard = [...board];
-    setTimeout(() => {
-      let output: RowObj[] = [];
-      for (let rowIndex = 0; rowIndex < duplicateBoard.length; rowIndex++) {
-        let row = duplicateBoard[rowIndex];
-        if (!row.row.length) {
-          continue;
-        }
-        const rowWidth = row.row.reduce((acc, curr) => {
-          return acc + curr.width;
-        }, 0);
-        if (rowWidth >= BOARD_WIDTH) {
-          continue;
-        }
-        output.push(row);
+    const duplicateBoard = [...boardRef.current];
+    let output: RowObj[] = [];
+    for (let rowIndex = 0; rowIndex < duplicateBoard.length; rowIndex++) {
+      let row = duplicateBoard[rowIndex];
+      if (!row.row.length) {
+        continue;
       }
-      if (output.length !== duplicateBoard.length) {
-        setBoard(output);
+      const rowWidth = row.row.reduce((acc, curr) => {
+        return acc + curr.width;
+      }, 0);
+      if (rowWidth >= BOARD_WIDTH) {
+        continue;
       }
-    }, 500);
-  }, [board]);
+      output.push(row);
+    }
+    if (output.length !== duplicateBoard.length) {
+      setBoard(output);
+    }
+  }, []);
 
   React.useEffect(() => {
     handleAlignment();
     // filterOutFilledAndEmpty();
-  }, [board, handleAlignment, filterOutFilledAndEmpty]);
+  }, [board, handleAlignment]);
+
+  React.useEffect(() => {
+    setTimeout(() => {
+      filterOutFilledAndEmpty();
+    }, 300);
+  }, [board, filterOutFilledAndEmpty]);
 
   const updateBrickPos = (
     brick: BrickObj,
