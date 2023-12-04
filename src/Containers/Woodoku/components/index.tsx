@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { View, StyleSheet } from 'react-native';
 import Row from './row';
 
@@ -14,17 +14,42 @@ type UpdatedBrickInfo = {
 
 const Woodoku = () => {
   const [board, setBoard] = React.useState<RowObj[]>(generateBoard());
-  const handleAlignment = () => {
-    let duplicateBoard = [...board];
+
+  const handleMoveBrick = useCallback(
+    (brick: BrickObj, rowIndex: number, brickIndex: number) => {
+      let duplicateBoard: RowObj[] = JSON.parse(JSON.stringify(board));
+      const modifiedBoard = moveBrick(
+        brick,
+        rowIndex,
+        brickIndex,
+        duplicateBoard,
+      );
+      const stringifiedBoard = JSON.stringify(board);
+      const stringifiedModBoard = JSON.stringify(modifiedBoard);
+      const areBoardsEqual = stringifiedBoard === stringifiedModBoard;
+      console.log('modified board', modifiedBoard, areBoardsEqual);
+
+      if (!areBoardsEqual) {
+        setBoard(modifiedBoard);
+      }
+    },
+    [board],
+  );
+
+  const handleAlignment = useCallback(() => {
+    let duplicateBoard: RowObj[] = JSON.parse(JSON.stringify(board));
     duplicateBoard.forEach((row, rowIndex) => {
+      // console.log(rowIndex);
       row.row.forEach((brick, brickIndex) => {
         if (rowIndex === 0) {
           const canDrop = canDropDown(brick, duplicateBoard[rowIndex]);
+          // console.log('can drop', canDrop);
           if (canDrop) {
             handleMoveBrick(brick, rowIndex + 1, brickIndex);
           }
         } else {
           const canDrop = canDropDown(brick, duplicateBoard[rowIndex - 1]);
+          // console.log('can drop', canDrop);
 
           if (canDrop) {
             handleMoveBrick(brick, rowIndex, brickIndex);
@@ -32,43 +57,35 @@ const Woodoku = () => {
         }
       });
     });
-  };
+  }, [board, handleMoveBrick]);
 
-  React.useEffect(() => {
-    handleAlignment();
-  }, [board]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  React.useEffect(() => {
-    // filter all rows that are filled with bricks and all rows that are empty
-    // set a delay so that there is a visual presentation
-    // before the row gets removed
+  const filterOutFilledAndEmpty = useCallback(() => {
     const duplicateBoard = [...board];
     setTimeout(() => {
       let output: RowObj[] = [];
-
       for (let rowIndex = 0; rowIndex < duplicateBoard.length; rowIndex++) {
         let row = duplicateBoard[rowIndex];
-
         if (!row.row.length) {
           continue;
         }
-
         const rowWidth = row.row.reduce((acc, curr) => {
           return acc + curr.width;
         }, 0);
-
         if (rowWidth >= BOARD_WIDTH) {
           continue;
         }
-
         output.push(row);
       }
-
       if (output.length !== duplicateBoard.length) {
         setBoard(output);
       }
     }, 500);
   }, [board]);
+
+  React.useEffect(() => {
+    handleAlignment();
+    // filterOutFilledAndEmpty();
+  }, [board, handleAlignment, filterOutFilledAndEmpty]);
 
   const updateBrickPos = (
     brick: BrickObj,
@@ -85,15 +102,6 @@ const Woodoku = () => {
       },
     });
     setBoard(duplicateBoard);
-  };
-
-  const handleMoveBrick = (
-    brick: BrickObj,
-    rowIndex: number,
-    brickIndex: number,
-  ) => {
-    const modifiedBoard = moveBrick(brick, rowIndex, brickIndex, board);
-    setBoard(modifiedBoard);
   };
 
   return (

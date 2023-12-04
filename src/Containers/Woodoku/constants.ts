@@ -12,12 +12,18 @@ import {
   generateBoard7,
   generateBoard8,
   generateBoard9,
+  generateSampleBoard,
+  generateSampleBoard2,
+  generateSampleBoard3,
 } from './boards';
 
 export const BOARD_WIDTH = Dimensions.get('window').width * 0.9;
 export const BOARD_HEIGHT = Dimensions.get('window').height * 0.6;
 
 export function getBoards(randomNum: number): RowObj[] {
+  // return generateSampleBoard3();
+  return generateSampleBoard2();
+  // return generateSampleBoard();
   switch (randomNum) {
     case 0:
       return generateBoard1();

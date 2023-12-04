@@ -2,6 +2,241 @@ import { generateId } from './functions';
 import { BOARD_WIDTH } from './constants';
 import type { RowObj } from './types';
 
+export function generateSampleBoard3(): RowObj[] {
+  return [
+    {
+      id: generateId(),
+      row: [
+        {
+          id: generateId(),
+          width: BOARD_WIDTH * 0.4,
+          transparent: false,
+        },
+        {
+          id: generateId(),
+          width: BOARD_WIDTH * 0.3,
+          transparent: true,
+        },
+        {
+          id: generateId(),
+          width: BOARD_WIDTH * 0.3,
+          transparent: true,
+        },
+      ],
+    },
+    {
+      id: generateId(),
+      row: [
+        {
+          id: generateId(),
+          width: BOARD_WIDTH * 0.3,
+          transparent: false,
+        },
+        {
+          id: generateId(),
+          width: BOARD_WIDTH * 0.4,
+          transparent: true,
+        },
+        {
+          id: generateId(),
+          width: BOARD_WIDTH * 0.3,
+          transparent: true,
+        },
+      ],
+    },
+  ];
+}
+
+export function generateSampleBoard2(): RowObj[] {
+  return [
+    {
+      id: generateId(),
+      row: [
+        {
+          id: generateId(),
+          width: BOARD_WIDTH * 0.4,
+          transparent: false,
+        },
+        {
+          id: generateId(),
+          width: BOARD_WIDTH * 0.3,
+          transparent: true,
+        },
+        {
+          id: generateId(),
+          width: BOARD_WIDTH * 0.3,
+          transparent: false,
+        },
+      ],
+    },
+    {
+      id: generateId(),
+      row: [
+        {
+          id: generateId(),
+          width: BOARD_WIDTH * 0.4,
+          transparent: false,
+        },
+        {
+          id: generateId(),
+          width: BOARD_WIDTH * 0.3,
+          transparent: true,
+        },
+        {
+          id: generateId(),
+          width: BOARD_WIDTH * 0.3,
+          transparent: false,
+        },
+      ],
+    },
+    {
+      id: generateId(),
+      row: [
+        {
+          id: generateId(),
+          width: BOARD_WIDTH * 0.3,
+          transparent: true,
+        },
+        {
+          id: generateId(),
+          width: BOARD_WIDTH * 0.3,
+          transparent: true,
+        },
+        {
+          id: generateId(),
+          width: BOARD_WIDTH * 0.4,
+          transparent: false,
+        },
+      ],
+    },
+    {
+      id: generateId(),
+      row: [
+        {
+          id: generateId(),
+          width: BOARD_WIDTH * 0.3,
+          transparent: true,
+        },
+        {
+          id: generateId(),
+          width: BOARD_WIDTH * 0.4,
+          transparent: false,
+        },
+        {
+          id: generateId(),
+          width: BOARD_WIDTH * 0.3,
+          transparent: false,
+        },
+      ],
+    },
+    {
+      id: generateId(),
+      row: [
+        {
+          id: generateId(),
+          width: BOARD_WIDTH * 0.3,
+          transparent: true,
+        },
+        {
+          id: generateId(),
+          width: BOARD_WIDTH * 0.4,
+          transparent: true,
+        },
+        {
+          id: generateId(),
+          width: BOARD_WIDTH * 0.3,
+          transparent: false,
+        },
+      ],
+    },
+    {
+      id: generateId(),
+      row: [
+        {
+          id: generateId(),
+          width: BOARD_WIDTH * 0.3,
+          transparent: true,
+        },
+        {
+          id: generateId(),
+          width: BOARD_WIDTH * 0.4,
+          transparent: true,
+        },
+        {
+          id: generateId(),
+          width: BOARD_WIDTH * 0.3,
+          transparent: false,
+        },
+      ],
+    },
+  ];
+}
+
+export function generateSampleBoard(): RowObj[] {
+  return [
+    {
+      id: generateId(),
+      row: [
+        {
+          id: generateId(),
+          width: BOARD_WIDTH * 0.4,
+          transparent: false,
+        },
+        {
+          id: generateId(),
+          width: BOARD_WIDTH * 0.3,
+          transparent: true,
+        },
+        {
+          id: generateId(),
+          width: BOARD_WIDTH * 0.3,
+          transparent: false,
+        },
+      ],
+    },
+    {
+      id: generateId(),
+      row: [
+        {
+          id: generateId(),
+          width: BOARD_WIDTH * 0.4,
+          transparent: false,
+        },
+        {
+          id: generateId(),
+          width: BOARD_WIDTH * 0.3,
+          transparent: true,
+        },
+        {
+          id: generateId(),
+          width: BOARD_WIDTH * 0.3,
+          transparent: true,
+        },
+      ],
+    },
+    {
+      id: generateId(),
+      row: [
+        {
+          id: generateId(),
+          width: BOARD_WIDTH * 0.3,
+          transparent: false,
+        },
+        {
+          id: generateId(),
+          width: BOARD_WIDTH * 0.4,
+          transparent: true,
+        },
+        {
+          id: generateId(),
+          width: BOARD_WIDTH * 0.3,
+          transparent: true,
+        },
+      ],
+    },
+  ];
+}
+
 export function generateBoard1(): RowObj[] {
   return [
     {

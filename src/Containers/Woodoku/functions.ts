@@ -47,11 +47,11 @@ export function canDropDown(target: BrickObj, rowUnder: RowObj) {
   let targetPos = target.pos as BrickPos;
   const leftClears: boolean[] = [];
   const rightClears: boolean[] = [];
+  const SAFE_MARGIN = 5;
+
   let isClear = false;
 
   for (let i = 0; i < rowUnder.row.length; i++) {
-    const SAFE_MARGIN = 5;
-
     let brickPos = rowUnder.row[i].pos as BrickPos;
     let nextBrick = rowUnder.row[i + 1];
     let prevBrick = rowUnder.row[i - 1];
@@ -72,15 +72,29 @@ export function canDropDown(target: BrickObj, rowUnder: RowObj) {
       );
     } else {
       if (!prevBrick && nextBrick) {
+        // console.log('case 2', targetPos, brickPos, nextBrick.pos);
         // as this means the first brick on the under row, we only need
         // target's right to be lower than current's left
+        // if (
+        //   targetPos.right <= brickPos.left ||
+        //   targetPos.right + SAFE_MARGIN <= brickPos.left ||
+        //   targetPos.right - SAFE_MARGIN <= brickPos.left
+        // ) {
+        //   isClear = true;
+        // }
         if (
-          targetPos.right <= brickPos.left ||
-          targetPos.right + SAFE_MARGIN <= brickPos.left ||
-          targetPos.right - SAFE_MARGIN <= brickPos.left
+          (targetPos.left >= brickPos.right &&
+            targetPos.right <= (nextBrick.pos as BrickPos).left) ||
+          (targetPos.left + SAFE_MARGIN >= brickPos.right &&
+            targetPos.right <= (nextBrick.pos as BrickPos).left) ||
+          (targetPos.left >= brickPos.right &&
+            targetPos.right - SAFE_MARGIN <= (nextBrick.pos as BrickPos).left)
         ) {
           isClear = true;
+          // console.log('clear');
+          break;
         }
+        break;
       } else if (prevBrick && !nextBrick) {
         // as this means the last brick on the under row, we only need
         // target to find space between previous and current bricks
@@ -96,6 +110,7 @@ export function canDropDown(target: BrickObj, rowUnder: RowObj) {
         ) {
           isClear = true;
         }
+        // break;
       } else if (
         !prevBrick &&
         !nextBrick &&
@@ -115,6 +130,7 @@ export function canDropDown(target: BrickObj, rowUnder: RowObj) {
         ) {
           isClear = true;
         }
+        // break;
       } else if (prevBrick && nextBrick) {
         // at least 3 bricks on under row
         if (
@@ -123,6 +139,7 @@ export function canDropDown(target: BrickObj, rowUnder: RowObj) {
         ) {
           isClear = true;
         }
+        // break;
       }
     }
   }
@@ -169,7 +186,9 @@ export function moveBrick(
   brickIndex: number,
   board: RowObj[],
 ) {
+  console.log('in move brick');
   const dropRowIndex = rowIndex - 1;
+  const SAFE_MARGIN = 5;
   let dropRow = board[dropRowIndex];
   let duplicateBoard: RowObj[] = JSON.parse(JSON.stringify(board));
 
@@ -185,9 +204,11 @@ export function moveBrick(
 
   if (brick.pos?.left === 0) {
     // case 1: lapping left border
+    console.log('case 1');
     dropAtStart();
   } else if (brick.pos?.right === BOARD_WIDTH) {
     // case 2: brick lapping right border
+    console.log('case 2');
     dropAtEnd();
   } else {
     // case 3: brick lapping neither border
@@ -196,12 +217,14 @@ export function moveBrick(
       if ((dropRow.row[0].pos as BrickPos).left >= brick.width) {
         // case 3.1.a: item can fit between left border and item in drop row
         dropAtStart();
+        console.log('case 3.1a');
       } else if (
         BOARD_WIDTH - (dropRow.row[0].pos as BrickPos).right >=
         brick.width
       ) {
         // case 3.1.b: item can fit between right border and item in drop row
         dropAtEnd();
+        console.log('case 3.1b');
       }
     } else {
       // case 3.2: drop row has more than one item
@@ -211,6 +234,7 @@ export function moveBrick(
         if (i === 0 && (iterBrick.pos as BrickPos).left >= brick.width) {
           // case 3.2.a: space between left and droprow's first brick can fit brick
           dropAtStart();
+          console.log('case 3.2a');
           break;
         } else if (
           i === dropRow.row.length - 1 &&
@@ -218,50 +242,70 @@ export function moveBrick(
         ) {
           // case 3.2.b: space between right and droprow's last brick can fit brick
           dropAtEnd();
+          console.log('case 3..2b');
           break;
-        } else if (
-          nextIterBrick &&
-          (nextIterBrick.pos as BrickPos).left -
-            (iterBrick.pos as BrickPos).right >=
-            brick.width
-        ) {
-          // case 3.2.c: space between currently iteirated brick and the next one can fit moved brick
-          // case 4: flush to left or right adjacent bricks
-          let newBrick = { ...brick };
+        } else if (nextIterBrick) {
+          console.log('case 4');
+          console.log(
+            'bbrick',
+            brick.width,
+            (nextIterBrick.pos as BrickPos).left -
+              (iterBrick.pos as BrickPos).right,
+          );
           if (
-            (newBrick.pos as BrickPos).left < (iterBrick.pos as BrickPos).right
+            (nextIterBrick.pos as BrickPos).left -
+              (iterBrick.pos as BrickPos).right >=
+            brick.width - SAFE_MARGIN
           ) {
-            // case 4.1: brick's left pos is greater than lefthand's brick right pos. Adjust brick's left pos
-            (newBrick.pos as BrickPos).left = (iterBrick.pos as BrickPos).right;
+            // console.log(
+            //   'in loop',
+            //   iterBrick.pos?.right,
+            //   nextIterBrick?.pos?.left,
+            // );
+
+            // case 3.2.c: space between currently iteirated brick and the next one can fit moved brick
+            // case 4: flush to left or right adjacent bricks
+            let newBrick = { ...brick };
+            if (
+              (newBrick.pos as BrickPos).left <
+              (iterBrick.pos as BrickPos).right
+            ) {
+              // case 4.1: brick's left pos is greater than lefthand's brick right pos. Adjust brick's left pos
+              (newBrick.pos as BrickPos).left = (
+                iterBrick.pos as BrickPos
+              ).right;
+              console.log('4.1');
+            }
+
+            if (
+              (newBrick.pos as BrickPos).right >
+              (nextIterBrick.pos as BrickPos).left
+            ) {
+              // case 4.2: brick's right pos is greater than righthand's brick right pos. Adjust brick's right pos
+              (newBrick.pos as BrickPos).right = (
+                nextIterBrick.pos as BrickPos
+              ).left;
+              console.log('4.2');
+            }
+
+            // since [dropRowIndex].row[i] represents the brick to the left
+            // and we have ascertained that there is space between left and right
+            // to drop our brick,
+            // we drop our brick (with modified position values above) in the index after i,
+            // and move all the bricks after our dropped brick downward by one index
+
+            duplicateBoard[dropRowIndex].row[i + 1] = newBrick;
+            let indexShifted = i + 2;
+            while (indexShifted <= dropRow.row.length) {
+              duplicateBoard[dropRowIndex].row[indexShifted] =
+                dropRow.row[indexShifted - 1];
+
+              indexShifted += 1;
+            }
+
+            duplicateBoard[rowIndex].row.splice(brickIndex, 1);
+            break;
           }
-
-          if (
-            (newBrick.pos as BrickPos).right >
-            (nextIterBrick.pos as BrickPos).left
-          ) {
-            // case 4.2: brick's right pos is greater than righthand's brick right pos. Adjust brick's right pos
-            (newBrick.pos as BrickPos).right = (
-              nextIterBrick.pos as BrickPos
-            ).left;
-          }
-
-          // since [dropRowIndex].row[i] represents the brick to the left
-          // and we have ascertained that there is space between left and right
-          // to drop our brick,
-          // we drop our brick (with modified position values above) in the index after i,
-          // and move all the bricks after our dropped brick downward by one index
-
-          duplicateBoard[dropRowIndex].row[i + 1] = newBrick;
-          let indexShifted = i + 2;
-          while (indexShifted <= dropRow.row.length) {
-            duplicateBoard[dropRowIndex].row[indexShifted] =
-              dropRow.row[indexShifted - 1];
-
-            indexShifted += 1;
-          }
-
-          duplicateBoard[rowIndex].row.splice(brickIndex, 1);
-          break;
         }
       }
     }
